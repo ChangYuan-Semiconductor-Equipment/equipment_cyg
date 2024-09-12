@@ -1,5 +1,6 @@
 import csv
 import datetime
+import functools
 import json
 import logging
 import os
@@ -7,19 +8,19 @@ import pathlib
 import subprocess
 import threading
 from logging.handlers import TimedRotatingFileHandler
-from typing import Union
+from typing import Union, Optional
 
 from secsgem.common import DeviceType, Message
 from secsgem.gem import CollectionEvent, GemEquipmentHandler, EquipmentConstant, StatusVariable, RemoteCommand, Alarm
 from secsgem.secs.data_items.tiack import TIACK
+from secsgem.secs.functions import SecsS02F18
 from secsgem.secs.variables import U4, Array
 from secsgem.hsms import HsmsSettings, HsmsConnectMode
 
 from equipment_cyg.controller.enum_sece_data_type import EnumSecsDataType
-
 from equipment_cyg.utils.database.log_handler import DatabaseHandler
-from equipment_cyg.utils.database.operations import get_all_event, get_all_equipment_constant, get_all_status_variable, \
-    get_all_remote_command, get_all_alarm
+from equipment_cyg.utils.database.operations import (get_all_event, get_all_equipment_constant,
+                                                     get_all_status_variable, get_all_remote_command, get_all_alarm)
 
 
 class Controller(GemEquipmentHandler):
@@ -28,9 +29,9 @@ class Controller(GemEquipmentHandler):
         self._file_handler = None  # 保存日志的处理器
 
         hsms_settings = HsmsSettings(
-            address=self.get_value_from_config("secs_ip"),
-            port=self.get_value_from_config("secs_port"),
-            connect_mode=getattr(HsmsConnectMode, self.get_value_from_config("connect_mode")),
+            address=self.get_config_value("secs_ip", "127.0.0.1"),
+            port=self.get_config_value("secs_port", 5000),
+            connect_mode=getattr(HsmsConnectMode, self.get_config_value("connect_mode", "PASSIVE")),
             device_type=DeviceType.EQUIPMENT
         )
         super().__init__(settings=hsms_settings, **kwargs)
@@ -118,23 +119,29 @@ class Controller(GemEquipmentHandler):
             for alarm_id, alarm_name, alarm_text, alarm_code, ce_on, ce_off in alarms:
                 self.alarms.update({alarm_id: Alarm(alarm_id, alarm_name, alarm_text, alarm_code, ce_on, ce_off)})
         else:
-            if alarm_path := self.get_config_path(self.config.get("alarm_csv")):
-                with pathlib.Path(alarm_path).open("r", encoding="utf-8") as file:
+            if alarm_path := self.get_config_value("alarm_csv", ""):
+                with pathlib.Path(alarm_path).open("r", encoding="UTF-8") as file:
                     csv_reader = csv.reader(file)
                     next(csv_reader)
                     for row in csv_reader:
                         alarm_id, alarm_name, alarm_text, alarm_code, ce_on, ce_off, *_ = row
                         self.alarms.update({
-                            alarm_id: Alarm(alarm_id, alarm_name, alarm_text, alarm_code, ce_on, ce_off)
+                            alarm_id: Alarm(alarm_id, alarm_name, alarm_text, int(alarm_code), ce_on, ce_off)
                         })
 
     # host给设备发送指令
 
-    def _on_s02f17(self, handler, packet):
-        """获取设备时间."""
+    # noinspection PyUnusedLocal
+    def _on_s02f17(self, handler, packet) -> SecsS02F18:
+        """获取设备时间.
+
+        Returns:
+            SecsS02F18: SecsS02F18 实例.
+        """
         del handler, packet
         return self.stream_function(2, 18)(datetime.datetime.now().strftime("%Y%m%d%H%M%S%C"))
 
+    # noinspection PyUnusedLocal
     def _on_s02f31(self, handler, packet):
         """设置设备时间."""
         del handler
@@ -169,6 +176,10 @@ class Controller(GemEquipmentHandler):
         """host请求配方列表"""
         raise NotImplementedError("如果使用,这个方法必须要根据产品重写！")
 
+    def _on_s07f06(self, handler, packet):
+        """host下发配方数据"""
+        raise NotImplementedError("如果使用,这个方法必须要根据产品重写！")
+
     def _on_s07f17(self, handler, packet):
         """删除配方."""
         raise NotImplementedError("如果使用,这个方法必须要根据产品重写！")
@@ -192,6 +203,7 @@ class Controller(GemEquipmentHandler):
         def _ce_sender():
             reports = []
             event = self.collection_events.get(event_name)
+            # noinspection PyUnresolvedReferences
             link_reports = event.link_reports
             for report_id, sv_ids in link_reports.items():
                 variables = []
@@ -216,16 +228,17 @@ class Controller(GemEquipmentHandler):
         self.enable()  # 设备和host通讯
         self.logger.info(f"*** CYG SECSGEM 服务已启动 *** -> 等待工厂 EAP 连接!")
 
-    def get_value_from_config(self, key) -> Union[str, int, dict, None]:
+    def get_config_value(self, key, default=None) -> Union[str, int, dict, list, None]:
         """根据key获取配置文件里的值.
 
         Args:
             key(str): 获取值对应的key.
+            default: 找不到值时的默认值.
 
         Returns:
-            Union[str, int, dict]: 从配置文件中获取的值.
+            Union[str, int, dict, list]: 从配置文件中获取的值.
         """
-        return self.config.get(key, None)
+        return self.config.get(key, default)
 
     def get_receive_data(self, message: Message) -> Union[dict, str]:
         """解析Host发来的数据并返回.
@@ -239,25 +252,76 @@ class Controller(GemEquipmentHandler):
         function = self.settings.streams_functions.decode(message)
         return function.get()
 
+    def get_sv_id_with_name(self, sv_name: str) -> Optional[int]:
+        """根据变量名获取变量id.
+
+        Args:
+            sv_name: 变量名称.
+
+        Returns:
+            Optional[int]: 返回变量id, 没有此变量返回None.
+        """
+        if sv_info := self.get_config_value("status_variable").get(sv_name):
+            return sv_info["svid"]
+        return None
+
+    def get_sv_value_with_name(self, sv_name: str) -> Union[int, str, bool, list, float]:
+        """根据变量名获取变量值.
+
+        Args:
+            sv_name: 变量名称.
+
+        Returns:
+            Union[int, str, bool, list, float]: 返回对应变量的值.
+        """
+        return self.status_variables.get(self.get_sv_id_with_name(sv_name)).value
+
+    def set_sv_value_with_name(self, sv_name: str, sv_value: Union[str, int, float, list]):
+        """设置指定变量的值.
+
+        Args:
+            sv_name (str): 变量名称.
+            sv_value (Union[str, int, float, list]): 要设定的值.
+        """
+        self.status_variables.get(self.get_sv_id_with_name(sv_name)).value = sv_value
+
     # 静态通用函数
     @staticmethod
-    def get_config_path(relative_path) -> str:
-        """获取配置文件绝对路径地址."""
-        return f'{os.path.dirname(__file__)}/../../{relative_path}'
+    def get_config_path(relative_path: str) -> Optional[str]:
+        """获取配置文件绝对路径地址.
+
+        Args:
+            relative_path: 相对路径字符串.
+
+        Returns:
+            Optional[str]: 返回绝对路径字符串, 如果 relative_path 为空字符串返回None.
+        """
+        if relative_path:
+            return f"{os.path.dirname(__file__)}/../../{relative_path}"
 
     @staticmethod
-    def get_config(path) -> dict:
-        """获取配置文件内容."""
-        conf_path = pathlib.Path(path)
-        with conf_path.open(mode="r", encoding="utf-8") as f:
+    def get_config(path: str) -> dict:
+        """获取配置文件内容.
+
+        Args:
+            path: 配置文件绝对路径.
+
+        Returns:
+            dict: 配置文件数据.
+        """
+        with pathlib.Path(path).open(mode="r", encoding="utf-8") as f:
             conf_dict = json.load(f)
         return conf_dict
 
     @staticmethod
-    def update_config(path, data: dict) -> None:
-        """更新配置文件内容."""
-        conf_path = pathlib.Path(path)
-        with conf_path.open(mode="w+", encoding="utf-8") as f:
+    def update_config(path, data: dict):
+        """更新配置文件内容.
+
+        Args:
+            path: 配置文件绝对路径.
+            data: 新的配置文件数据.
+        """
+        with pathlib.Path(path).open(mode="w+", encoding="utf-8") as f:
             json.dump(data, f, indent=4, ensure_ascii=False)
 
     @staticmethod
@@ -280,7 +344,12 @@ class Controller(GemEquipmentHandler):
         return False
 
     @staticmethod
-    def get_log_format():
+    def get_log_format() -> str:
+        """获取日志格式字符串.
+
+        Returns:
+            str: 返回日志格式字符串.
+        """
         return "%(asctime)s - %(levelname)s - %(module)s:%(lineno)d - %(message)s"
 
     @staticmethod
@@ -290,8 +359,38 @@ class Controller(GemEquipmentHandler):
         if not log_dir.exists():
             os.mkdir(log_dir)
 
+    @staticmethod
+    def get_current_thread_name():
+        """获取当前线程名称."""
+        return threading.current_thread().name
+
+    @staticmethod
+    def try_except_exception(exception_type: Exception):
+        """根据传进来的异常类型返回装饰器函数.
+
+        Args:
+            exception_type (Exception): 要抛出的异常.
+
+        Returns:
+            function: 返回装饰器函数.
+        """
+        def wrap(func):
+            @functools.wraps(func)
+            def wrapper(*args, **kwargs):
+                try:
+                    return func(*args, **kwargs)
+                except Exception:
+                    raise exception_type
+            return wrapper
+        return wrap
+
     @property
-    def file_handler(self):
+    def file_handler(self) -> TimedRotatingFileHandler:
+        """设置保存日志的处理器, 每个一天自动生成一个日志文件.
+
+        Returns:
+            TimedRotatingFileHandler: 返回 TimedRotatingFileHandler 日志处理器.
+        """
         if self._file_handler is None:
             logging.basicConfig(level=logging.INFO, encoding="UTF-8", format=self.get_log_format())
             log_file_name = f"{os.getcwd()}/log/{datetime.datetime.now().strftime('%Y-%m-%d')}"

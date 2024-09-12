@@ -24,5 +24,3 @@ def get_declarative_base():
 
 ENGINE = create_engine(DB_URI)
 SESSION_CLASS = sessionmaker(bind=ENGINE)
-
-

@@ -1,196 +1,196 @@
-"alarm_id","alarm_name","alarm_text","alarm_code","ce_on","ce_off","description"
-"-66",,"TCP connection closed",,,,"å¯¹ç­‰æœºå™¨å·²å…³é—­ç½‘ç»œè¿æ¥"
-"-500",,"The Loop folder has non-CSV files",,,,"Loopæ–‡ä»¶å¤¹æœ‰éCSVæ–‡ä»¶"
-"-1050",,"Failed to open the COM",,,,"COMå£æ‰“å¼€å¤±è´¥"
-"-1060",,"Robot TCP connection failure",,,,"Robotè¿æ¥å¤±è´¥"
-"-1063",,"TCP connection failure",,,,"TCPè¿æ¥å¤±è´¥"
-"-1064",,"PLC connection failure",,,,"PLCè¿æ¥å¤±è´¥"
-"-1065",,"Carrier scan failed",,,,"è½½å…·æ‰«ç å¤±è´¥"
-"-1067",,"Carrier scan times out",,,,"è½½å…·æ‰«ç è¶…æ—¶"
-"-1069",,"The length of TCP write characters is invalid",,,,"TCPå†™å…¥å­—ç¬¦é•¿åº¦å¤±æ•ˆ"
-"-1070",,"Fail to open CCD",,,,"XXç›¸æœºæ‰“å¼€å¤±è´¥"
-"-1071",,"CCD Alarm",,,,"XXç›¸æœºæŠ¥è­¦"
-"-1100",,"Undefined Section",,,,"æœªå®šä¹‰çš„Section"
-"-2000",,"Warning Error",,,,"è­¦å‘Šæç¤º"
-"-2010",,"Undefined Error",,,,"æœªçŸ¥é”™è¯¯"
-"-2060",,"File type Error",,,,"æ–‡ä»¶ç±»å‹é”™è¯¯"
-"-3001",,"The corresponding queue was not retrieved",,,,"æœªæ£€ç´¢åˆ°ç›¸åº”çš„é˜Ÿåˆ—"
-"-3002",,"No Section was retrieved",,,,"æœªæ£€ç´¢åˆ°Section"
-"-3500",,"Calibration_Failed to match Qr code area",,,,"æ ‡å®šåŒ¹é…äºŒç»´ç åŒºåŸŸå¤±è´¥"
-"-3501",,"Calibration_Squares not found",,,,"æ ‡å®šæœªæ‰¾åˆ°æ­£æ–¹å½¢"
-"-3502",,"Quadrant out of camera resolution range or QR code reading failed",,,,"è±¡é™è¶…è¿‡ç›¸æœºåˆ†è¾¨ç‡èŒƒå›´æˆ–äºŒç»´ç è¯»å–å¤±è´¥"
-"-4001",,"The main panel control reference was not found",,,,"æœªæ‰¾åˆ°ä¸»é¢æ¿æ§ä»¶å¼•ç”¨"
-"-4101",,"Login Sysdata is not exist",,,,"ç™»å½•æ–‡ä»¶ä¸å­˜åœ¨"
-"-4300",,"Bin not in safe position",,,,"æ–™ä»“ä¸åœ¨å®‰å…¨ä½ç½®"
-"-5100",,"Photo failure",,,,"æ‹ç…§å¤±è´¥!"
-"-5101",,"CCD Error",,,,"CCDæŠ¥é”™"
-"-6000",,"GTN_Open card failure",,,,"GTNå¼€å¡å¤±è´¥"
-"-6001",,"Failed to enable the Axis",,,,"æœ‰è½´ä½¿èƒ½å¤±è´¥"
-"-6002",,"Axis Num Error",,,,"è½´å·é”™è¯¯"
-"-6003",,"The axis is not defined or has an incorrect name",,,,"è½´æœªå®šä¹‰æˆ–åç§°é”™è¯¯"
-"-6004",,"The point coordinate system does not exist",,,,"ç‚¹ä½åæ ‡ç³»ä¸å­˜åœ¨"
-"-6005",,"Axis ServoON Error",,,,"Axis  xx  ServoONError!"
-"-6010",,"Read Axis status Error",,,,"è½´çŠ¶æ€è¯»å–æŠ¥é”™"
-"-6011",,"Get Axis position Error",,,,"è½´ä½ç½®è¯»å–æŠ¥é”™"
-"-6100",,"The point is not defined or has an incorrect name",,,,"ç‚¹ä½æœªå®šä¹‰æˆ–åç§°é”™è¯¯"
-"-6103",,"Offset points  are not defined or have incorrect names",,,,"è¡¥å¿ç‚¹ä½æœªå®šä¹‰æˆ–åç§°é”™è¯¯"
-"-6201",,"Axial motion timeout",,,,"è½´è¿åŠ¨è¶…æ—¶"
-"-6202",,"Axis Do not Move Done",,,,"Axis xx  Do not Move Done!"
-"-6203",,"Axis Move Done Error",,,,"Axis xx  Move Done Error!"
-"-6204",,"The z-axis is not in a safe position",,,,"Zè½´ä¸åœ¨å®‰å…¨ä½ç½®"
-"-7000",,"DIO writing error",,,,"DIOç¼–å†™é”™è¯¯"
-"-7001",,"IO Single Check Timeout",,,,"DIæ£€æµ‹è¶…æ—¶"
-"-7002",,"IO Card write or read error",,,,"IOå¡è¯»å†™æŠ¥é”™"
-"-7100",,"The EXT_DI name is undefined or incorrect",,,,"EXT_DIåç§°æœªå®šä¹‰æˆ–é”™è¯¯"
-"-7103",,"Encoder detection timeout",,,,"ç¼–ç å™¨æ£€æµ‹è¶…æ—¶"
-"-7801",,"The ErrorLog database was not found",,,,"ErrorLogæ•°æ®åº“æœªæ‰¾åˆ°"
-"-8000",,"Stop abnormal",,,,"æ€¥åœå¼‚å¸¸"
-"-8001",,"Abnormal safety door",,,,"å®‰å…¨é—¨å¼‚å¸¸"
-"-8002",,"Grating abnormal",,,,"å…‰å¹•å¼‚å¸¸"
-"-8003",,"Air Source pressure is insufficient",,,,"æ°”æºæ°”å‹ä¸è¶³"
-"-8004",,"Abnormal Ion fan",,,,"ç¦»å­é£æ‰‡å¼‚å¸¸ï¼"
-"-8005",,"The Rubber has reached its service life.Please replace it!",,,,"èƒ¶å«è¾¾åˆ°ä½¿ç”¨å¯¿å‘½..è¯·åŠæ—¶æ›´æ¢ï¼"
-"-9000",,"The interaction signal was not found locally",,,,"æœ¬åœ°æœªæ‰¾åˆ°è¯¥äº¤äº’ä¿¡å·"
-"-9001",,"Read PLC Single Timeout",,,,"PLC xx æ£€æµ‹è¶…æ—¶"
-"-9005",,"Error writing PLC address",,,,"å†™å…¥PLCåœ°å€ä¿¡æ¯é”™è¯¯"
-"-9010",,"Error reading PLC address",,,,"è¯»å–PLCåœ°å€ä¿¡æ¯é”™è¯¯"
-"60002",,"GP-No Boolean variable found",,,,"GP-æœªæ‰¾åˆ°å¸ƒå°”å˜é‡"
-"60003",,"GP- Error reading Boolean variable value",,,,"GP-è¯»å–å¸ƒå°”å˜é‡å€¼å‡ºé”™"
-"-110001",,"Low pressure fault-Please check",,,,"æ°”å‹ä½æ•…éšœ-è¯·æ£€æŸ¥"
-"-110003",,"Recipe data not written-Please check",,,,"é…æ–¹æ•°æ®æœªå†™å…¥è¯·æ£€æŸ¥"
-"-110005",,"Grating abnormal-Please check",,,,"å…‰æ …å¼‚å¸¸è¯·æ£€æŸ¥"
-"-110006",,"The emergency stop circuit is faulty-Please check",,,,"æ€¥åœå›è·¯æ•…éšœè¯·æ£€æŸ¥"
-"-110007",,"The safety door loop is faulty-Please check",,,,"å®‰å…¨é—¨å›è·¯æ•…éšœè¯·æ£€æŸ¥"
-"-110100",,"ROBOT claw 1_Inconsistent material-Please confirm",,,,"ROBOTå¤¹çˆª1_æ–™è´¦ä¸ä¸€è‡´æŠ¥è­¦-è¯·ç¡®è®¤"
-"-110101",,"ROBOT claw 2_Inconsistent material-Please confirm",,,,"ROBOTå¤¹çˆª2_æ–™è´¦ä¸ä¸€è‡´æŠ¥è­¦-è¯·ç¡®è®¤"
-"-110102",,"Marking platform_Inconsistent material-Please confirm",,,,"æ‰“æ ‡å¹³å°_æ–™è´¦ä¸ä¸€è‡´æŠ¥è­¦-è¯·ç¡®è®¤"
-"-110103",,"Assemble the jaws of the outer frame_Inconsistent material-Please confirm",,,,"è£…é…å–å¤–æ¡†å¤¹çˆª_æ–™è´¦ä¸ä¸€è‡´æŠ¥è­¦-è¯·ç¡®è®¤"
-"-110104",,"Assemble the clamping jaws of the base plate_Inconsistent material-Please confirm",,,,"è£…é…å–åŸºæ¿å¤¹çˆª_æ–™è´¦ä¸ä¸€è‡´æŠ¥è­¦-è¯·ç¡®è®¤"
-"-110105",,"Left transplanting platform1_Inconsistent material-Please confirm",,,,"å·¦ä¾§ç§»æ ½å¹³å°ä½ç½®1_æ–™è´¦ä¸ä¸€è‡´æŠ¥è­¦-è¯·ç¡®è®¤"
-"-110106",,"Left transplanting platform2_Inconsistent material-Please confirm",,,,"å·¦ä¾§ç§»æ ½å¹³å°ä½ç½®2_æ–™è´¦ä¸ä¸€è‡´æŠ¥è­¦-è¯·ç¡®è®¤"
-"-110107",,"Left transplanting platform3_Inconsistent material-Please confirm",,,,"å·¦ä¾§ç§»æ ½å¹³å°ä½ç½®3_æ–™è´¦ä¸ä¸€è‡´æŠ¥è­¦-è¯·ç¡®è®¤"
-"-110108",,"Right transplanting platform1_Inconsistent material-Please confirm",,,,"å³ä¾§ç§»æ ½å¹³å°ä½ç½®1_æ–™è´¦ä¸ä¸€è‡´æŠ¥è­¦-è¯·ç¡®è®¤"
-"-110109",,"Right transplanting platform2_Inconsistent material-Please confirm",,,,"å³ä¾§ç§»æ ½å¹³å°ä½ç½®2_æ–™è´¦ä¸ä¸€è‡´æŠ¥è­¦-è¯·ç¡®è®¤"
-"-110110",,"Right transplanting platform3_Inconsistent material-Please confirm",,,,"å³ä¾§ç§»æ ½å¹³å°ä½ç½®3_æ–™è´¦ä¸ä¸€è‡´æŠ¥è­¦-è¯·ç¡®è®¤"
-"-110111",,"Tray receiving platform_Inconsistent material-Please confirm",,,,"Trayç›˜æ¥æ–™å¹³å°_æ–™è´¦ä¸ä¸€è‡´æŠ¥è­¦-è¯·ç¡®è®¤"
-"-110200",,"B841_Assembly platform shell scanner_Response timeout-Please confirm",,,,"B841_è£…é…å¹³å°å¤–å£³ æ‰«ç æª_å“åº”è¶…æ—¶è¯·ç¡®è®¤"
-"-110201",,"B842_Dispensing cache bit scanner_Response timeout-Please confirm",,,,"B842_ç‚¹èƒ¶ç¼“å­˜ä½ æ‰«ç æª_å“åº”è¶…æ—¶è¯·ç¡®è®¤"
-"-110202",,"B843_Assemble the cache bit scanner_Response timeout-Please confirm",,,,"B843_è£…é…ç¼“å­˜ä½ æ‰«ç æª_å“åº”è¶…æ—¶è¯·ç¡®è®¤"
-"-110203",,"Dispensing working position MES_Response timeout-Please confirm",,,,"ç‚¹èƒ¶å·¥ä½œä½ MES_å“åº”è¶…æ—¶è¯·ç¡®è®¤"
-"-110204",,"The dispensing work bit camera_Response timeout-Please confirm",,,,"ç‚¹èƒ¶å·¥ä½œä½ ç›¸æœº_å“åº”è¶…æ—¶è¯·ç¡®è®¤"
-"-110205",,"Dispensing working position 3D_Response timeout-Please confirm",,,,"ç‚¹èƒ¶å·¥ä½œä½ çº¿æ‰«_å“åº”è¶…æ—¶è¯·ç¡®è®¤"
-"-110206",,"Assemble the working position MES_Response timeout-Please confirm",,,,"è£…é…å·¥ä½œä½ MES_å“åº”è¶…æ—¶è¯·ç¡®è®¤"
-"-110207",,"Assembly working position Top Camera_Response timeout-Please confirm",,,,"è£…é…å·¥ä½œä½ é¡¶éƒ¨ç›¸æœº_å“åº”è¶…æ—¶è¯·ç¡®è®¤"
-"-110208",,"Assembly working position Bottom Camera_Response timeout-Please confirm",,,,"è£…é…å·¥ä½œä½ åº•éƒ¨ç›¸æœº_å“åº”è¶…æ—¶è¯·ç¡®è®¤"
-"-110209",,"Marking platform Camera_Response timeout-Please confirm",,,,"æ‰“æ ‡å¹³å° ç›¸æœº_å“åº”è¶…æ—¶è¯·ç¡®è®¤"
-"-110210",,"Printer_Response timeout-Please confirm",,,,"æ‰“æ ‡æœº_å“åº”è¶…æ—¶è¯·ç¡®è®¤"
-"-110211",,"Marking platform MES_Response timeout-Please confirm",,,,"æ‰“æ ‡å¹³å° MES_å“åº”è¶…æ—¶è¯·ç¡®è®¤"
-"-110212",,"Electronic scale_Response timeout-Please confirm",,,,"ç”µå­ç§¤_å“åº”è¶…æ—¶è¯·ç¡®è®¤"
-"-110302",,"Dispensing cache station MES_Feedback abnormal-Please confirm",,,,"ç‚¹èƒ¶ç¼“å­˜å·¥ä½MES_åé¦ˆä¿¡å·çŠ¶æ€å¼‚å¸¸-è¯·ç¡®è®¤"
-"-110303",,"Dispensing working position MES_Feedback abnormal-Please confirm",,,,"ç‚¹èƒ¶å·¥ä½œä½ MES_åé¦ˆä¿¡å·çŠ¶æ€å¼‚å¸¸è¯·ç¡®è®¤"
-"-110304",,"Dispensing working position Camera_Feedback abnormal-Please confirm",,,,"ç‚¹èƒ¶å·¥ä½œä½ ç›¸æœº_åé¦ˆä¿¡å·çŠ¶æ€å¼‚å¸¸è¯·ç¡®è®¤"
-"-110305",,"Dispensing working position 3D_Feedback abnormal-Please confirm",,,,"ç‚¹èƒ¶å·¥ä½œä½ çº¿æ‰«_åé¦ˆä¿¡å·çŠ¶æ€å¼‚å¸¸è¯·ç¡®è®¤"
-"-110306",,"Assembly working position MES_Feedback abnormal-Please confirm",,,,"è£…é…å·¥ä½œä½ MES_åé¦ˆä¿¡å·çŠ¶æ€å¼‚å¸¸è¯·ç¡®è®¤"
-"-110307",,"Assembly working position Top Camera_Feedback abnormal-Please confirm",,,,"è£…é…å·¥ä½œä½ é¡¶éƒ¨ç›¸æœº_åé¦ˆä¿¡å·çŠ¶æ€å¼‚å¸¸è¯·ç¡®è®¤"
-"-110308",,"Assembly working position Bottom Camera_Feedback abnormal-Please confirm",,,,"è£…é…å·¥ä½œä½ åº•éƒ¨ç›¸æœº_åé¦ˆä¿¡å·çŠ¶æ€å¼‚å¸¸è¯·ç¡®è®¤"
-"-110309",,"Marking platform Camera_Feedback abnormal-Please confirm",,,,"æ‰“æ ‡å¹³å° ç›¸æœº_åé¦ˆä¿¡å·çŠ¶æ€å¼‚å¸¸è¯·ç¡®è®¤"
-"-110310",,"Printer_Feedback abnormal-Please confirm",,,,"æ‰“æ ‡æœº_åé¦ˆä¿¡å·çŠ¶æ€å¼‚å¸¸-è¯·ç¡®è®¤"
-"-110312",,"Electronic scale_Feedback abnormal-Please confirm",,,,"ç”µå­ç§¤_åé¦ˆä¿¡å·çŠ¶æ€å¼‚å¸¸è¯·ç¡®è®¤"
-"-110401",,"Dispensing working position Line sweep the glue track_Result NG-Please confirm",,,,"ç‚¹èƒ¶å·¥ä½œä½ çº¿æ‰«èƒ¶æ°´è½¨è¿¹_ç»“æœNGè¯·ç¡®è®¤"
-"-110407",,"ROBOT Camera_Result NG-Please confirm",,,,"ROBOT ç›¸æœºæ‹ç…§_ç»“æœNGè¯·ç¡®è®¤"
-"-110408",,"Marking platform cylinder_Abnormal sensor-Please confirm",,,,"æ‰“æ ‡å¹³å°å¤¹å…·_ä¼ æ„Ÿå™¨æ£€æµ‹å¼‚å¸¸-è¯·ç¡®è®¤"
-"-110409",,"Outer box cache area_Abnormal sensor-Please confirm",,,,"å¤–æ¡†æš‚å­˜åŒº_ä¼ æ„Ÿå™¨æ£€æµ‹å¼‚å¸¸-è¯·ç¡®è®¤"
-"-110410",,"Dispensing NG platform_Abnormal sensor-Please confirm",,,,"ç‚¹èƒ¶NGå¹³å°_ä¼ æ„Ÿå™¨æ£€æµ‹å¼‚å¸¸-è¯·ç¡®è®¤"
-"-110411",,"Left transplanting platform_Abnormal sensor-Please confirm",,,,"å·¦ä¾§ç§»æ ½å¹³å°_ä¼ æ„Ÿå™¨æ£€æµ‹å¼‚å¸¸-è¯·ç¡®è®¤"
-"-110412",,"Right transplanting platform_Abnormal sensor-Please confirm",,,,"å³ä¾§ç§»æ ½å¹³å°_ä¼ æ„Ÿå™¨æ£€æµ‹å¼‚å¸¸-è¯·ç¡®è®¤"
-"-110413",,"Jaws of the outer frame_Abnormal sensor-Please confirm",,,,"è£…é…å–å¤–å£³å¤¹çˆª_ä¼ æ„Ÿå™¨æ£€æµ‹å¼‚å¸¸-è¯·ç¡®è®¤"
-"-110414",,"Clamping jaws of the base plate_Abnormal sensor-Please confirm",,,,"è£…é…å–åŸºæ¿å¤¹çˆª_ä¼ æ„Ÿå™¨æ£€æµ‹å¼‚å¸¸-è¯·ç¡®è®¤"
-"-110501",,"ROBOT System failure",,,,"ROBOTç³»ç»Ÿæ•…éšœ"
-"-110502",,"ROBOT Camping jaw1 Manually confirm the availability of materials",,,,"ROBOT å¤¹çˆª1 éœ€äººå·¥ç¡®è®¤æœ‰æ— ç‰©æ–™"
-"-110503",,"ROBOT Camping jaw2 Manually confirm the availability of materials",,,,"ROBOT å¤¹çˆª2 éœ€äººå·¥ç¡®è®¤æœ‰æ— ç‰©æ–™"
-"-110504",,"The dispensing machine is faulty-Please confirm",,,,"ç‚¹èƒ¶æœºæ•…éšœè¯·ç¡®è®¤"
-"-110507",,"Calibration error of dispensing needle-Please confirm",,,,"ç‚¹èƒ¶é’ˆå¤´æ ¡å‡†è¶…å·®-è¯·ç¡®è®¤"
-"-110508",,"DWP MES The pallet information is Do not do -Please confirm",,,,"ç‚¹èƒ¶å·¥ä½œä½ MESæ‰˜ç›˜ä¿¡æ¯ä¸º ä¸å¯åš -è¯·ç¡®è®¤"
-"-110509",,"DWP Placode1 MES The information is inconsistent with the sensor-Please check the sensor",,,,"ç‚¹èƒ¶å·¥ä½œä½ åŸºæ¿1 MESçŠ¶æ€ä¿¡æ¯ä¸ä¼ æ„Ÿå™¨æ£€æµ‹ä¸ä¸€è‡´-è¯·æ£€æŸ¥ä¼ æ„Ÿå™¨"
-"-110510",,"DWP Placode2 MES The information is inconsistent with the sensor-Please check the sensor",,,,"ç‚¹èƒ¶å·¥ä½œä½ åŸºæ¿2 MESçŠ¶æ€ä¿¡æ¯ä¸ä¼ æ„Ÿå™¨æ£€æµ‹ä¸ä¸€è‡´-è¯·æ£€æŸ¥ä¼ æ„Ÿå™¨"
-"-110511",,"DWP Placode3 MES The information is inconsistent with the sensor-Please check the sensor",,,,"ç‚¹èƒ¶å·¥ä½œä½ åŸºæ¿3 MESçŠ¶æ€ä¿¡æ¯ä¸ä¼ æ„Ÿå™¨æ£€æµ‹ä¸ä¸€è‡´-è¯·æ£€æŸ¥ä¼ æ„Ÿå™¨"
-"-110512",,"DCWB Placode1 Abnormal sensor-Please check the sensor",,,,"ç‚¹èƒ¶ç¼“å­˜å·¥ä½œä½ åŸºæ¿1æ£€æµ‹ä¼ æ„Ÿå™¨å¼‚å¸¸-è¯·æ£€æŸ¥ä¼ æ„Ÿå™¨"
-"-110513",,"DCWB Placode2 Abnormal sensor-Please check the sensor",,,,"ç‚¹èƒ¶ç¼“å­˜å·¥ä½œä½ åŸºæ¿2æ£€æµ‹ä¼ æ„Ÿå™¨å¼‚å¸¸-è¯·æ£€æŸ¥ä¼ æ„Ÿå™¨"
-"-110514",,"DCWB Placode3 Abnormal sensor-Please check the sensor",,,,"ç‚¹èƒ¶ç¼“å­˜å·¥ä½œä½ åŸºæ¿3æ£€æµ‹ä¼ æ„Ÿå™¨å¼‚å¸¸-è¯·æ£€æŸ¥ä¼ æ„Ÿå™¨"
-"-110515",,"AWP MES The pallet information is Do not do -Please confirm",,,,"è£…é…å·¥ä½œä½ MESæ‰˜ç›˜ä¿¡æ¯ä¸º ä¸å¯åš -è¯·ç¡®è®¤"
-"-110600",,"AWP Placode1 MES The information is inconsistent with the sensor-Please check the sensor",,,,"è£…é…å·¥ä½œä½ åŸºæ¿1 MESçŠ¶æ€ä¿¡æ¯ä¸ä¼ æ„Ÿå™¨æ£€æµ‹ä¸ä¸€è‡´-è¯·æ£€æŸ¥ä¼ æ„Ÿå™¨"
-"-110601",,"AWP Placode2 MES The information is inconsistent with the sensor-Please check the sensor",,,,"è£…é…å·¥ä½œä½ åŸºæ¿2 MESçŠ¶æ€ä¿¡æ¯ä¸ä¼ æ„Ÿå™¨æ£€æµ‹ä¸ä¸€è‡´-è¯·æ£€æŸ¥ä¼ æ„Ÿå™¨"
-"-110602",,"AWP Placode3 MES The information is inconsistent with the sensor-Please check the sensor",,,,"è£…é…å·¥ä½œä½ åŸºæ¿3 MESçŠ¶æ€ä¿¡æ¯ä¸ä¼ æ„Ÿå™¨æ£€æµ‹ä¸ä¸€è‡´-è¯·æ£€æŸ¥ä¼ æ„Ÿå™¨"
-"-110606",,"Tray vacuum suction anomaly-Please check the sensor",,,,"Trayç›˜å¸æ°”æ£€æµ‹å¼‚å¸¸è¯·æ£€æŸ¥"
-"-110607",,"Tray NOK products exist-Please take away",,,,"Trayç›˜å†…å­˜åœ¨NOKäº§å“è¯·å–èµ°"
-"-110608",,"Tray Go up to the lift platform timeout-Please check B606&B607",,,,"Trayç›˜ä¸Šæ–™åˆ°è¾¾å‡é™å¹³å°è¶…æ—¶-è¯·æ£€æŸ¥B606&B607"
-"-110609",,"Tray Feeding servo reaches height limit position-Please check B601",,,,"Trayç›˜ä¸Šæ–™ä¼ºæœåˆ°è¾¾é™é«˜ä½ç½®-è¯·æ£€æŸ¥B601"
-"-110610",,"Tray Feeding detected Tray being lifted-Please confirm",,,,"Trayç›˜ä¸Šæ–™æ£€æµ‹åˆ°Trayç›˜è¢«å¸¦èµ·-è¯·ç¡®è®¤"
-"-110611",,"Serial port server port 2 is disconnected",,,,"ä¸²å£æœåŠ¡å™¨ç«¯å£2è¿æ¥ä¸­æ–­"
-"-110612",,"There is no vehicle number matching the preloaded pallet on the transplanting platform",,,,"ç§»æ ½å¹³å°ä¸Šæ²¡æœ‰ä¸é¢„è£…é…æ‰˜ç›˜ç›¸åŒ¹é…çš„è½½å…·å·"
-"-110613",,"Jaws of the outer frame The product information is inconsistent with the Placode",,,,"è£…é…æ¨¡ç»„å–å¤–æ¡†å¤¹çˆªäº§å“ä¿¡æ¯ä¸åŸºæ¿ä¿¡æ¯ä¸åŒ¹é…(æœ¬åœ°)"
-"-110614",,"DCWB MES The pallet information is Do not do -Please confirm",,,,"ç‚¹èƒ¶ç¼“å­˜å·¥ä½œä½ MESæ‰˜ç›˜ä¿¡æ¯ä¸º ä¸å¯åš -è¯·ç¡®è®¤"
-"-110615",,"Jaws of the outer frame The product information is inconsistent with the Placode",,,,"è£…é…æ¨¡ç»„å–å¤–æ¡†å¤¹çˆªäº§å“çŠ¶æ€ä¸åŸºæ¿çŠ¶æ€ä¸ä¸€è‡´"
-"-110700",,"Clamping jaws of the base plate The product information is inconsistent with the Placode",,,,"è£…é…æ¨¡ç»„å–åŸºæ¿å¤¹çˆªäº§å“çŠ¶æ€ä¸åŸºæ¿çŠ¶æ€ä¸ä¸€è‡´"
-"-110701",,"Both jaws of the assembly module are in the state-Please confirm",,,,"è£…é…æ¨¡ç»„ä¸¤ä¸ªå¤¹çˆªå‡å­˜åœ¨çŠ¶æ€-è¯·ç¡®è®¤"
-"-110702",,"AWP Jaws of the outer frame SN inconsistent with the scan results-Please confirm",,,,"è£…é…å·¥ä½œä½ å¤–æ¡† å¤¹çˆªæ¡ç ä¸æ‰«ç ç»“æœä¸ä¸€è‡´-è¯·ç¡®è®¤"
-"-110703",,"Left transplanting platform Placode it is not all taken-Please check",,,,"å·¦ä¾§ç§»æ ½å¹³å°ä¸ŠåŸºæ¿æœªè¢«å…¨éƒ¨å–èµ°ä¿¡æ¯é”™è¯¯-è¯·æ£€æŸ¥"
-"-110704",,"Right transplanting platform Placode it is not all taken-Please check",,,,"å³ä¾§ç§»æ ½å¹³å°ä¸ŠåŸºæ¿æœªè¢«å…¨éƒ¨å–èµ°ä¿¡æ¯é”™è¯¯-è¯·æ£€æŸ¥"
-"-110705",,"AWP Pallet SN inconsistent with queue SN-Please check",,,,"è£…é…å·¥ä½å®é™…æ‰˜ç›˜å·ä¸é˜Ÿåˆ—æ‰˜ç›˜å·ä¸ä¸€è‡´-è¯·æ£€æŸ¥"
-"-110707",,"3D Result judgment timeout-Please confirm",,,,"æµ‹èƒ¶çº¿æ‰«ç»“æœåˆ¤æ–­è¶…æ—¶è¯·ç¡®è®¤"
-"-110710",,"Marking platform Camera locate NG-Please confirm",,,,"æ‰“æ ‡é¡¶éƒ¨ç›¸æœºå®šä½NGè¯·ç¡®è®¤"
-"-110711",,"Marking platform Camera Grade NG-Please confirm",,,,"æ‰“æ ‡é¡¶éƒ¨ç›¸æœºç­‰çº§NGè¯·ç¡®è®¤"
-"-110712",,"Bottom Camera locate NG-Please confirm",,,,"è£…é…åº•éƒ¨ç›¸æœºå¤–æ¡†å®šä½NGè¯·ç¡®è®¤"
-"-110713",,"Top Camera locate NG-Please confirm",,,,"è£…é…é¡¶éƒ¨ç›¸æœºåŸºæ¿å®šä½NGè¯·ç¡®è®¤"
-"-210001",,"Low pressure fault-Please check",,,,"æ°”å‹ä½æ•…éšœ-è¯·æ£€æŸ¥"
-"-210003",,"Recipe data not written-Please check",,,,"é…æ–¹æ•°æ®æœªå†™å…¥-è¯·æ£€æŸ¥"
-"-210005",,"Grating abnormal-Please check",,,,"å…‰æ …å¼‚å¸¸-è¯·æ£€æŸ¥"
-"-210006",,"The emergency stop circuit is faulty-Please check",,,,"æ€¥åœå›è·¯æ•…éšœ-è¯·æ£€æŸ¥"
-"-210007",,"The safety door loop is faulty-Please check",,,,"å®‰å…¨é—¨å›è·¯æ•…éšœ-è¯·æ£€æŸ¥"
-"-210101",,"Bin1_Inconsistent material and account alarm-Please confirm",,,,"åŠ çƒ­ä»“1_æ–™è´¦ä¸ä¸€è‡´æŠ¥è­¦-è¯·ç¡®è®¤"
-"-210102",,"Bin2_Inconsistent material and account alarm-Please confirm",,,,"åŠ çƒ­ä»“2_æ–™è´¦ä¸ä¸€è‡´æŠ¥è­¦-è¯·ç¡®è®¤"
-"-210103",,"Bin3_Inconsistent material and account alarm-Please confirm",,,,"åŠ çƒ­ä»“3_æ–™è´¦ä¸ä¸€è‡´æŠ¥è­¦-è¯·ç¡®è®¤"
-"-210104",,"Bin4_Inconsistent material and account alarm-Please confirm",,,,"åŠ çƒ­ä»“4_æ–™è´¦ä¸ä¸€è‡´æŠ¥è­¦-è¯·ç¡®è®¤"
-"-210105",,"Bin5_Inconsistent material and account alarm-Please confirm",,,,"åŠ çƒ­ä»“5_æ–™è´¦ä¸ä¸€è‡´æŠ¥è­¦-è¯·ç¡®è®¤"
-"-210106",,"Bin6_Inconsistent material and account alarm-Please confirm",,,,"åŠ çƒ­ä»“6_æ–™è´¦ä¸ä¸€è‡´æŠ¥è­¦-è¯·ç¡®è®¤"
-"-210107",,"Bin7_Inconsistent material and account alarm-Please confirm",,,,"åŠ çƒ­ä»“7_æ–™è´¦ä¸ä¸€è‡´æŠ¥è­¦-è¯·ç¡®è®¤"
-"-210108",,"Transplanting platform _Inconsistent material and account alarm-Please confirm",,,,"ç§»æ ½å¹³å°_æ–™è´¦ä¸ä¸€è‡´æŠ¥è­¦-è¯·ç¡®è®¤"
-"-210200",,"B841_Mainstream line scanner_Response timeout-Please confirm",,,,"B841_ä¸»æµçº¿æ‰«ç æª_å“åº”è¶…æ—¶-è¯·ç¡®è®¤"
-"-210201",,"A871_Temperature controller_Response timeout-Please confirm",,,,"A871_æ¸©æ§å™¨_å“åº”è¶…æ—¶-è¯·ç¡®è®¤"
-"-210202",,"A872_Temperature controller_Response timeout-Please confirm",,,,"A872_æ¸©æ§å™¨_å“åº”è¶…æ—¶-è¯·ç¡®è®¤"
-"-210203",,"A873_Temperature controller_Response timeout-Please confirm",,,,"A873_æ¸©æ§å™¨_å“åº”è¶…æ—¶-è¯·ç¡®è®¤"
-"-210204",,"A874_Temperature controller_Response timeout-Please confirm",,,,"A874_æ¸©æ§å™¨_å“åº”è¶…æ—¶-è¯·ç¡®è®¤"
-"-210205",,"A875_Temperature controller_Response timeout-Please confirm",,,,"A875_æ¸©æ§å™¨_å“åº”è¶…æ—¶-è¯·ç¡®è®¤"
-"-210206",,"A876_Temperature controller_Response timeout-Please confirm",,,,"A876_æ¸©æ§å™¨_å“åº”è¶…æ—¶-è¯·ç¡®è®¤"
-"-210207",,"A877_Temperature controller_Response timeout-Please confirm",,,,"A877_æ¸©æ§å™¨_å“åº”è¶…æ—¶-è¯·ç¡®è®¤"
-"-210208",,"Stock bin1 MES_Response timeout-Please confirm",,,,"æ–™ä»“1 MES_å“åº”è¶…æ—¶-è¯·ç¡®è®¤"
-"-210209",,"Stock bin2 MES_Response timeout-Please confirm",,,,"æ–™ä»“2 MES_å“åº”è¶…æ—¶-è¯·ç¡®è®¤"
-"-210210",,"Stock bin3 MES_Response timeout-Please confirm",,,,"æ–™ä»“3 MES_å“åº”è¶…æ—¶-è¯·ç¡®è®¤"
-"-210211",,"Stock bin4 MES_Response timeout-Please confirm",,,,"æ–™ä»“4 MES_å“åº”è¶…æ—¶-è¯·ç¡®è®¤"
-"-210212",,"Stock bin5 MES_Response timeout-Please confirm",,,,"æ–™ä»“5 MES_å“åº”è¶…æ—¶-è¯·ç¡®è®¤"
-"-210213",,"Stock bin6 MES_Response timeout-Please confirm",,,,"æ–™ä»“6 MES_å“åº”è¶…æ—¶-è¯·ç¡®è®¤"
-"-210214",,"Stock bin7 MES_Response timeout-Please confirm",,,,"æ–™ä»“7 MES_å“åº”è¶…æ—¶-è¯·ç¡®è®¤"
-"-210215",,"Transplanting platform _MES_Response timeout-Please confirm",,,,"ç§»æ ½å¹³å°MES_å“åº”è¶…æ—¶-è¯·ç¡®è®¤"
-"-210300",,"Cooling station_MES_Response timeout-Please confirm",,,,"å†·å´å·¥ä½MES_åé¦ˆä¿¡å·çŠ¶æ€å¼‚å¸¸-è¯·ç¡®è®¤"
-"-210308",,"Stock bin1 MES_Abnormal feedback status-Please confirm",,,,"æ–™ä»“1 MES_åé¦ˆä¿¡å·çŠ¶æ€å¼‚å¸¸-è¯·ç¡®è®¤"
-"-210309",,"Stock bin2 MES_Abnormal feedback status-Please confirm",,,,"æ–™ä»“2 MES_åé¦ˆä¿¡å·çŠ¶æ€å¼‚å¸¸-è¯·ç¡®è®¤"
-"-210310",,"Stock bin3 MES_Abnormal feedback status-Please confirm",,,,"æ–™ä»“3 MES_åé¦ˆä¿¡å·çŠ¶æ€å¼‚å¸¸-è¯·ç¡®è®¤"
-"-210311",,"Stock bin4 MES_Abnormal feedback status-Please confirm",,,,"æ–™ä»“4 MES_åé¦ˆä¿¡å·çŠ¶æ€å¼‚å¸¸-è¯·ç¡®è®¤"
-"-210312",,"Stock bin5 MES_Abnormal feedback status-Please confirm",,,,"æ–™ä»“5 MES_åé¦ˆä¿¡å·çŠ¶æ€å¼‚å¸¸-è¯·ç¡®è®¤"
-"-210313",,"Stock bin6 MES_Abnormal feedback status-Please confirm",,,,"æ–™ä»“6 MES_åé¦ˆä¿¡å·çŠ¶æ€å¼‚å¸¸-è¯·ç¡®è®¤"
-"-210314",,"Stock bin7 MES_Abnormal feedback status-Please confirm",,,,"æ–™ä»“7 MES_åé¦ˆä¿¡å·çŠ¶æ€å¼‚å¸¸-è¯·ç¡®è®¤"
-"-210315",,"Transplanting platform MES_Abnormal feedback status-Please confirm",,,,"ç§»æ ½å¹³å°MES_åé¦ˆä¿¡å·çŠ¶æ€å¼‚å¸¸-è¯·ç¡®è®¤"
-"-210509",,"Transplanting platformMES The pallet information is Do not do -Please confirm",,,,"ç§»æ ½å¹³å° MESæ‰˜ç›˜ä¿¡æ¯ä¸º ä¸å¯åš -è¯·ç¡®è®¤"
-"-210510",,"Bin Feed timeout alarm-Please confirm",,,,"åŠ çƒ­ä»“ è¿›æ–™è¶…æ—¶æŠ¥è­¦-è¯·ç¡®è®¤"
-"-210511",,"Bin Discharge time out alarm-Please confirm",,,,"åŠ çƒ­ä»“ å‡ºæ–™è¶…æ—¶æŠ¥è­¦-è¯·ç¡®è®¤"
-"-210513",,"Cooling station_MES_Response timeout-Please confirm",,,,"å†·å´å·¥ä½MES_å“åº”è¶…æ—¶-è¯·ç¡®è®¤"
-"-210601",,"Stock bin1 Abnormal thermocouple of thermostat-Please check",,,,"æ–™ä»“1 æ¸©æ§å™¨çƒ­ç”µå¶å¼‚å¸¸-è¯·æ£€æŸ¥"
-"-210602",,"Stock bin2 Abnormal thermocouple of thermostat-Please check",,,,"æ–™ä»“2 æ¸©æ§å™¨çƒ­ç”µå¶å¼‚å¸¸-è¯·æ£€æŸ¥"
-"-210603",,"Stock bin3 Abnormal thermocouple of thermostat-Please check",,,,"æ–™ä»“3 æ¸©æ§å™¨çƒ­ç”µå¶å¼‚å¸¸-è¯·æ£€æŸ¥"
-"-210604",,"Stock bin4 Abnormal thermocouple of thermostat-Please check",,,,"æ–™ä»“4 æ¸©æ§å™¨çƒ­ç”µå¶å¼‚å¸¸-è¯·æ£€æŸ¥"
-"-210605",,"Stock bin5 Abnormal thermocouple of thermostat-Please check",,,,"æ–™ä»“5 æ¸©æ§å™¨çƒ­ç”µå¶å¼‚å¸¸-è¯·æ£€æŸ¥"
-"-210606",,"Stock bin6 Abnormal thermocouple of thermostat-Please check",,,,"æ–™ä»“6 æ¸©æ§å™¨çƒ­ç”µå¶å¼‚å¸¸-è¯·æ£€æŸ¥"
-"-210607",,"Stock bin7 Abnormal thermocouple of thermostat-Please check",,,,"æ–™ä»“7 æ¸©æ§å™¨çƒ­ç”µå¶å¼‚å¸¸-è¯·æ£€æŸ¥"
-"-210700",,"Scanner results inconsistent with the upstream pallet SN-Please confirm",,,,"æ‰«ç æªè§£ç ç»“æœä¸ä¸Šæ¸¸æ¥æ–™æ‰˜ç›˜ç ä¸ä¸€è‡´-è¯·ç¡®è®¤"
-"-210613",,"Stock bin6 The heating time exceeds the setting time-Please confirm",,,,"æ–™ä»“6 åŠ çƒ­æ—¶é—´è¶…è¿‡è®¾ç½®æ—¶é—´è¯·ç¡®è®¤"
-"-210614",,"Stock bin7 The heating time exceeds the setting time-Please confirm",,,,"æ–™ä»“7 åŠ çƒ­æ—¶é—´è¶…è¿‡è®¾ç½®æ—¶é—´è¯·ç¡®è®¤"
+alarm_id,alarm_name,alarm_text,alarm_code,ce_on,ce_off,description
+-66,,TCP connection closed,,,,¶ÔµÈ»úÆ÷ÒÑ¹Ø±ÕÍøÂçÁ¬½Ó
+-500,,The Loop folder has non-CSV files,,,,LoopÎÄ¼ş¼ĞÓĞ·ÇCSVÎÄ¼ş
+-1050,,Failed to open the COM,,,,COM¿Ú´ò¿ªÊ§°Ü
+-1060,,Robot TCP connection failure,,,,RobotÁ¬½ÓÊ§°Ü
+-1063,,TCP connection failure,,,,TCPÁ¬½ÓÊ§°Ü
+-1064,,PLC connection failure,,,,PLCÁ¬½ÓÊ§°Ü
+-1065,,Carrier scan failed,,,,ÔØ¾ßÉ¨ÂëÊ§°Ü
+-1067,,Carrier scan times out,,,,ÔØ¾ßÉ¨Âë³¬Ê±
+-1069,,The length of TCP write characters is invalid,,,,TCPĞ´Èë×Ö·û³¤¶ÈÊ§Ğ§
+-1070,,Fail to open CCD,,,,XXÏà»ú´ò¿ªÊ§°Ü
+-1071,,CCD Alarm,,,,XXÏà»ú±¨¾¯
+-1100,,Undefined Section,,,,Î´¶¨ÒåµÄSection
+-2000,,Warning Error,,,,¾¯¸æÌáÊ¾
+-2010,,Undefined Error,,,,Î´Öª´íÎó
+-2060,,File type Error,,,,ÎÄ¼şÀàĞÍ´íÎó
+-3001,,The corresponding queue was not retrieved,,,,Î´¼ìË÷µ½ÏàÓ¦µÄ¶ÓÁĞ
+-3002,,No Section was retrieved,,,,Î´¼ìË÷µ½Section
+-3500,,Calibration_Failed to match Qr code area,,,,±ê¶¨Æ¥Åä¶şÎ¬ÂëÇøÓòÊ§°Ü
+-3501,,Calibration_Squares not found,,,,±ê¶¨Î´ÕÒµ½Õı·½ĞÎ
+-3502,,Quadrant out of camera resolution range or QR code reading failed,,,,ÏóÏŞ³¬¹ıÏà»ú·Ö±æÂÊ·¶Î§»ò¶şÎ¬Âë¶ÁÈ¡Ê§°Ü
+-4001,,The main panel control reference was not found,,,,Î´ÕÒµ½Ö÷Ãæ°å¿Ø¼şÒıÓÃ
+-4101,,Login Sysdata is not exist,,,,µÇÂ¼ÎÄ¼ş²»´æÔÚ
+-4300,,Bin not in safe position,,,,ÁÏ²Ö²»ÔÚ°²È«Î»ÖÃ
+-5100,,Photo failure,,,,ÅÄÕÕÊ§°Ü!
+-5101,,CCD Error,,,,CCD±¨´í
+-6000,,GTN_Open card failure,,,,GTN¿ª¿¨Ê§°Ü
+-6001,,Failed to enable the Axis,,,,ÓĞÖáÊ¹ÄÜÊ§°Ü
+-6002,,Axis Num Error,,,,ÖáºÅ´íÎó
+-6003,,The axis is not defined or has an incorrect name,,,,ÖáÎ´¶¨Òå»òÃû³Æ´íÎó
+-6004,,The point coordinate system does not exist,,,,µãÎ»×ø±êÏµ²»´æÔÚ
+-6005,,Axis ServoON Error,,,,Axis  xx  ServoONError!
+-6010,,Read Axis status Error,,,,Öá×´Ì¬¶ÁÈ¡±¨´í
+-6011,,Get Axis position Error,,,,ÖáÎ»ÖÃ¶ÁÈ¡±¨´í
+-6100,,The point is not defined or has an incorrect name,,,,µãÎ»Î´¶¨Òå»òÃû³Æ´íÎó
+-6103,,Offset points  are not defined or have incorrect names,,,,²¹³¥µãÎ»Î´¶¨Òå»òÃû³Æ´íÎó
+-6201,,Axial motion timeout,,,,ÖáÔË¶¯³¬Ê±
+-6202,,Axis Do not Move Done,,,,Axis xx  Do not Move Done!
+-6203,,Axis Move Done Error,,,,Axis xx  Move Done Error!
+-6204,,The z-axis is not in a safe position,,,,ZÖá²»ÔÚ°²È«Î»ÖÃ
+-7000,,DIO writing error,,,,DIO±àĞ´´íÎó
+-7001,,IO Single Check Timeout,,,,DI¼ì²â³¬Ê±
+-7002,,IO Card write or read error,,,,IO¿¨¶ÁĞ´±¨´í
+-7100,,The EXT_DI name is undefined or incorrect,,,,EXT_DIÃû³ÆÎ´¶¨Òå»ò´íÎó
+-7103,,Encoder detection timeout,,,,±àÂëÆ÷¼ì²â³¬Ê±
+-7801,,The ErrorLog database was not found,,,,ErrorLogÊı¾İ¿âÎ´ÕÒµ½
+-8000,,Stop abnormal,,,,¼±Í£Òì³£
+-8001,,Abnormal safety door,,,,°²È«ÃÅÒì³£
+-8002,,Grating abnormal,,,,¹âÄ»Òì³£
+-8003,,Air Source pressure is insufficient,,,,ÆøÔ´ÆøÑ¹²»×ã
+-8004,,Abnormal Ion fan,,,,Àë×Ó·çÉÈÒì³££¡
+-8005,,The Rubber has reached its service life.Please replace it!,,,,½ºµæ´ïµ½Ê¹ÓÃÊÙÃü..Çë¼°Ê±¸ü»»£¡
+-9000,,The interaction signal was not found locally,,,,±¾µØÎ´ÕÒµ½¸Ã½»»¥ĞÅºÅ
+-9001,,Read PLC Single Timeout,,,,PLC xx ¼ì²â³¬Ê±
+-9005,,Error writing PLC address,,,,Ğ´ÈëPLCµØÖ·ĞÅÏ¢´íÎó
+-9010,,Error reading PLC address,,,,¶ÁÈ¡PLCµØÖ·ĞÅÏ¢´íÎó
+60002,,GP-No Boolean variable found,,,,GP-Î´ÕÒµ½²¼¶û±äÁ¿
+60003,,GP- Error reading Boolean variable value,,,,GP-¶ÁÈ¡²¼¶û±äÁ¿Öµ³ö´í
+-110001,,Low pressure fault-Please check,,,,ÆøÑ¹µÍ¹ÊÕÏ-Çë¼ì²é
+-110003,,Recipe data not written-Please check,,,,Åä·½Êı¾İÎ´Ğ´ÈëÇë¼ì²é
+-110005,,Grating abnormal-Please check,,,,¹âÕ¤Òì³£Çë¼ì²é
+-110006,,The emergency stop circuit is faulty-Please check,,,,¼±Í£»ØÂ·¹ÊÕÏÇë¼ì²é
+-110007,,The safety door loop is faulty-Please check,,,,°²È«ÃÅ»ØÂ·¹ÊÕÏÇë¼ì²é
+-110100,,ROBOT claw 1_Inconsistent material-Please confirm,,,,ROBOT¼Ğ×¦1_ÁÏÕË²»Ò»ÖÂ±¨¾¯-ÇëÈ·ÈÏ
+-110101,,ROBOT claw 2_Inconsistent material-Please confirm,,,,ROBOT¼Ğ×¦2_ÁÏÕË²»Ò»ÖÂ±¨¾¯-ÇëÈ·ÈÏ
+-110102,,Marking platform_Inconsistent material-Please confirm,,,,´ò±êÆ½Ì¨_ÁÏÕË²»Ò»ÖÂ±¨¾¯-ÇëÈ·ÈÏ
+-110103,,Assemble the jaws of the outer frame_Inconsistent material-Please confirm,,,,×°ÅäÈ¡Íâ¿ò¼Ğ×¦_ÁÏÕË²»Ò»ÖÂ±¨¾¯-ÇëÈ·ÈÏ
+-110104,,Assemble the clamping jaws of the base plate_Inconsistent material-Please confirm,,,,×°ÅäÈ¡»ù°å¼Ğ×¦_ÁÏÕË²»Ò»ÖÂ±¨¾¯-ÇëÈ·ÈÏ
+-110105,,Left transplanting platform1_Inconsistent material-Please confirm,,,,×ó²àÒÆÔÔÆ½Ì¨Î»ÖÃ1_ÁÏÕË²»Ò»ÖÂ±¨¾¯-ÇëÈ·ÈÏ
+-110106,,Left transplanting platform2_Inconsistent material-Please confirm,,,,×ó²àÒÆÔÔÆ½Ì¨Î»ÖÃ2_ÁÏÕË²»Ò»ÖÂ±¨¾¯-ÇëÈ·ÈÏ
+-110107,,Left transplanting platform3_Inconsistent material-Please confirm,,,,×ó²àÒÆÔÔÆ½Ì¨Î»ÖÃ3_ÁÏÕË²»Ò»ÖÂ±¨¾¯-ÇëÈ·ÈÏ
+-110108,,Right transplanting platform1_Inconsistent material-Please confirm,,,,ÓÒ²àÒÆÔÔÆ½Ì¨Î»ÖÃ1_ÁÏÕË²»Ò»ÖÂ±¨¾¯-ÇëÈ·ÈÏ
+-110109,,Right transplanting platform2_Inconsistent material-Please confirm,,,,ÓÒ²àÒÆÔÔÆ½Ì¨Î»ÖÃ2_ÁÏÕË²»Ò»ÖÂ±¨¾¯-ÇëÈ·ÈÏ
+-110110,,Right transplanting platform3_Inconsistent material-Please confirm,,,,ÓÒ²àÒÆÔÔÆ½Ì¨Î»ÖÃ3_ÁÏÕË²»Ò»ÖÂ±¨¾¯-ÇëÈ·ÈÏ
+-110111,,Tray receiving platform_Inconsistent material-Please confirm,,,,TrayÅÌ½ÓÁÏÆ½Ì¨_ÁÏÕË²»Ò»ÖÂ±¨¾¯-ÇëÈ·ÈÏ
+-110200,,B841_Assembly platform shell scanner_Response timeout-Please confirm,,,,B841_×°ÅäÆ½Ì¨Íâ¿Ç É¨ÂëÇ¹_ÏìÓ¦³¬Ê±ÇëÈ·ÈÏ
+-110201,,B842_Dispensing cache bit scanner_Response timeout-Please confirm,,,,B842_µã½º»º´æÎ» É¨ÂëÇ¹_ÏìÓ¦³¬Ê±ÇëÈ·ÈÏ
+-110202,,B843_Assemble the cache bit scanner_Response timeout-Please confirm,,,,B843_×°Åä»º´æÎ» É¨ÂëÇ¹_ÏìÓ¦³¬Ê±ÇëÈ·ÈÏ
+-110203,,Dispensing working position MES_Response timeout-Please confirm,,,,µã½º¹¤×÷Î» MES_ÏìÓ¦³¬Ê±ÇëÈ·ÈÏ
+-110204,,The dispensing work bit camera_Response timeout-Please confirm,,,,µã½º¹¤×÷Î» Ïà»ú_ÏìÓ¦³¬Ê±ÇëÈ·ÈÏ
+-110205,,Dispensing working position 3D_Response timeout-Please confirm,,,,µã½º¹¤×÷Î» ÏßÉ¨_ÏìÓ¦³¬Ê±ÇëÈ·ÈÏ
+-110206,,Assemble the working position MES_Response timeout-Please confirm,,,,×°Åä¹¤×÷Î» MES_ÏìÓ¦³¬Ê±ÇëÈ·ÈÏ
+-110207,,Assembly working position Top Camera_Response timeout-Please confirm,,,,×°Åä¹¤×÷Î» ¶¥²¿Ïà»ú_ÏìÓ¦³¬Ê±ÇëÈ·ÈÏ
+-110208,,Assembly working position Bottom Camera_Response timeout-Please confirm,,,,×°Åä¹¤×÷Î» µ×²¿Ïà»ú_ÏìÓ¦³¬Ê±ÇëÈ·ÈÏ
+-110209,,Marking platform Camera_Response timeout-Please confirm,,,,´ò±êÆ½Ì¨ Ïà»ú_ÏìÓ¦³¬Ê±ÇëÈ·ÈÏ
+-110210,,Printer_Response timeout-Please confirm,,,,´ò±ê»ú_ÏìÓ¦³¬Ê±ÇëÈ·ÈÏ
+-110211,,Marking platform MES_Response timeout-Please confirm,,,,´ò±êÆ½Ì¨ MES_ÏìÓ¦³¬Ê±ÇëÈ·ÈÏ
+-110212,,Electronic scale_Response timeout-Please confirm,,,,µç×Ó³Ó_ÏìÓ¦³¬Ê±ÇëÈ·ÈÏ
+-110302,,Dispensing cache station MES_Feedback abnormal-Please confirm,,,,µã½º»º´æ¹¤Î»MES_·´À¡ĞÅºÅ×´Ì¬Òì³£-ÇëÈ·ÈÏ
+-110303,,Dispensing working position MES_Feedback abnormal-Please confirm,,,,µã½º¹¤×÷Î» MES_·´À¡ĞÅºÅ×´Ì¬Òì³£ÇëÈ·ÈÏ
+-110304,,Dispensing working position Camera_Feedback abnormal-Please confirm,,,,µã½º¹¤×÷Î» Ïà»ú_·´À¡ĞÅºÅ×´Ì¬Òì³£ÇëÈ·ÈÏ
+-110305,,Dispensing working position 3D_Feedback abnormal-Please confirm,,,,µã½º¹¤×÷Î» ÏßÉ¨_·´À¡ĞÅºÅ×´Ì¬Òì³£ÇëÈ·ÈÏ
+-110306,,Assembly working position MES_Feedback abnormal-Please confirm,,,,×°Åä¹¤×÷Î» MES_·´À¡ĞÅºÅ×´Ì¬Òì³£ÇëÈ·ÈÏ
+-110307,,Assembly working position Top Camera_Feedback abnormal-Please confirm,,,,×°Åä¹¤×÷Î» ¶¥²¿Ïà»ú_·´À¡ĞÅºÅ×´Ì¬Òì³£ÇëÈ·ÈÏ
+-110308,,Assembly working position Bottom Camera_Feedback abnormal-Please confirm,,,,×°Åä¹¤×÷Î» µ×²¿Ïà»ú_·´À¡ĞÅºÅ×´Ì¬Òì³£ÇëÈ·ÈÏ
+-110309,,Marking platform Camera_Feedback abnormal-Please confirm,,,,´ò±êÆ½Ì¨ Ïà»ú_·´À¡ĞÅºÅ×´Ì¬Òì³£ÇëÈ·ÈÏ
+-110310,,Printer_Feedback abnormal-Please confirm,,,,´ò±ê»ú_·´À¡ĞÅºÅ×´Ì¬Òì³£-ÇëÈ·ÈÏ
+-110312,,Electronic scale_Feedback abnormal-Please confirm,,,,µç×Ó³Ó_·´À¡ĞÅºÅ×´Ì¬Òì³£ÇëÈ·ÈÏ
+-110401,,Dispensing working position Line sweep the glue track_Result NG-Please confirm,,,,µã½º¹¤×÷Î» ÏßÉ¨½ºË®¹ì¼£_½á¹ûNGÇëÈ·ÈÏ
+-110407,,ROBOT Camera_Result NG-Please confirm,,,,ROBOT Ïà»úÅÄÕÕ_½á¹ûNGÇëÈ·ÈÏ
+-110408,,Marking platform cylinder_Abnormal sensor-Please confirm,,,,´ò±êÆ½Ì¨¼Ğ¾ß_´«¸ĞÆ÷¼ì²âÒì³£-ÇëÈ·ÈÏ
+-110409,,Outer box cache area_Abnormal sensor-Please confirm,,,,Íâ¿òÔİ´æÇø_´«¸ĞÆ÷¼ì²âÒì³£-ÇëÈ·ÈÏ
+-110410,,Dispensing NG platform_Abnormal sensor-Please confirm,,,,µã½ºNGÆ½Ì¨_´«¸ĞÆ÷¼ì²âÒì³£-ÇëÈ·ÈÏ
+-110411,,Left transplanting platform_Abnormal sensor-Please confirm,,,,×ó²àÒÆÔÔÆ½Ì¨_´«¸ĞÆ÷¼ì²âÒì³£-ÇëÈ·ÈÏ
+-110412,,Right transplanting platform_Abnormal sensor-Please confirm,,,,ÓÒ²àÒÆÔÔÆ½Ì¨_´«¸ĞÆ÷¼ì²âÒì³£-ÇëÈ·ÈÏ
+-110413,,Jaws of the outer frame_Abnormal sensor-Please confirm,,,,×°ÅäÈ¡Íâ¿Ç¼Ğ×¦_´«¸ĞÆ÷¼ì²âÒì³£-ÇëÈ·ÈÏ
+-110414,,Clamping jaws of the base plate_Abnormal sensor-Please confirm,,,,×°ÅäÈ¡»ù°å¼Ğ×¦_´«¸ĞÆ÷¼ì²âÒì³£-ÇëÈ·ÈÏ
+-110501,,ROBOT System failure,,,,ROBOTÏµÍ³¹ÊÕÏ
+-110502,,ROBOT Camping jaw1 Manually confirm the availability of materials,,,,ROBOT ¼Ğ×¦1 ĞèÈË¹¤È·ÈÏÓĞÎŞÎïÁÏ
+-110503,,ROBOT Camping jaw2 Manually confirm the availability of materials,,,,ROBOT ¼Ğ×¦2 ĞèÈË¹¤È·ÈÏÓĞÎŞÎïÁÏ
+-110504,,The dispensing machine is faulty-Please confirm,,,,µã½º»ú¹ÊÕÏÇëÈ·ÈÏ
+-110507,,Calibration error of dispensing needle-Please confirm,,,,µã½ºÕëÍ·Ğ£×¼³¬²î-ÇëÈ·ÈÏ
+-110508,,DWP MES The pallet information is Do not do -Please confirm,,,,µã½º¹¤×÷Î» MESÍĞÅÌĞÅÏ¢Îª ²»¿É×ö -ÇëÈ·ÈÏ
+-110509,,DWP Placode1 MES The information is inconsistent with the sensor-Please check the sensor,,,,µã½º¹¤×÷Î» »ù°å1 MES×´Ì¬ĞÅÏ¢Óë´«¸ĞÆ÷¼ì²â²»Ò»ÖÂ-Çë¼ì²é´«¸ĞÆ÷
+-110510,,DWP Placode2 MES The information is inconsistent with the sensor-Please check the sensor,,,,µã½º¹¤×÷Î» »ù°å2 MES×´Ì¬ĞÅÏ¢Óë´«¸ĞÆ÷¼ì²â²»Ò»ÖÂ-Çë¼ì²é´«¸ĞÆ÷
+-110511,,DWP Placode3 MES The information is inconsistent with the sensor-Please check the sensor,,,,µã½º¹¤×÷Î» »ù°å3 MES×´Ì¬ĞÅÏ¢Óë´«¸ĞÆ÷¼ì²â²»Ò»ÖÂ-Çë¼ì²é´«¸ĞÆ÷
+-110512,,DCWB Placode1 Abnormal sensor-Please check the sensor,,,,µã½º»º´æ¹¤×÷Î» »ù°å1¼ì²â´«¸ĞÆ÷Òì³£-Çë¼ì²é´«¸ĞÆ÷
+-110513,,DCWB Placode2 Abnormal sensor-Please check the sensor,,,,µã½º»º´æ¹¤×÷Î» »ù°å2¼ì²â´«¸ĞÆ÷Òì³£-Çë¼ì²é´«¸ĞÆ÷
+-110514,,DCWB Placode3 Abnormal sensor-Please check the sensor,,,,µã½º»º´æ¹¤×÷Î» »ù°å3¼ì²â´«¸ĞÆ÷Òì³£-Çë¼ì²é´«¸ĞÆ÷
+-110515,,AWP MES The pallet information is Do not do -Please confirm,,,,×°Åä¹¤×÷Î» MESÍĞÅÌĞÅÏ¢Îª ²»¿É×ö -ÇëÈ·ÈÏ
+-110600,,AWP Placode1 MES The information is inconsistent with the sensor-Please check the sensor,,,,×°Åä¹¤×÷Î» »ù°å1 MES×´Ì¬ĞÅÏ¢Óë´«¸ĞÆ÷¼ì²â²»Ò»ÖÂ-Çë¼ì²é´«¸ĞÆ÷
+-110601,,AWP Placode2 MES The information is inconsistent with the sensor-Please check the sensor,,,,×°Åä¹¤×÷Î» »ù°å2 MES×´Ì¬ĞÅÏ¢Óë´«¸ĞÆ÷¼ì²â²»Ò»ÖÂ-Çë¼ì²é´«¸ĞÆ÷
+-110602,,AWP Placode3 MES The information is inconsistent with the sensor-Please check the sensor,,,,×°Åä¹¤×÷Î» »ù°å3 MES×´Ì¬ĞÅÏ¢Óë´«¸ĞÆ÷¼ì²â²»Ò»ÖÂ-Çë¼ì²é´«¸ĞÆ÷
+-110606,,Tray vacuum suction anomaly-Please check the sensor,,,,TrayÅÌÎüÆø¼ì²âÒì³£Çë¼ì²é
+-110607,,Tray NOK products exist-Please take away,,,,TrayÅÌÄÚ´æÔÚNOK²úÆ·ÇëÈ¡×ß
+-110608,,Tray Go up to the lift platform timeout-Please check B606&B607,,,,TrayÅÌÉÏÁÏµ½´ïÉı½µÆ½Ì¨³¬Ê±-Çë¼ì²éB606&B607
+-110609,,Tray Feeding servo reaches height limit position-Please check B601,,,,TrayÅÌÉÏÁÏËÅ·şµ½´ïÏŞ¸ßÎ»ÖÃ-Çë¼ì²éB601
+-110610,,Tray Feeding detected Tray being lifted-Please confirm,,,,TrayÅÌÉÏÁÏ¼ì²âµ½TrayÅÌ±»´øÆğ-ÇëÈ·ÈÏ
+-110611,,Serial port server port 2 is disconnected,,,,´®¿Ú·şÎñÆ÷¶Ë¿Ú2Á¬½ÓÖĞ¶Ï
+-110612,,There is no vehicle number matching the preloaded pallet on the transplanting platform,,,,ÒÆÔÔÆ½Ì¨ÉÏÃ»ÓĞÓëÔ¤×°ÅäÍĞÅÌÏàÆ¥ÅäµÄÔØ¾ßºÅ
+-110613,,Jaws of the outer frame The product information is inconsistent with the Placode,,,,×°ÅäÄ£×éÈ¡Íâ¿ò¼Ğ×¦²úÆ·ĞÅÏ¢Óë»ù°åĞÅÏ¢²»Æ¥Åä(±¾µØ)
+-110614,,DCWB MES The pallet information is Do not do -Please confirm,,,,µã½º»º´æ¹¤×÷Î» MESÍĞÅÌĞÅÏ¢Îª ²»¿É×ö -ÇëÈ·ÈÏ
+-110615,,Jaws of the outer frame The product information is inconsistent with the Placode,,,,×°ÅäÄ£×éÈ¡Íâ¿ò¼Ğ×¦²úÆ·×´Ì¬Óë»ù°å×´Ì¬²»Ò»ÖÂ
+-110700,,Clamping jaws of the base plate The product information is inconsistent with the Placode,,,,×°ÅäÄ£×éÈ¡»ù°å¼Ğ×¦²úÆ·×´Ì¬Óë»ù°å×´Ì¬²»Ò»ÖÂ
+-110701,,Both jaws of the assembly module are in the state-Please confirm,,,,×°ÅäÄ£×éÁ½¸ö¼Ğ×¦¾ù´æÔÚ×´Ì¬-ÇëÈ·ÈÏ
+-110702,,AWP Jaws of the outer frame SN inconsistent with the scan results-Please confirm,,,,×°Åä¹¤×÷Î» Íâ¿ò ¼Ğ×¦ÌõÂëÓëÉ¨Âë½á¹û²»Ò»ÖÂ-ÇëÈ·ÈÏ
+-110703,,Left transplanting platform Placode it is not all taken-Please check,,,,×ó²àÒÆÔÔÆ½Ì¨ÉÏ»ù°åÎ´±»È«²¿È¡×ßĞÅÏ¢´íÎó-Çë¼ì²é
+-110704,,Right transplanting platform Placode it is not all taken-Please check,,,,ÓÒ²àÒÆÔÔÆ½Ì¨ÉÏ»ù°åÎ´±»È«²¿È¡×ßĞÅÏ¢´íÎó-Çë¼ì²é
+-110705,,AWP Pallet SN inconsistent with queue SN-Please check,,,,×°Åä¹¤Î»Êµ¼ÊÍĞÅÌºÅÓë¶ÓÁĞÍĞÅÌºÅ²»Ò»ÖÂ-Çë¼ì²é
+-110707,,3D Result judgment timeout-Please confirm,,,,²â½ºÏßÉ¨½á¹ûÅĞ¶Ï³¬Ê±ÇëÈ·ÈÏ
+-110710,,Marking platform Camera locate NG-Please confirm,,,,´ò±ê¶¥²¿Ïà»ú¶¨Î»NGÇëÈ·ÈÏ
+-110711,,Marking platform Camera Grade NG-Please confirm,,,,´ò±ê¶¥²¿Ïà»úµÈ¼¶NGÇëÈ·ÈÏ
+-110712,,Bottom Camera locate NG-Please confirm,,,,×°Åäµ×²¿Ïà»úÍâ¿ò¶¨Î»NGÇëÈ·ÈÏ
+-110713,,Top Camera locate NG-Please confirm,,,,×°Åä¶¥²¿Ïà»ú»ù°å¶¨Î»NGÇëÈ·ÈÏ
+-210001,,Low pressure fault-Please check,,,,ÆøÑ¹µÍ¹ÊÕÏ-Çë¼ì²é
+-210003,,Recipe data not written-Please check,,,,Åä·½Êı¾İÎ´Ğ´Èë-Çë¼ì²é
+-210005,,Grating abnormal-Please check,,,,¹âÕ¤Òì³£-Çë¼ì²é
+-210006,,The emergency stop circuit is faulty-Please check,,,,¼±Í£»ØÂ·¹ÊÕÏ-Çë¼ì²é
+-210007,,The safety door loop is faulty-Please check,,,,°²È«ÃÅ»ØÂ·¹ÊÕÏ-Çë¼ì²é
+-210101,,Bin1_Inconsistent material and account alarm-Please confirm,,,,¼ÓÈÈ²Ö1_ÁÏÕË²»Ò»ÖÂ±¨¾¯-ÇëÈ·ÈÏ
+-210102,,Bin2_Inconsistent material and account alarm-Please confirm,,,,¼ÓÈÈ²Ö2_ÁÏÕË²»Ò»ÖÂ±¨¾¯-ÇëÈ·ÈÏ
+-210103,,Bin3_Inconsistent material and account alarm-Please confirm,,,,¼ÓÈÈ²Ö3_ÁÏÕË²»Ò»ÖÂ±¨¾¯-ÇëÈ·ÈÏ
+-210104,,Bin4_Inconsistent material and account alarm-Please confirm,,,,¼ÓÈÈ²Ö4_ÁÏÕË²»Ò»ÖÂ±¨¾¯-ÇëÈ·ÈÏ
+-210105,,Bin5_Inconsistent material and account alarm-Please confirm,,,,¼ÓÈÈ²Ö5_ÁÏÕË²»Ò»ÖÂ±¨¾¯-ÇëÈ·ÈÏ
+-210106,,Bin6_Inconsistent material and account alarm-Please confirm,,,,¼ÓÈÈ²Ö6_ÁÏÕË²»Ò»ÖÂ±¨¾¯-ÇëÈ·ÈÏ
+-210107,,Bin7_Inconsistent material and account alarm-Please confirm,,,,¼ÓÈÈ²Ö7_ÁÏÕË²»Ò»ÖÂ±¨¾¯-ÇëÈ·ÈÏ
+-210108,,Transplanting platform _Inconsistent material and account alarm-Please confirm,,,,ÒÆÔÔÆ½Ì¨_ÁÏÕË²»Ò»ÖÂ±¨¾¯-ÇëÈ·ÈÏ
+-210200,,B841_Mainstream line scanner_Response timeout-Please confirm,,,,B841_Ö÷Á÷ÏßÉ¨ÂëÇ¹_ÏìÓ¦³¬Ê±-ÇëÈ·ÈÏ
+-210201,,A871_Temperature controller_Response timeout-Please confirm,,,,A871_ÎÂ¿ØÆ÷_ÏìÓ¦³¬Ê±-ÇëÈ·ÈÏ
+-210202,,A872_Temperature controller_Response timeout-Please confirm,,,,A872_ÎÂ¿ØÆ÷_ÏìÓ¦³¬Ê±-ÇëÈ·ÈÏ
+-210203,,A873_Temperature controller_Response timeout-Please confirm,,,,A873_ÎÂ¿ØÆ÷_ÏìÓ¦³¬Ê±-ÇëÈ·ÈÏ
+-210204,,A874_Temperature controller_Response timeout-Please confirm,,,,A874_ÎÂ¿ØÆ÷_ÏìÓ¦³¬Ê±-ÇëÈ·ÈÏ
+-210205,,A875_Temperature controller_Response timeout-Please confirm,,,,A875_ÎÂ¿ØÆ÷_ÏìÓ¦³¬Ê±-ÇëÈ·ÈÏ
+-210206,,A876_Temperature controller_Response timeout-Please confirm,,,,A876_ÎÂ¿ØÆ÷_ÏìÓ¦³¬Ê±-ÇëÈ·ÈÏ
+-210207,,A877_Temperature controller_Response timeout-Please confirm,,,,A877_ÎÂ¿ØÆ÷_ÏìÓ¦³¬Ê±-ÇëÈ·ÈÏ
+-210208,,Stock bin1 MES_Response timeout-Please confirm,,,,ÁÏ²Ö1 MES_ÏìÓ¦³¬Ê±-ÇëÈ·ÈÏ
+-210209,,Stock bin2 MES_Response timeout-Please confirm,,,,ÁÏ²Ö2 MES_ÏìÓ¦³¬Ê±-ÇëÈ·ÈÏ
+-210210,,Stock bin3 MES_Response timeout-Please confirm,,,,ÁÏ²Ö3 MES_ÏìÓ¦³¬Ê±-ÇëÈ·ÈÏ
+-210211,,Stock bin4 MES_Response timeout-Please confirm,,,,ÁÏ²Ö4 MES_ÏìÓ¦³¬Ê±-ÇëÈ·ÈÏ
+-210212,,Stock bin5 MES_Response timeout-Please confirm,,,,ÁÏ²Ö5 MES_ÏìÓ¦³¬Ê±-ÇëÈ·ÈÏ
+-210213,,Stock bin6 MES_Response timeout-Please confirm,,,,ÁÏ²Ö6 MES_ÏìÓ¦³¬Ê±-ÇëÈ·ÈÏ
+-210214,,Stock bin7 MES_Response timeout-Please confirm,,,,ÁÏ²Ö7 MES_ÏìÓ¦³¬Ê±-ÇëÈ·ÈÏ
+-210215,,Transplanting platform _MES_Response timeout-Please confirm,,,,ÒÆÔÔÆ½Ì¨MES_ÏìÓ¦³¬Ê±-ÇëÈ·ÈÏ
+-210300,,Cooling station_MES_Response timeout-Please confirm,,,,ÀäÈ´¹¤Î»MES_·´À¡ĞÅºÅ×´Ì¬Òì³£-ÇëÈ·ÈÏ
+-210308,,Stock bin1 MES_Abnormal feedback status-Please confirm,,,,ÁÏ²Ö1 MES_·´À¡ĞÅºÅ×´Ì¬Òì³£-ÇëÈ·ÈÏ
+-210309,,Stock bin2 MES_Abnormal feedback status-Please confirm,,,,ÁÏ²Ö2 MES_·´À¡ĞÅºÅ×´Ì¬Òì³£-ÇëÈ·ÈÏ
+-210310,,Stock bin3 MES_Abnormal feedback status-Please confirm,,,,ÁÏ²Ö3 MES_·´À¡ĞÅºÅ×´Ì¬Òì³£-ÇëÈ·ÈÏ
+-210311,,Stock bin4 MES_Abnormal feedback status-Please confirm,,,,ÁÏ²Ö4 MES_·´À¡ĞÅºÅ×´Ì¬Òì³£-ÇëÈ·ÈÏ
+-210312,,Stock bin5 MES_Abnormal feedback status-Please confirm,,,,ÁÏ²Ö5 MES_·´À¡ĞÅºÅ×´Ì¬Òì³£-ÇëÈ·ÈÏ
+-210313,,Stock bin6 MES_Abnormal feedback status-Please confirm,,,,ÁÏ²Ö6 MES_·´À¡ĞÅºÅ×´Ì¬Òì³£-ÇëÈ·ÈÏ
+-210314,,Stock bin7 MES_Abnormal feedback status-Please confirm,,,,ÁÏ²Ö7 MES_·´À¡ĞÅºÅ×´Ì¬Òì³£-ÇëÈ·ÈÏ
+-210315,,Transplanting platform MES_Abnormal feedback status-Please confirm,,,,ÒÆÔÔÆ½Ì¨MES_·´À¡ĞÅºÅ×´Ì¬Òì³£-ÇëÈ·ÈÏ
+-210509,,Transplanting platformMES The pallet information is Do not do -Please confirm,,,,ÒÆÔÔÆ½Ì¨ MESÍĞÅÌĞÅÏ¢Îª ²»¿É×ö -ÇëÈ·ÈÏ
+-210510,,Bin Feed timeout alarm-Please confirm,,,,¼ÓÈÈ²Ö ½øÁÏ³¬Ê±±¨¾¯-ÇëÈ·ÈÏ
+-210511,,Bin Discharge time out alarm-Please confirm,,,,¼ÓÈÈ²Ö ³öÁÏ³¬Ê±±¨¾¯-ÇëÈ·ÈÏ
+-210513,,Cooling station_MES_Response timeout-Please confirm,,,,ÀäÈ´¹¤Î»MES_ÏìÓ¦³¬Ê±-ÇëÈ·ÈÏ
+-210601,,Stock bin1 Abnormal thermocouple of thermostat-Please check,,,,ÁÏ²Ö1 ÎÂ¿ØÆ÷ÈÈµçÅ¼Òì³£-Çë¼ì²é
+-210602,,Stock bin2 Abnormal thermocouple of thermostat-Please check,,,,ÁÏ²Ö2 ÎÂ¿ØÆ÷ÈÈµçÅ¼Òì³£-Çë¼ì²é
+-210603,,Stock bin3 Abnormal thermocouple of thermostat-Please check,,,,ÁÏ²Ö3 ÎÂ¿ØÆ÷ÈÈµçÅ¼Òì³£-Çë¼ì²é
+-210604,,Stock bin4 Abnormal thermocouple of thermostat-Please check,,,,ÁÏ²Ö4 ÎÂ¿ØÆ÷ÈÈµçÅ¼Òì³£-Çë¼ì²é
+-210605,,Stock bin5 Abnormal thermocouple of thermostat-Please check,,,,ÁÏ²Ö5 ÎÂ¿ØÆ÷ÈÈµçÅ¼Òì³£-Çë¼ì²é
+-210606,,Stock bin6 Abnormal thermocouple of thermostat-Please check,,,,ÁÏ²Ö6 ÎÂ¿ØÆ÷ÈÈµçÅ¼Òì³£-Çë¼ì²é
+-210607,,Stock bin7 Abnormal thermocouple of thermostat-Please check,,,,ÁÏ²Ö7 ÎÂ¿ØÆ÷ÈÈµçÅ¼Òì³£-Çë¼ì²é
+-210700,,Scanner results inconsistent with the upstream pallet SN-Please confirm,,,,É¨ÂëÇ¹½âÂë½á¹ûÓëÉÏÓÎÀ´ÁÏÍĞÅÌÂë²»Ò»ÖÂ-ÇëÈ·ÈÏ
+-210613,,Stock bin6 The heating time exceeds the setting time-Please confirm,,,,ÁÏ²Ö6 ¼ÓÈÈÊ±¼ä³¬¹ıÉèÖÃÊ±¼äÇëÈ·ÈÏ
+-210614,,Stock bin7 The heating time exceeds the setting time-Please confirm,,,,ÁÏ²Ö7 ¼ÓÈÈÊ±¼ä³¬¹ıÉèÖÃÊ±¼äÇëÈ·ÈÏ
