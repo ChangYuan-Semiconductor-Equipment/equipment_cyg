@@ -1,13 +1,16 @@
+"""异步socket."""
 import asyncio
 import logging
 import socket
 from asyncio import AbstractEventLoop
 
 
+# pylint: disable=W1203
 class CygSocketServerAsyncio:
+    """异步socket class."""
 
-    clients = dict()  # 保存已连接的client
-    tasks = dict()
+    clients = {}  # 保存已连接的client
+    tasks = {}
     loop: AbstractEventLoop = None
 
     def __init__(self, address="127.0.01", port=8000):
@@ -17,11 +20,13 @@ class CygSocketServerAsyncio:
 
     @property
     def logger(self):
+        """日志实例."""
         return self._logger
 
     def operations_return_data(self, data: bytes):
+        """操作返回数据."""
         data = data.decode("UTF-8")
-        self._logger.warning(f"*** 回显 *** -> 没有重写 operations_return_data 函数, 默认是回显.")
+        self._logger.warning("*** 回显 *** -> 没有重写 operations_return_data 函数, 默认是回显.")
         return data
 
     async def socket_send(self, client_connection, data: bytes):
@@ -34,6 +39,7 @@ class CygSocketServerAsyncio:
             self._logger.info(f"***发送*** --> 发送失败, {data}, 未连接")
 
     async def receive_send(self, client_connection: socket.socket):
+        """接收发送数据."""
         client_ip = client_connection.getpeername()[0]  # 获取连接客户端的ip
         try:
             while data := await self.loop.sock_recv(client_connection, 1024 * 1024):
@@ -44,7 +50,7 @@ class CygSocketServerAsyncio:
                 await self.loop.sock_sendall(client_connection, send_data_byte)
                 self._logger.info(f"***Socket回复*** --> {client_ip}, 数据: {send_data}")
                 self._logger.info(f"{ '-' * 60}")
-        except Exception as e:
+        except Exception as e:  # pylint: disable=W0718
             self._logger.warning(f"***通讯出现异常*** --> 异常信息是: {e}")
         finally:
             self.clients.pop(client_ip)
@@ -53,6 +59,7 @@ class CygSocketServerAsyncio:
             client_connection.close()
 
     async def listen_for_connection(self, socket_server: socket):
+        """异步监听连接."""
         while True:
             self.loop = asyncio.get_running_loop()
             client_connection, address = await self.loop.sock_accept(socket_server)
@@ -69,10 +76,3 @@ class CygSocketServerAsyncio:
         socket_server.bind((self._address, self._port))
         socket_server.listen()
         await self.listen_for_connection(socket_server)
-
-
-if __name__ == '__main__':
-    log_format = "%(asctime)s - %(levelname)s - %(module)s:%(lineno)d - %(message)s"
-    logging.basicConfig(level=logging.INFO, encoding="UTF-8", format=log_format)
-    cyg_socket_server = CygSocketServerAsyncio("127.0.0.1", 8000)
-    asyncio.run(cyg_socket_server.run_socket_server())

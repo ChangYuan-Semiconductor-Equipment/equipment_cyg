@@ -7,7 +7,6 @@ class PLCBaseException(Exception):
     This exception class inherits from Exception and serves as the base for all
     exceptions related to PLC operations.
     """
-    pass
 
 
 class PLCConnectError(PLCBaseException):
@@ -16,7 +15,6 @@ class PLCConnectError(PLCBaseException):
     This exception is a subclass of PLCBaseException and is raised when there is
     an error related to connect the PLC.
     """
-    pass
 
 
 class PLCWriteError(PLCBaseException):
@@ -25,7 +23,6 @@ class PLCWriteError(PLCBaseException):
     This exception is a subclass of PLCBaseException and is raised when there is
     an error related to writing data to the PLC.
     """
-    pass
 
 
 class PLCReadError(PLCBaseException):
@@ -34,7 +31,6 @@ class PLCReadError(PLCBaseException):
     This exception is a subclass of PLCBaseException and is raised when there
     is an error related to reading data from the PLC.
     """
-    pass
 
 
 class PLCRuntimeError(PLCBaseException):
@@ -43,4 +39,3 @@ class PLCRuntimeError(PLCBaseException):
     This exception is a subclass of PLCBaseException and is raised when there
     is a runtime error during PLC operations.
     """
-    pass

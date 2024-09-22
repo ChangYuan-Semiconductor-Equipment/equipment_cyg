@@ -1,3 +1,4 @@
+# pylint: skip-file
 """
 上传配方:
     1.监控上传配方信号, True
@@ -68,6 +69,8 @@ import os
 import threading
 import time
 from datetime import datetime
+from typing import Optional
+
 from equipment_cyg.controller.controller import Controller
 from equipment_cyg.utils.airtable.airtable import Airtable
 from equipment_cyg.utils.plc.exception import PLCWriteError
@@ -76,7 +79,10 @@ from equipment_cyg.utils.socket.socket_server_asyncio import CygSocketServerAsyn
 
 
 # noinspection DuplicatedCode
-class Ceribell(Controller):
+# pylint: disable=W1203
+# pylint: disable=R0904
+class Ceribell(Controller):  # pylint: disable=R0901
+    """Ceribell 包装机设备类."""
     def __init__(self):
         super().__init__()
         self.upload_dict = {}  # 临时保存上传到airtable的数据
@@ -116,16 +122,17 @@ class Ceribell(Controller):
         thread.start()
 
     # 监控 web 页面发来请求进行处理, 然后返回信息
-    def operations_return_data(self, byte_data: bytes) -> str:
+    def operations_return_data(self, byte_data: bytes) -> Optional[str]:
         """监控 web 页面发来请求进行处理, 然后返回信息."""
         request_data = byte_data.decode("UTF-8")
         request_data_dict = json.loads(request_data)
         request_flag = list(request_data_dict.keys())[0]
         if request_flag == "current_lot":
             return json.dumps(self.current_lot_operation())
-        elif request_flag == "new_lot":
+        if request_flag == "new_lot":
             request_data_dict = list(request_data_dict.values())[0]
             return json.dumps(self.new_lot_operation(request_data_dict))
+        return None
 
     def new_lot_operation(self, request_data_dict: dict):
         """web 页面创建工单触发的操作."""
@@ -181,7 +188,7 @@ class Ceribell(Controller):
                 except PLCWriteError:
                     self.logger.warning(f"*** plc未连接 *** -> plc地址是: {self.plc.ip}!")
                     if self.plc.communication_open() is False:
-                        self.logger.warning(f"*** plc connect attempt *** -> wait 10s attempt.")
+                        self.logger.warning("*** plc connect attempt *** -> wait 10s attempt.")
                         time.sleep(10)
                     else:
                         self.logger.warning(f"*** plc connect success*** -> plc地址是: {self.plc.ip}.")
@@ -229,7 +236,7 @@ class Ceribell(Controller):
         recipe_id = self.get_sv_value_with_name("upload_recipe_id")
         recipe_name = self.get_sv_value_with_name("upload_recipe_name")
         recipe_id_name = f"{recipe_id}_{recipe_name}"
-        recipe_id_name not in self.recipes and self.recipes.append(recipe_id_name)
+        recipe_id_name not in self.recipes and self.recipes.append(recipe_id_name)  # pylint: disable=W0106
 
     def execute_call_backs(self, call_backs: list, time_out=5) -> bool:
         """根据操作列表执行具体的操作.
@@ -259,9 +266,10 @@ class Ceribell(Controller):
             # noinspection PyBroadException
             try:
                 current_value = self.plc.execute_read(kwargs.get("tag_name"), "bool", False)
+                # pylint: disable=W0106
                 current_value and self.signal_trigger_event(kwargs.get("call_back"), kwargs)  # 监控到bool信号触发事件
                 time.sleep(wait_time)
-            except Exception:
+            except Exception:  # pylint: disable=W0718
                 pass
 
     def write_operation(self, call_back: dict, time_out=5) -> bool:
@@ -279,8 +287,7 @@ class Ceribell(Controller):
                 tag_name, premise_tag_name, premise_value, data_type, write_value, time_out=time_out
             )
             return result
-        else:
-            return self.write_no_condition(tag_name, write_value, data_type)
+        return self.write_no_condition(tag_name, write_value, data_type)
 
     def read_operation(self, call_back: dict):
         """读取plc数据, 更新sv."""
@@ -293,6 +300,7 @@ class Ceribell(Controller):
         if sv_name == "track_out_state" and self.is_mix("track_out"):
             self.status_variables.get(sv_id).value = 0
 
+    # pylint: disable=R0913, disable=R0917
     def write_with_condition(
             self, tag_name, premise_tag_name, premise_value, data_type, write_value, time_out=5) -> bool:
         """Write value with condition.
@@ -333,6 +341,7 @@ class Ceribell(Controller):
         return flag
 
     def write_no_condition(self, tag_name, write_value, data_type):
+        """向指定标签写入值."""
         self.plc.execute_write(tag_name, data_type, write_value)
         return True
 
@@ -348,6 +357,7 @@ class Ceribell(Controller):
         """获取当前配方."""
         return self.get_sv_value_with_name("current_recipe")
 
+    # pylint: disable=R0914
     def get_label_info(self, event_name):
         """获取进站标签信息."""
         label_info = self.get_sv_value_with_name(event_name)
@@ -376,6 +386,7 @@ class Ceribell(Controller):
             "Lot Code": lot_code, "Lot #": lot
         }
 
+    # pylint: disable=R1705
     def is_mix(self, event_name) -> int:
         """Mix, not in this lot or new lot."""
         label_length = self.get_config_value("label_length")
@@ -383,17 +394,15 @@ class Ceribell(Controller):
             real_value = self.get_sv_value_with_name("track_in_label_left")
             if self.get_sv_value_with_name("current_lot_id") in real_value and label_length == len(real_value):
                 return 1
-            elif self.get_sv_value_with_name("current_lot_id") in real_value and label_length != len(real_value):
+            if self.get_sv_value_with_name("current_lot_id") in real_value and label_length != len(real_value):
                 return self.get_config_value("new_lot_state_code")
-            else:
-                return 0
+            return 0
         else:
             track_out_state = self.get_config_value("track_out_state")
             real_value = self.get_sv_value_with_name("track_out_label")
             if track_out_state == 63 and self.get_sv_value_with_name("current_lot_id") in real_value:
                 return 1
-            else:
-                return 0
+            return 0
 
     def get_track_in_state(self):
         """根据相机检查结果获取MES反馈结果."""
@@ -516,12 +525,11 @@ class Ceribell(Controller):
         except AttributeError:
             self.logger.error(f"*** tape index repeat *** -> "
                               f"Current tape index: {current_tape_index} has used, repeated!")
-        except Exception as e:
+        except Exception as e:  # pylint: disable=W0718
             self.logger.error(f"*** Unknown exception *** -> Exception info: {str(e)}")
 
     def save_track_out(self, photo_dir):
         """保存track_out上传数据."""
-        pass
 
     def save_current_lot_local(self, lot_id="", recipe=""):
         """保存当前的工单, 为了断电重启后读取当前工单和配方."""
@@ -531,7 +539,7 @@ class Ceribell(Controller):
 
     def upload_data(self, **kwargs):
         """上传数据."""
-        self.logger.info(f"*** 开始上传数据 ***")
+        self.logger.info("*** 开始上传数据 ***")
 
         def _upload_thread(**upload_kwargs):
             date_dir = datetime.now().strftime("%Y-%m-%d")
@@ -550,7 +558,7 @@ class Ceribell(Controller):
                     base_id, record_id, self.get_config_value("airtable")["track_in_right_column"],
                     photo_path=self.get_photo_path(f"{photo_dir}/CCD1/{date_dir}")
                 )
-                self.logger.info(f"*** 结束上传数据 *** ")
+                self.logger.info("*** 结束上传数据 *** ")
             elif event_name == "check_tape":
                 self.airtable_instance.upload_photo_with_record_id(
                     base_id, record_id, self.get_config_value("airtable")["track_in_left_column"],
@@ -585,6 +593,7 @@ class Ceribell(Controller):
 
     @staticmethod
     def get_photo_path(path_dir, index=-1):
+        """获取图片路径."""
         photo_name = os.listdir(path_dir)[index]
         return f"{path_dir}/{photo_name}"
 

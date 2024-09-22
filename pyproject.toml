@@ -11,7 +11,7 @@ packages = [{include = "equipment_cyg"},]
 
 [tool.poetry.dependencies]
 python = ">=3.10,<3.13"
-secsgem_cyg="1.0.0"
+secsgem_cyg="1.0.1"
 sqlalchemy = "^2.0.31"
 pymysql = "^1.1.1"
 modbus-tk = "^1.1.3"
@@ -22,6 +22,8 @@ pyairtable = "^2.3.3"
 pillow = "^10.4.0"
 cffi = "^1.17.0"
 pythonnet = "3.0.3"
+suds-community = "^1.2.0"
+pylint = "^3.3.0"
 
 
 [tool.poetry.group.dev.dependencies]
