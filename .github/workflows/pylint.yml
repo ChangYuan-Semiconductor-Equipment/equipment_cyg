@@ -28,19 +28,20 @@ jobs:
         run: |
           git fetch origin main
           git diff --name-only HEAD origin/main > modified_files.txt || echo "" > modified_files.txt
-          echo "MODIFIED_FILES<<EOF" >> $GITHUB_ENV
-          type modified_files.txt >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
+          set MODIFIED_FILES= 
+          for /f "delims=" %%i in (modified_files.txt) do (
+              set MODIFIED_FILES=!MODIFIED_FILES! %%i
+          )
+          echo MODIFIED_FILES=%MODIFIED_FILES% >> $GITHUB_ENV
 
       - name: Check MODIFIED_FILES
         run: |
-          echo $env:MODIFIED_FILES
+          echo %MODIFIED_FILES%
 
       - name: Run Pylint on modified files
-        shell: pwsh
         run: |
-          if ($env:MODIFIED_FILES -ne "") {
-            pylint $env:MODIFIED_FILES
-          } else {
-            Write-Host "No Python files to check."
-          }
+          if not "%MODIFIED_FILES%"=="" (
+            pylint %MODIFIED_FILES%
+          ) else (
+            echo No Python files to check.
+          )
