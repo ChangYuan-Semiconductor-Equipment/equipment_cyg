@@ -23,29 +23,12 @@ jobs:
           python -m pip install --upgrade pip
           pip install pylint
 
-      - name: Get modified Python files
-        id: modified_files
+      - name: Check all Python files
         run: |
-          git fetch origin main
-          git diff --name-only HEAD origin/main > modified_files.txt || echo "" > modified_files.txt
-          $modifiedFiles = Get-Content modified_files.txt | Where-Object { $_ -ne "" }
-          if ($modifiedFiles) {
-            $modifiedFilesString = $modifiedFiles -join ' '
-            echo "MODIFIED_FILES=$modifiedFilesString" >> $GITHUB_ENV
-          } else {
-            echo "No modified files."
-          }
-
-      - name: Check MODIFIED_FILES
-        run: |
-          echo $env:MODIFIED_FILES
-
-      - name: Run Pylint on modified files
-        shell: pwsh
-        run: |
-          if ($env:MODIFIED_FILES -ne "") {
-            pylint $env:MODIFIED_FILES
+          $pyFiles = Get-ChildItem -Recurse -Filter "*.py"
+          if ($pyFiles.Count -gt 0) {
+            pylint $pyFiles.FullName
           } else {
             Write-Host "No Python files to check."
-            exit 0  # 成功退出
+            exit 0
           }
