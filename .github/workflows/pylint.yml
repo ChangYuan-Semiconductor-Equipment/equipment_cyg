@@ -28,9 +28,9 @@ jobs:
         run: |
           git fetch origin main
           git diff --name-only HEAD origin/main > modified_files.txt || echo "" > modified_files.txt
-          set MODIFIED_FILES= 
-          for /f "delims=" %%i in (modified_files.txt) do (
-              set MODIFIED_FILES=!MODIFIED_FILES! %%i
+          set MODIFIED_FILES=
+          for /F "delims=" %i in (modified_files.txt) do (
+            set MODIFIED_FILES=%MODIFIED_FILES% %i
           )
           echo MODIFIED_FILES=%MODIFIED_FILES% >> $GITHUB_ENV
 
