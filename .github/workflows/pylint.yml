@@ -23,6 +23,16 @@ jobs:
           python -m pip install --upgrade pip
           pip install pylint
 
-      - name: Run Pylint
+      - name: Get modified Python files
+        id: modified_files
         run: |
-          pylint **/*.py
+          git fetch origin main
+          echo "::set-output name=files::$(git diff --name-only origin/main...HEAD | findstr /R "\.py$")"
+
+      - name: Run Pylint on modified files
+        run: |
+          if [ -n "${{ steps.modified_files.outputs.files }}" ]; then
+            pylint ${{ steps.modified_files.outputs.files }}
+          else
+            echo "No Python files to check."
+          fi
