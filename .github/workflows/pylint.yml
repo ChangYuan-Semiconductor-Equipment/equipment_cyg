@@ -26,7 +26,8 @@ jobs:
       - name: Get modified Python files
         id: modified_files
         run: |
-          git diff --name-only origin/main...HEAD > modified_files.txt || echo "" > modified_files.txt
+          git fetch origin main
+          git diff --name-only HEAD origin/main > modified_files.txt || echo "" > modified_files.txt
           echo "MODIFIED_FILES<<EOF" >> $GITHUB_ENV
           type modified_files.txt >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
