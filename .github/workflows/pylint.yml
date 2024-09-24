@@ -28,9 +28,14 @@ jobs:
         run: |
           git fetch origin main
           git diff --name-only HEAD origin/main > modified_files.txt || echo "" > modified_files.txt
+          type modified_files.txt
           echo "MODIFIED_FILES<<EOF" >> $GITHUB_ENV
           type modified_files.txt >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
+
+      - name: Check MODIFIED_FILES
+        run: |
+          echo $env:MODIFIED_FILES
 
       - name: Run Pylint on modified files
         shell: pwsh
