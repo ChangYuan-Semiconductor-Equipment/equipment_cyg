@@ -27,12 +27,15 @@ jobs:
         id: modified_files
         run: |
           git fetch origin main
-          echo "::set-output name=files::$(git diff --name-only origin/main...HEAD | findstr /R "\.py$")"
+          git diff --name-only origin/main...HEAD > modified_files.txt || echo "" > modified_files.txt
+          echo "MODIFIED_FILES<<EOF" >> $GITHUB_ENV
+          type modified_files.txt >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
 
       - name: Run Pylint on modified files
         run: |
-          if [ -n "${{ steps.modified_files.outputs.files }}" ]; then
-            pylint ${{ steps.modified_files.outputs.files }}
+          if [ -n "${{ env.MODIFIED_FILES }}" ]; then
+            pylint ${{ env.MODIFIED_FILES }}
           else
             echo "No Python files to check."
           fi
