@@ -25,24 +25,27 @@ jobs:
 
       - name: Get modified Python files
         id: modified_files
-        run: cmd.exe /C 
+        run: |
           git fetch origin main
-          git diff --name-only HEAD origin/main > modified_files.txt || echo. > modified_files.txt
-          set MODIFIED_FILES=
-          for /F "delims=" %i in (modified_files.txt) do (
-            set MODIFIED_FILES=!MODIFIED_FILES! %i
-          )
-          echo MODIFIED_FILES=!MODIFIED_FILES! >> %GITHUB_ENV%
-        shell: cmd
+          git diff --name-only HEAD origin/main > modified_files.txt || echo "" > modified_files.txt
+          $modifiedFiles = Get-Content modified_files.txt | Where-Object { $_ -ne "" }
+          if ($modifiedFiles) {
+            $modifiedFilesString = $modifiedFiles -join ' '
+            echo "MODIFIED_FILES=$modifiedFilesString" >> $GITHUB_ENV
+          } else {
+            echo "No modified files."
+          }
 
       - name: Check MODIFIED_FILES
         run: |
-          echo %MODIFIED_FILES%
+          echo $env:MODIFIED_FILES
 
       - name: Run Pylint on modified files
+        shell: pwsh
         run: |
-          if not "%MODIFIED_FILES%"=="" (
-            pylint %MODIFIED_FILES%
-          ) else (
-            echo No Python files to check.
-          )
+          if ($env:MODIFIED_FILES -ne "") {
+            pylint $env:MODIFIED_FILES
+          } else {
+            Write-Host "No Python files to check."
+            exit 0  # 成功退出
+          }
