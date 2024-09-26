@@ -1156,10 +1156,10 @@ reference = "mirrors"
 
 [[package]]
 name = "secsgem-cyg"
-version = "1.0.0"
+version = "1.0.1"
 description = ""
 optional = false
-python-versions = "^3.10"
+python-versions = ">=3.10,<3.13"
 files = []
 develop = false
 
@@ -1171,7 +1171,7 @@ serial = "^0.0.97"
 type = "git"
 url = "https://github.com/ChangYuan-Semiconductor-Equipment/secsgem_cyg.git"
 reference = "main"
-resolved_reference = "480c5fb68f56ccefa47ff84690120638004e7469"
+resolved_reference = "26d1cf23437633b399422459005183ca5f09b712"
 
 [[package]]
 name = "serial"
@@ -1391,4 +1391,4 @@ reference = "mirrors"
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<3.13"
-content-hash = "8e32e5d334987630e3c2bacaaa231117cd99c8db95f9ba0302e17edcf2514d32"
+content-hash = "d154ecefb5807da9753c2ea2cbf1afeeee1b4e126261582ca90f92d12c604927"
