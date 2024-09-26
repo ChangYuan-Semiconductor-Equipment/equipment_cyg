@@ -11,7 +11,7 @@ packages = [{include = "equipment_cyg"},]
 
 [tool.poetry.dependencies]
 python = ">=3.10,<3.13"
-secsgem_cyg="1.0.1"
+secsgem_cyg="^1.0.2"
 sqlalchemy = "^2.0.31"
 pymysql = "^1.1.1"
 modbus-tk = "^1.1.3"
