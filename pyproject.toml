@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "equipment_cyg"
-version = "1.1.1"
+version = "1.1.2"
 description = ""
 repository = "https://github.com/ChangYuan-Semiconductor-Equipment/equipment_cyg.git"
 homepage = "https://github.com/ChangYuan-Semiconductor-Equipment/equipment_cyg.git"
