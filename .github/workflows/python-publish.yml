@@ -32,10 +32,6 @@ jobs:
       run: |
         poetry install
 
-    - name: Build package
-      run: |
-        poetry build
-
     - name: Publish package to PyPI
       env:
         POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_API_TOKEN }}
