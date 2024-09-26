@@ -1,17 +1,3 @@
-import asyncio
-import json
-import threading
-import time
-
-from secsgem.gem import StatusVariable
-
-from equipment_cyg.controller.controller import Controller
-from secsgem.secs.data_items import ALCD, PPGNT, ACKC7, ACKC10
-from secsgem.secs.variables import I4, Base, Array, String
-
-from equipment_cyg.controller.exception import EquipmentRuntimeError
-from equipment_cyg.utils.socket.socket_server_asyncio import CygSocketServerAsyncio
-
 """
 EAP->PC: 建立通讯 s1f13
 
@@ -133,10 +119,24 @@ PC->EAP: 请求停止工作
     3.EAP通过S2F41发送  LotEndReply "lot_end_state"=OK
         EAP回复 OK 设备才能停止
 """
+import asyncio
+import json
+import threading
+import time
+
+from secsgem.gem import StatusVariable
+from secsgem.secs.data_items import ACKC7, ACKC10, ALCD, PPGNT
+from secsgem.secs.variables import I4, Array, Base, String
+
+from equipment_cyg.controller.controller import Controller
+from equipment_cyg.controller.exception import EquipmentRuntimeError
+from equipment_cyg.utils.socket.socket_server_asyncio import CygSocketServerAsyncio
 
 
+# pylint: disable=W1203, disable=W0612, disable=C0103
 # noinspection PyUnresolvedReferences
-class TongFuWei(Controller):
+class TongFuWei(Controller):  # pylint: disable=R0901, disable=R0902, disable=R0904
+    """通富微扫码压合设备类."""
 
     def __init__(self):
         super().__init__()
@@ -169,7 +169,9 @@ class TongFuWei(Controller):
         thread.start()
 
     # 监听到下位机请求函数
+    # pylint: disable=R0912
     def operations_return_data(self, byte_data) -> str:
+        """操作并返回数据."""
         try:
             str_data = self.decode_bytes(byte_data)  # 解析接收的下位机数据
             str_data_list = str_data.split(",")
@@ -229,7 +231,7 @@ class TongFuWei(Controller):
         except EquipmentRuntimeError as e:
             self.logger.warning(f"***代码报错, 已知异常 *** --> 报错信息是: {e}")
             return ""
-        except Exception as e:
+        except Exception as e:  # pylint: disable=W0718
             self.logger.warning(f"***代码报错, 未知异常 *** --> 报错信息是: {e}")
             return ""
 
@@ -311,6 +313,7 @@ class TongFuWei(Controller):
         self.config["current_recipe"] = {current_recipe_id: current_recipe_info}
         self.update_config(f'{"/".join(self.__module__.split("."))}.conf', self.config)
 
+    # pylint: disable=R1705
     def get_real_control_state(self, machine_id, control_state) -> int:
         """更新每台设备的控制状态, 获取对外真实的控制状态."""
         setattr(self, f"machine_{machine_id}_control_state", control_state)  # 单个设备控制状态改变
@@ -345,7 +348,7 @@ class TongFuWei(Controller):
 
     def start_work_inquire(self):
         """设备请求开始工作, 发送S6F11."""
-        self.logger.info(f"***PC->EAP, 触发事件*** --> 询问是否可以开始工作")
+        self.logger.info("***PC->EAP, 触发事件*** --> 询问是否可以开始工作")
         self.send_s6f11("StartWorkInquire")
 
     def machine_state_change(self, str_data_list):
@@ -381,7 +384,7 @@ class TongFuWei(Controller):
         """设备2产品进站事件, 更新frame_sn, 发送S6F11."""
         frame_sn = str_data.split(",")[1]
         self.status_variables.get(514).value = frame_sn
-        self.logger.info(f"***PC->EAP, 触发事件*** --> 产品进站")
+        self.logger.info("***PC->EAP, 触发事件*** --> 产品进站")
         self.send_s6f11("TrackIn")
 
     def track_out(self, str_data):
@@ -389,19 +392,19 @@ class TongFuWei(Controller):
         frame_sn, wafers_sn_str, *args = str_data.split(",")[1::]
         wafers_sn = wafers_sn_str.split("&")
         self.status_variables.get(515).value = wafers_sn
-        self.logger.info(f"***PC->EAP, 触发事件*** --> 产品出站")
+        self.logger.info("***PC->EAP, 触发事件*** --> 产品出站")
         self.send_s6f11("TrackOut")
 
     def reset_ng(self, str_data):
         """设备2复位出站, 更新frame_sn, 发送S6F11."""
         frame_sn, *args = str_data.split(",")[1::]
         self.status_variables.get(514).value = frame_sn
-        self.logger.info(f"***PC->EAP, 触发事件*** --> 产品复位出站")
+        self.logger.info("***PC->EAP, 触发事件*** --> 产品复位出站")
         self.send_s6f11("ResetNG")
 
     def lot_end(self):
         """PC通知EAP工单结束."""
-        self.logger.info(f"***PC->EAP, 触发事件*** --> 生产结束")
+        self.logger.info("***PC->EAP, 触发事件*** --> 生产结束")
         self.send_s6f11("LotEnd")
 
     def upload_recipe(self, str_data):
@@ -421,7 +424,7 @@ class TongFuWei(Controller):
             })
         # 判断2个设备是否都上传了配方，如果都上传了配方，再上传配方给EAP
         if len(self.recipes.get(recipe_id)) == 2:
-            self.logger.info(f"***PC->EAP, 上传配方***")
+            self.logger.info("***PC->EAP, 上传配方***")
             pp_body = json.dumps(self.recipes[recipe_id])
             self.send_process_program(recipe_id, pp_body)
             return
@@ -442,14 +445,14 @@ class TongFuWei(Controller):
     def download_recipe_inquire_reply(self, str_data):
         """PC回复EAP是否可以下发配方."""
         machine_id, status, *args = str_data.split(",")[1::]
-        self.recipe_load_inquire.append(True if status == "OK" else False)
+        self.recipe_load_inquire.append(True if status == "OK" else False)  # pylint: disable=R1719
         if len(self.recipe_load_inquire) == 2:
             if all(self.recipe_load_inquire):
                 response = PPGNT.OK
-                self.logger.info(f"***PC->EAP, 回复是否可以下发配方*** --> YES")
+                self.logger.info("***PC->EAP, 回复是否可以下发配方*** --> YES")
             else:
                 response = PPGNT.BUSY
-                self.logger.info(f"***PC->EAP, 回复是否可以下发配方*** --> NO, 设备正在运行")
+                self.logger.info("***PC->EAP, 回复是否可以下发配方*** --> NO, 设备正在运行")
             self.recipe_load_inquire = []
             self.send_response(self.stream_function(7, 2)(response), self.packet.header.system)
             del self.packet  # 使用完后删除
@@ -462,12 +465,13 @@ class TongFuWei(Controller):
             self.recipe_load_reply.update({machine_id: True})
         if len(self.recipe_load_reply) == 2:
             self.recipe_load_reply = {}  # 清空两个下位机都切换成功记录
-            self.logger.info(f"******PC->EAP, 触发事件****** --> 配方切换成功")
+            self.logger.info("******PC->EAP, 触发事件****** --> 配方切换成功")
             self.send_s6f11("DownloadRecipe")
 
     # 事件函数结束
 
     # 接收EAP函数
+    # pylint: disable=R1710
     def _on_s07f01(self, handler, packet):
         """host发送s07f01,下载配方请求前询问状态, EAP是否可以下载配方 PPLoadInquire.
 
@@ -478,15 +482,16 @@ class TongFuWei(Controller):
             PPReply,2,OK,0,0,0,0,0
         """
         del handler
+        # pylint: disable=W0201
         self.packet = packet  # 保存，等待接收到下位机回复再通过s7f2回复mes
         parser_result = self.get_receive_data(packet)
         recipe_id = parser_result.get("PPID")  # process program id
         if recipe_id in self.recipes:  # 判断配方是否存在, 存在回复 1:Already have
             return self.stream_function(7, 2)(PPGNT.ALREADY_HAVE)
         data = self.get_send_to_pc_data(replace_data=recipe_id, key="S7F1")
-        self.logger.info(f"***下载配方询问*** --> 询问下位机1")
+        self.logger.info("***下载配方询问*** --> 询问下位机1")
         status_1 = self.send_data_to_pc(self.config["client_ip"]["1"], data)
-        self.logger.info(f"***下载配方询问*** --> 询问下位机2")
+        self.logger.info("***下载配方询问*** --> 询问下位机2")
         status_2 = self.send_data_to_pc(self.config["client_ip"]["2"], data)
         if not (status_1 and status_2):
             return self.stream_function(7, 2)(PPGNT.WILL_NOT_ACCEPT)
@@ -508,6 +513,7 @@ class TongFuWei(Controller):
         pp_body = json.dumps(self.recipes.get(recipe_id, ""))
         return self.stream_function(7, 6)([recipe_id, pp_body])
 
+    # pylint: disable=R1711
     def _on_s07f06(self, handler, packet):
         """host下发配方数据."""
         del handler
@@ -563,6 +569,7 @@ class TongFuWei(Controller):
             return self.stream_function(10, 4)(ACKC10.ACCEPTED)
         return self.stream_function(10, 4)(3)  # 其他错误
 
+    # pylint: disable=W0237
     def on_sv_value_request(self, sv_id: Base, status_variable: StatusVariable) -> Base:
         """Get the status variable value depending on its configuration.
 
@@ -596,9 +603,9 @@ class TongFuWei(Controller):
             data = self.get_send_to_pc_data(replace_data=replace_data, origin_data=origin_data)
             self.send_data_to_pc(self.config["client_ip"][machine_id], data)
 
-    def _on_rcmd_STARTWORKORDER(self, **kwargs):
+    def _on_rcmd_STARTWORKORDER(self, **kwargs):  # pylint: disable=W0613
         """收到命令后给两个设备发出StartWorkOrder,ok,0,0,0,0,0,0,."""
-        self.logger.info(f"***EAP->PC, 开始*** --> 开始工作")
+        self.logger.info("***EAP->PC, 开始*** --> 开始工作")
         data = self.remote_commands.get("STARTWORKORDER").to_pc
         self.send_data_to_pc(self.config["client_ip"]["1"], data)
         self.send_data_to_pc(self.config["client_ip"]["2"], data)

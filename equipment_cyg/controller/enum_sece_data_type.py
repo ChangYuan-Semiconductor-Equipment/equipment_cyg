@@ -1,3 +1,4 @@
+"""枚举 secs 数据类型."""
 from enum import Enum
 
 from secsgem.secs.variables import Array, List
@@ -10,6 +11,7 @@ from secsgem.secs.variables.binary import Binary
 
 
 class EnumSecsDataType(Enum):
+    """Secs 数据类型枚举类."""
     F4 = F4
     ASCII = String
     BOOL = Boolean

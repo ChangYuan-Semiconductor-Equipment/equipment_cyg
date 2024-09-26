@@ -67,3 +67,5 @@ samples/log/*.log
 .DS_Store
 .python-version
 main.py
+liuwei.py
+equipment_cyg_run.bat

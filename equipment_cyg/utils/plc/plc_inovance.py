@@ -1,3 +1,4 @@
+"""汇川plc modbus通讯."""
 import logging
 import struct
 from typing import Union
@@ -6,8 +7,9 @@ from modbus_tk import defines as funcs
 from modbus_tk.modbus_tcp import TcpMaster
 
 
+# pylint: disable=W1203, disable=R0913, disable=R0917, disable=W0106
 class PlcInovance:
-
+    """汇川plc modbus通讯class."""
     def __init__(self, ip: str, port=502, timeout=5):
         self._ip = ip
         self._port = port
@@ -18,22 +20,27 @@ class PlcInovance:
 
     @property
     def logger(self):
+        """日志实例."""
         return self._logger
 
     @property
     def ip(self):
+        """plc ip。"""
         return self._ip
 
     @ip.setter
     def ip(self, ip):
+        """设置plc ip."""
         self._ip = ip
 
     @property
     def timeout(self):
+        """超时时间."""
         return self._timeout
 
     @timeout.setter
     def timeout(self, timeout):
+        """设置超时时间."""
         self._timeout = timeout
 
     def communication_open(self) -> bool:
@@ -54,7 +61,7 @@ class PlcInovance:
 
     def execute_read(
             self, address: int, length: int = 1, data_type="int", save_log=True, real_length=20,
-    ) -> Union[int, bool, str]:
+    ) -> Union[int, bool, str, None]:
         """根据类型读取plc数据.
 
         Args:
@@ -83,6 +90,7 @@ class PlcInovance:
             result = "".join([chr(value) for value in result])
             save_log and self.logger.info(f"*** 读取{data_type}成功 *** -> 值: {result}")
             return result
+        return None
 
     def execute_write(
             self, address: int, value: Union[int, bool, list], data_type: str = "int",
@@ -229,9 +237,10 @@ class PlcInovance:
             results = self.master.execute(1, funcs.READ_HOLDING_REGISTERS, address, quantity_of_x=length)
             results = results[:real_length]
             byte_data = b"".join(struct.pack(">H", reg) for reg in results[::-1])
+            # noinspection PyBroadException
             try:
                 value_str = byte_data.decode("UTF-8").strip("\x00")[::-1]
-            except Exception:
+            except Exception:  # pylint: disable=W0718
                 self.logger.warning("*** read empty data ***")
                 value_str = ""
             return value_str[:max_length]

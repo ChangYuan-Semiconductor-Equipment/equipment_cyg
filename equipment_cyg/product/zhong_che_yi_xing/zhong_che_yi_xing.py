@@ -1,25 +1,31 @@
+"""中车宜兴拨针机设备."""
+import json
 import threading
 import time
-from typing import Union
+from typing import Union, Optional
 
-from secsgem.secs.data_items import PPGNT, ACKC7, ACKC10
-from secsgem.secs.variables import I4
+from secsgem.gem import StatusVariable
+from secsgem.secs.data_items import ACKC7, ACKC10
+from secsgem.secs.variables import I4, U4, Array, Base
 
 from equipment_cyg.controller.controller import Controller
-from equipment_cyg.utils.plc.exception import PLCWriteError, PLCReadError, PLCRuntimeError
+from equipment_cyg.utils.plc.exception import PLCReadError, PLCRuntimeError, PLCWriteError
 from equipment_cyg.utils.plc.tag_communication import TagCommunication
 from equipment_cyg.utils.plc.tag_type_enum import TagTypeEnum
 
 
+# pylint: disable=W1203, disable=R0913, disable=R0917, disable=R0904
 # noinspection DuplicatedCode
-class ZhongCheYiXing(Controller):
+class ZhongCheYiXing(Controller):  # pylint: disable=R0901
+    """中车宜兴拨针设备class."""
     def __init__(self):
         super().__init__()
-        self.recipe_id_names = []  # 保存 EAP 下发的配方
+        self.track_in_carrier_info = {}  # 保存进站数据
+        self.recipes = self.get_config_value("recipes", {})  # 获取所有上传过的配方信息
         self.alarm_id = I4(0)  # 保存报警id
         self.alarm_text = ""  # 保存报警内容
         self.set_sv_value_with_name("current_recipe_id_name", self.get_config_value("current_recipe_id_name", ""))
-        self.plc = TagCommunication(self.get_config_value("dll_path"), self.get_config_value("plc_ip"))
+        self.plc = TagCommunication(self.get_inovance_dll_path(), self.get_config_value("plc_ip"))
         self.plc.logger.addHandler(self.file_handler)  # 保存plc日志到文件
 
         self.enable_equipment()  # 启动MES服务
@@ -118,9 +124,10 @@ class ZhongCheYiXing(Controller):
             # noinspection PyBroadException
             try:
                 current_value = self.plc.execute_read(kwargs.get("tag_name"), TagTypeEnum.BOOL.value, False)
+                # pylint: disable=W0106
                 current_value and self.signal_trigger_event(kwargs.get("call_back"), kwargs)  # 监控到bool信号触发事件
                 time.sleep(wait_time)
-            except Exception:
+            except Exception:  # pylint: disable=W0718
                 pass  # 出现任何异常不做处理
 
     def signal_trigger_event(self, call_back_list: list, signal_info: dict):
@@ -133,10 +140,7 @@ class ZhongCheYiXing(Controller):
         self.logger.info(f"{'=' * 40} Get Signal: {signal_info.get('description')}, "
                          f"地址位: {signal_info.get('tag_name')} {'=' * 40}")
 
-        try:
-            self.execute_call_backs(call_back_list)  # 根据配置文件下的call_back执行具体的操作
-        except PLCRuntimeError as e:
-            self.logger.warning(f"*** 执行 call back 时出现异常 *** -> 异常信息: {str(e)}")
+        self.execute_call_backs(call_back_list)  # 根据配置文件下的call_back执行具体的操作
 
         self.logger.info(f"{'=' * 40} Signal clear: {signal_info.get('description')} {'=' * 40}")
 
@@ -158,13 +162,58 @@ class ZhongCheYiXing(Controller):
                 self.read_operation_update_sv(call_back)  # 读取 plc 地址位更新sv
             elif call_back.get("operation_type") == "write":  # write操作
                 self.write_operation(call_back, time_out=time_out)  # 写入plc相关操作
+            elif call_back.get("operation_type") == "save_recipe":  # 保存配方详细信息
+                self.save_recipe(call_back["recipe_info_tags"])
+
+            if "track_in" in self.get_current_thread_name():
+                self.track_in_operations()
+
             if (event_name := call_back.get("event_name")) in self.get_config_value("collection_events"):  # 触发事件
                 self.send_s6f11(event_name)
-            else:
-                recipe_id = self.get_sv_id_with_name("upload_recipe_id")
-                recipe_name = self.get_sv_id_with_name("upload_recipe_name")
-                self.send_process_program(f"{recipe_id}:{recipe_name}", "")
+                if "track_out" in event_name:
+                    self.send_track_out_carrier_event()
+
             self.logger.info(f"{'-' * 30} 结束 Success: {description} {'-' * 30}")
+
+    def track_in_operations(self):
+        """进站时清空设备停止值, 保存进站数据给后面托盘出站用."""
+        # 每次都清空让设备停止的值
+        self.plc.execute_write(self.get_tag_name("equipment_stop"), TagTypeEnum.INT.value, 1)
+        # 保存进站的托盘码, 产品1出站的sn, 产品2出站的sn, 产品1出站状态, 产品2出站状态
+        self.save_track_in_carrier_info()
+
+    def send_track_out_carrier_event(self):
+        """判断是否要发送托盘出站事件."""
+        track_out_product_sn = self.get_sv_value_with_name("track_out_product_sn")
+
+        carrier_sn = self.get_product_carrier(track_out_product_sn)
+        self.track_in_carrier_info[carrier_sn]["track_out_num"] += 1
+        if self.track_in_carrier_info[carrier_sn]["track_out_num"] == 2:
+            self.set_sv_value_with_name("track_out_product2_sn", track_out_product_sn)
+            self.set_sv_value_with_name(
+                "track_out_product2_state", self.get_sv_value_with_name("track_out_product_state")
+            )
+            self.send_s6f11("track_out_carrier")
+        else:
+            self.set_sv_value_with_name("track_out_product1_sn", track_out_product_sn)
+            self.set_sv_value_with_name(
+                "track_out_product1_state", self.get_sv_value_with_name("track_out_product_state")
+            )
+
+    def get_product_carrier(self, track_out_product_sn) -> Optional[str]:
+        """根据产品码获取产品进站时对应的托盘码.
+
+        Args:
+            track_out_product_sn (str): 产品码.
+
+        Returns:
+            str: 产品进站时对应的托盘码.
+        """
+        for carrier_sn, track_in_info in self.track_in_carrier_info.items():
+            for key, value in track_in_info.items():  # pylint: disable=W0612
+                if value == track_out_product_sn:
+                    return carrier_sn
+        return None
 
     def write_operation(self, call_back: dict, time_out=5):
         """向 plc 地址位写入数据.
@@ -247,6 +296,7 @@ class ZhongCheYiXing(Controller):
             self.set_sv_value_with_name(call_back.get("sv_name"), plc_value)
         else:
             if isinstance(tag_name, list):
+                self.set_sv_value_with_name("track_out_pins_state", [])
                 for _tag_name in tag_name:
                     plc_value = self.plc.execute_read(_tag_name, data_type)
                     self.status_variables.get(self.get_sv_id_with_name("track_out_pins_state")).value.append(plc_value)
@@ -302,9 +352,14 @@ class ZhongCheYiXing(Controller):
         """
         return self.config["plc_signal_tag_name"][name]["tag_name"]
 
-    def save_current_recipe(self):
-        """保存plc上传的配方id和name."""
+    def save_current_recipe_local(self):
+        """保存当前的配方id和name."""
         self.config["current_recipe_id_name"] = self.get_sv_value_with_name("current_recipe_id_name")
+        self.update_config(f"{'/'.join(self.__module__.split('.'))}.conf", self.config)
+
+    def save_recipes_local(self):
+        """保存plc上传的配方id和name."""
+        self.config["recipes"] = self.recipes
         self.update_config(f"{'/'.join(self.__module__.split('.'))}.conf", self.config)
 
     def get_callback(self, signal_name: str) -> list:
@@ -337,55 +392,82 @@ class ZhongCheYiXing(Controller):
             )
         threading.Thread(target=_alarm_sender, args=(alarm_code,), daemon=True).start()
 
-    def _on_s07f01(self, handler, packet):
-        """Host发送s07f01, 下发配方前询问."""
-        del handler
-        parser_result = self.get_receive_data(packet)
-        recipe_id_name = parser_result.get("PPID")
-        if recipe_id_name in self.config.get("recipe_id_names", []):  # 判断配方是否存在
-            return self.stream_function(7, 2)(PPGNT.ALREADY_HAVE)
-        return self.stream_function(7, 2)(PPGNT.OK)  # 不允许切换
+    def save_recipe(self, recipe_info_tags):
+        """保存plc上传的配方信息.
+
+        Args:
+            recipe_info_tags (dict): 配方信息的字典, key是配方信息描述, value是plc标签.
+        """
+        recipe_id = self.get_sv_value_with_name("upload_recipe_id")
+        recipe_name = self.get_sv_value_with_name("upload_recipe_name")
+        recipe_id_name = f"{recipe_id}_{recipe_name}"
+        self.recipes[recipe_id_name] = {}
+
+        def _save_recipe_thread(_recipe_id_name, _recipe_info_tags):
+            for key_data_type, tag_name in _recipe_info_tags.items():
+                key, data_type = key_data_type.split(",")
+                if "_" in data_type:
+                    value_num, data_type = data_type.split("_")
+                    for index in range(int(value_num)):
+                        plc_value = self.plc.execute_read(f"{tag_name}[{index}]", data_type)
+                        self.recipes[_recipe_id_name].update({f"{key}{index}": plc_value})
+                else:
+                    plc_value = self.plc.execute_read(tag_name, data_type)
+                    self.recipes[_recipe_id_name].update({key: plc_value})
+            self.save_recipes_local()  # 保存所有的配方信息在本地
+
+        threading.Thread(target=_save_recipe_thread, args=(recipe_id_name, recipe_info_tags,), daemon=True).start()
+
+    def save_track_in_carrier_info(self):
+        """保存进站时的托盘, 产品1信息, 产品2信息."""
+        track_in_info = {
+            "product1_sn": self.get_sv_value_with_name("track_in_product1_sn"),
+            "product2_sn": self.get_sv_value_with_name("track_in_product2_sn"),
+            "track_out_num": 0
+        }
+        self.track_in_carrier_info[self.get_sv_value_with_name("track_in_carrier_sn")] = track_in_info
+
+    # pylint: disable=W0237
+    def on_sv_value_request(self, sv_id: Base, status_variable: StatusVariable) -> Base:
+        """Get the status variable value depending on its configuration.
+
+        Args:
+            sv_id (Base): The id of the status variable encoded in the corresponding type.
+            status_variable (StatusVariable): The status variable requested.
+
+        Returns:
+            The value encoded in the corresponding type
+        """
+        del sv_id
+        # noinspection PyTypeChecker
+        if issubclass(status_variable.value_type, Array):
+            return status_variable.value_type(U4, status_variable.value)
+        return status_variable.value_type(status_variable.value)
 
     def _on_s07f03(self, handler, packet):
-        """Host给PC下发配方, 保存EAP下发的配方."""
+        """Host给PC下发配方, 保存EAP下发的配方, 针对这个设备不做任何操作."""
         del handler
-        parser_result = self.get_receive_data(packet)
-        recipe_id_name = parser_result.get("PPID")
-        self.recipe_id_names.append(recipe_id_name)  # 保存EAP下发的配方id_name
         return self.stream_function(7, 4)(ACKC7.ACCEPTED)
 
     def _on_s07f05(self, handler, packet):
-        """Host请求上传配方内容, 目前只回复PPID, PPBODY回复空字符串."""
+        """Host请求上传配方内容."""
         del handler
         parser_result = self.get_receive_data(packet)
-        recipe_id_name = parser_result
-        return self.stream_function(7, 6)([recipe_id_name, ""])
-
-    def _on_s07f17(self, handler, packet):
-        """Host删除配方."""
-        del handler
-        parser_result = self.get_receive_data(packet)
-        recipe_id_names = parser_result
-        for recipe_id_name in recipe_id_names:
-            if recipe_id_name in self.recipe_id_names:
-                self.recipe_id_names.remove(recipe_id_name)
-                self.logger.info(f"*** 删除配方 *** --> 成功, 配方 {recipe_id_name} 已删除")
-            else:
-                self.logger.info(f"*** 删除配方 *** --> 失败, 配方 {recipe_id_name} 不存在, 存在的配方: {self.recipe_id_names}")
-                return self.stream_function(7, 18)(ACKC7.PPID_NOT_FOUND)
-        return self.stream_function(7, 18)(ACKC7.ACCEPTED)
+        recipe_name = parser_result
+        pp_body = json.dumps(self.recipes[recipe_name])
+        return self.stream_function(7, 6)([recipe_name, pp_body])
 
     def _on_s07f19(self, handler, packet):
         """Host查看设备的所有配方."""
         del handler
-        return self.stream_function(7, 20)(self.recipe_id_names)
+        return self.stream_function(7, 20)(list(self.recipes.keys()))
 
     def _on_s10f03(self, handler, packet):
         """Host发送弹框信息显示."""
         del handler
         parser_result = self.get_receive_data(packet)
-        terminal_id = parser_result.get("TID")
-        terminal_text = parser_result.get("TEXT")
+        terminal_id = parser_result.get("TID")  # pylint: disable=W0612
+        terminal_text = parser_result.get("TEXT")  # pylint: disable=W0612
         return self.stream_function(10, 4)(ACKC10.ACCEPTED)
 
     def _on_rcmd_pp_select(self, recipe_id_name):
@@ -394,43 +476,25 @@ class ZhongCheYiXing(Controller):
         Args:
             recipe_id_name (str): 要切换的配方id_name.
         """
-        recipe_id, recipe_name = recipe_id_name.split(":")
-        self.set_sv_value_with_name("pp_select_recipe_id", recipe_id)
+        recipe_id, recipe_name = recipe_id_name.split("_")
+        self.set_sv_value_with_name("pp_select_recipe_id", int(recipe_id))
         self.set_sv_value_with_name("pp_select_recipe_name", recipe_name)
         # noinspection PyBroadException
         try:  # 根据配置文件下的call_back执行具体的操作
             self.execute_call_backs(self.get_callback("pp_select"))
         except PLCRuntimeError:
             pass
-        except Exception:
+        except Exception:  # pylint: disable=W0718
             pass
-        self.send_s6f11("pp_select")  # 触发 pp_select 事件
 
         # 切换成功, 更新当前配方id_name, 保存当前配方
         if self.get_sv_value_with_name("pp_select_state") == self.get_config_value("pp_select_success_state"):
+            self.set_sv_value_with_name("pp_select_recipe_id_name", recipe_id_name)
             self.set_sv_value_with_name("current_recipe_id_name", recipe_id_name)
-            self.save_current_recipe()
+            self.save_current_recipe_local()
 
-    def _on_rcmd_track_in_reply(
-            self, carrier_sn: str, product1_sn: str, product2_sn: str, product1_state: int, product2_state: int):
-        """Host发送s02f41产品进站回复.
+        self.send_s6f11("pp_select")  # 触发 pp_select 事件
 
-        Args:
-            carrier_sn (str): 进站回复托盘码.
-            product1_sn (str): 进站回复产品1sn.
-            product2_sn (str): 进站回复产品2sn.
-            product1_state (int): 进站回复产品1状态.
-            product2_state (int): 进站回复产品2状态.
-        """
-        self.set_sv_value_with_name("track_in_reply_carrier_sn", carrier_sn)
-        self.set_sv_value_with_name("track_in_reply_product1_sn", product1_sn)
-        self.set_sv_value_with_name("track_in_reply_product2_sn", product2_sn)
-        self.set_sv_value_with_name("track_in_reply_product1_state", product1_state)
-        self.set_sv_value_with_name("track_in_reply_product2_state", product2_state)
-        # noinspection PyBroadException
-        try:  # 根据配置文件下的call_back执行具体的操作
-            self.execute_call_backs(self.get_callback("pp_select"))
-        except PLCRuntimeError:
-            pass
-        except Exception:
-            pass
+    def _on_rcmd_equipment_stop(self):
+        """EAP让设备停止."""
+        self.plc.execute_write(self.get_tag_name("equipment_stop"), TagTypeEnum.INT.value, 2)

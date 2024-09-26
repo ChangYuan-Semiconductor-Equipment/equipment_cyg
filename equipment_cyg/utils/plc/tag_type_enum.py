@@ -1,3 +1,4 @@
+"""标签数据类型枚举."""
 from enum import Enum
 
 

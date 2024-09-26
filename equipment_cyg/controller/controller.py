@@ -1,3 +1,4 @@
+"""Equipment controller."""
 import csv
 import datetime
 import functools
@@ -11,21 +12,21 @@ from logging.handlers import TimedRotatingFileHandler
 from typing import Union, Optional
 
 from secsgem.common import DeviceType, Message
-from secsgem.gem import CollectionEvent, GemEquipmentHandler, EquipmentConstant, StatusVariable, RemoteCommand, Alarm
+from secsgem.gem import CollectionEvent, GemEquipmentHandler, StatusVariable, RemoteCommand, Alarm
 from secsgem.secs.data_items.tiack import TIACK
 from secsgem.secs.functions import SecsS02F18
 from secsgem.secs.variables import U4, Array
 from secsgem.hsms import HsmsSettings, HsmsConnectMode
 
 from equipment_cyg.controller.enum_sece_data_type import EnumSecsDataType
-from equipment_cyg.utils.database.log_handler import DatabaseHandler
-from equipment_cyg.utils.database.operations import (get_all_event, get_all_equipment_constant,
-                                                     get_all_status_variable, get_all_remote_command, get_all_alarm)
 
 
-class Controller(GemEquipmentHandler):
+# pylint: disable=W1203
+class Controller(GemEquipmentHandler):  # pylint: disable=R0901
+    """Equipment controller class."""
+
     def __init__(self, **kwargs):
-        self.config = self.get_config(self.get_config_path(f'{"/".join(self.__module__.split("."))}.conf'))
+        self.config = self.get_config(self.get_config_path(f"{'/'.join(self.__module__.split('.'))}.conf"))
         self._file_handler = None  # 保存日志的处理器
 
         hsms_settings = HsmsSettings(
@@ -39,95 +40,57 @@ class Controller(GemEquipmentHandler):
         self.model_name = self.config.get("model_name")
         self.software_version = self.config.get("software_version")
 
-        self.initial_log_config()
-        self.initial_evnet()
-        self.initial_equipment_constant()
-        self.initial_status_variable()
-        self.initial_remote_command()
-        self.initial_alarm()
+        self._initial_log_config()
+        self._initial_evnet()
+        self._initial_status_variable()
+        self._initial_remote_command()
+        self._initial_alarm()
 
     # 初始化函数
-    def initial_log_config(self) -> None:
+    def _initial_log_config(self) -> None:
         """保存所有 self.__module__ + "." + self.__class__.__name__ 日志和sec通讯日志."""
         self.create_log_dir()
         self.logger.addHandler(self.file_handler)  # 所有 self.__module__ + "." + self.__class__.__name__ 日志
         self.protocol.communication_logger.addHandler(self.file_handler)  # secs 通讯日志
 
-        if self.config.get("config_from_db", False):
-            db_handler = DatabaseHandler()  # 创建保存日志到数据库处理器
-            db_handler.setFormatter(logging.Formatter(self.get_log_format()))
-            self.logger.addHandler(db_handler)
 
-    def initial_evnet(self):
+    def _initial_evnet(self):
         """加载定义好的事件."""
-        if self.config.get("config_from_db", False):
-            event_list = get_all_event()
-            for event_id, event_name in event_list:
-                self.collection_events.update({event_id: CollectionEvent(event_id, event_name, [])})
-        else:
-            collection_events = self.config.get("collection_events", {})
-            for event_name, event_info in collection_events.items():
-                self.collection_events.update({
-                    event_name: CollectionEvent(name=event_name, data_values=[], **event_info)
-                })
+        collection_events = self.config.get("collection_events", {})
+        for event_name, event_info in collection_events.items():
+            self.collection_events.update({
+                event_name: CollectionEvent(name=event_name, data_values=[], **event_info)
+            })
 
-    def initial_equipment_constant(self):
-        """加载定义好的设备常量."""
-        if self.config.get("config_from_db", False):
-            ec_list = get_all_equipment_constant()
-            for ec_id, name, min_value, max_value, default_value, value_type, unit, callback in ec_list:
-                self.equipment_constants.update({
-                    ec_id: EquipmentConstant(
-                        ec_id, name, min_value, max_value, default_value, unit, value_type, callback
-                    )
-                })
-        else:
-            pass
-
-    def initial_status_variable(self):
+    def _initial_status_variable(self):
         """加载定义好的变量."""
-        if self.config.get("config_from_db", False):
-            svs = get_all_status_variable()
-            for sv_id, sv_name, unit, value_type, callback in svs:
-                self.status_variables.update({sv_id: StatusVariable(sv_id, sv_name, unit, value_type, callback)})
-        else:
-            status_variables = self.config.get("status_variable", {})
-            for sv_name, sv_info in status_variables.items():
-                sv_id = sv_info.get("svid")
-                value_type_str = sv_info.get("value_type")
-                value_type = getattr(EnumSecsDataType, value_type_str).value
-                sv_info["value_type"] = value_type
-                self.status_variables.update({sv_id: StatusVariable(name=sv_name, **sv_info)})
-                sv_info["value_type"] = value_type_str
+        status_variables = self.config.get("status_variable", {})
+        for sv_name, sv_info in status_variables.items():
+            sv_id = sv_info.get("svid")
+            value_type_str = sv_info.get("value_type")
+            value_type = getattr(EnumSecsDataType, value_type_str).value
+            sv_info["value_type"] = value_type
+            self.status_variables.update({sv_id: StatusVariable(name=sv_name, **sv_info)})
+            sv_info["value_type"] = value_type_str
 
-    def initial_remote_command(self):
+    def _initial_remote_command(self):
         """加载定义好的远程命令."""
-        if self.config.get("config_from_db", False):
-            rcs = get_all_remote_command()
-            for rc_code, rc_name, ce_id, rc_param_names in rcs:
-                self.remote_commands.update({rc_name: RemoteCommand(rc_code, rc_name, rc_param_names, ce_id)})
-        else:
-            remote_commands = self.config.get("remote_commands", {})
-            for rc_name, rc_info in remote_commands.items():
-                ce_id = rc_info.get("ce_id")
-                self.remote_commands.update({rc_name: RemoteCommand(name=rc_name, ce_finished=ce_id, **rc_info)})
+        remote_commands = self.config.get("remote_commands", {})
+        for rc_name, rc_info in remote_commands.items():
+            ce_id = rc_info.get("ce_id")
+            self.remote_commands.update({rc_name: RemoteCommand(name=rc_name, ce_finished=ce_id, **rc_info)})
 
-    def initial_alarm(self):
+    def _initial_alarm(self):
         """加载定义好的报警."""
-        if self.config.get("config_from_db", False):
-            alarms = get_all_alarm()
-            for alarm_id, alarm_name, alarm_text, alarm_code, ce_on, ce_off in alarms:
-                self.alarms.update({alarm_id: Alarm(alarm_id, alarm_name, alarm_text, alarm_code, ce_on, ce_off)})
-        else:
-            if alarm_path := self.get_config_value("alarm_csv", ""):
-                with pathlib.Path(alarm_path).open("r", encoding="UTF-8") as file:
-                    csv_reader = csv.reader(file)
-                    next(csv_reader)
-                    for row in csv_reader:
-                        alarm_id, alarm_name, alarm_text, alarm_code, ce_on, ce_off, *_ = row
-                        self.alarms.update({
-                            alarm_id: Alarm(alarm_id, alarm_name, alarm_text, int(alarm_code), ce_on, ce_off)
-                        })
+        if alarm_path := self.get_alarm_path():
+            with pathlib.Path(alarm_path).open("r", encoding="UTF-8") as file:
+                csv_reader = csv.reader(file)
+                next(csv_reader)
+                for row in csv_reader:
+                    alarm_id, alarm_name, alarm_text, alarm_code, ce_on, ce_off, *_ = row
+                    self.alarms.update({
+                        alarm_id: Alarm(alarm_id, alarm_name, alarm_text, int(alarm_code), ce_on, ce_off)
+                    })
 
     # host给设备发送指令
 
@@ -164,11 +127,11 @@ class Controller(GemEquipmentHandler):
             ti_ack = TIACK.TIME_SET_FAIL
         return self.stream_function(2, 32)(ti_ack)
 
-    def _on_s07f01(self, handle, packet):
+    def _on_s07f01(self, handler, packet):
         """host发送s07f01,下载配方请求前询问,调用此函数."""
         raise NotImplementedError("如果使用,这个方法必须要根据产品重写！")
 
-    def _on_s07f03(self, handle, packet):
+    def _on_s07f03(self, handler, packet):
         """host发送s07f03,下发配方名及主体body,调用此函数."""
         raise NotImplementedError("如果使用,这个方法必须要根据产品重写！")
 
@@ -226,7 +189,7 @@ class Controller(GemEquipmentHandler):
     def enable_equipment(self):
         """启动监控EAP连接的服务."""
         self.enable()  # 设备和host通讯
-        self.logger.info(f"*** CYG SECSGEM 服务已启动 *** -> 等待工厂 EAP 连接!")
+        self.logger.info("*** CYG SECSGEM 服务已启动 *** -> 等待工厂 EAP 连接!")
 
     def get_config_value(self, key, default=None) -> Union[str, int, dict, list, None]:
         """根据key获取配置文件里的值.
@@ -298,6 +261,7 @@ class Controller(GemEquipmentHandler):
         """
         if relative_path:
             return f"{os.path.dirname(__file__)}/../../{relative_path}"
+        return None
 
     @staticmethod
     def get_config(path: str) -> dict:
@@ -336,9 +300,9 @@ class Controller(GemEquipmentHandler):
         """
         date_time = datetime.datetime.strptime(modify_time_str, "%Y%m%d%H%M%S%f")
         date_command = f"date {date_time.year}-{date_time.month}-{date_time.day}"
-        result_date = subprocess.run(date_command, shell=True)
+        result_date = subprocess.run(date_command, shell=True, check=False)
         time_command = f"time {date_time.hour}:{date_time.minute}:{date_time.second}"
-        result_time = subprocess.run(time_command, shell=True)
+        result_time = subprocess.run(time_command, shell=True, check=False)
         if result_date.returncode == 0 and result_time.returncode == 0:
             return True
         return False
@@ -379,10 +343,31 @@ class Controller(GemEquipmentHandler):
             def wrapper(*args, **kwargs):
                 try:
                     return func(*args, **kwargs)
-                except Exception:
-                    raise exception_type
+                except Exception as exc:
+                    raise exception_type from exc
             return wrapper
         return wrap
+
+    @staticmethod
+    def get_inovance_dll_path() -> str:
+        """获取汇川plc标签通讯的dll路径.
+
+        Returns:
+            str: 返回汇川plc标签通讯的dll路径.
+        """
+        return f"{os.getcwd()}/equipment_cyg/external/inovance_tag_dll/TagAccessCS.dll"
+
+    def get_alarm_path(self) -> Optional[pathlib.Path]:
+        """获取报警表格的路径.
+
+        Returns:
+            Optional[pathlib.Path]: 返回报警表格路径, 找不到返回None.
+        """
+        module_name = self.__module__.rsplit(".", maxsplit=1)[-1]
+        path = pathlib.Path(f"{os.getcwd()}/equipment_cyg/product/{module_name}/cyg_alarm.csv")
+        if path.exists():
+            return path
+        return None
 
     @property
     def file_handler(self) -> TimedRotatingFileHandler:
@@ -399,3 +384,4 @@ class Controller(GemEquipmentHandler):
             )
             self._file_handler.setFormatter(logging.Formatter(self.get_log_format()))
         return self._file_handler
+    

@@ -1,3 +1,4 @@
+"""汇川 plc 标签通讯."""
 import logging
 from typing import Union
 import clr
@@ -5,13 +6,15 @@ import clr
 from equipment_cyg.utils.plc.exception import PLCWriteError, PLCReadError
 
 
+# pylint: disable=W1203, disable=W0106
 class TagCommunication:
+    """汇川plc标签通信class."""
 
     def __init__(self, dll_path, plc_ip):
         # noinspection PyUnresolvedReferences
-        clr.AddReference(dll_path)  # 加载DLL
+        clr.AddReference(dll_path)  # pylint: disable=E1101
         # noinspection PyUnresolvedReferences
-        from TagAccessCS import TagAccessClass
+        from TagAccessCS import TagAccessClass  # pylint: disable=E0401, disable=C0415
         self._tag_instance = TagAccessClass()
         self._plc_ip = plc_ip
         self._logger = logging.getLogger(f"{self.__module__}.{self.__class__.__name__}")
@@ -19,18 +22,22 @@ class TagCommunication:
 
     @property
     def handles(self):
+        """标签实例."""
         return self._handles
 
     @property
     def ip(self):
+        """plc ip."""
         return self._plc_ip
 
     @property
     def logger(self):
+        """日志实例."""
         return self._logger
 
     @property
     def tag_instance(self):
+        """标签通讯实例对象."""
         return self._tag_instance
 
     def communication_open(self) -> bool:
@@ -68,8 +75,8 @@ class TagCommunication:
             save_log and self.logger.info(f"*** End read {tag_name}'s value *** -> "
                                           f"value_type: {read_type}, value: {result}, read_state: {state.ToString()}")
             return result
-        except Exception:
-            raise PLCReadError(f"Read failure: may be not connect plc {self.ip}")
+        except Exception as exc:
+            raise PLCReadError(f"Read failure: may be not connect plc {self.ip}") from exc
 
     def execute_read_struct(self, tag_name: str, save_log=True):
         """ Read the value of the specified tag name of struct.
@@ -90,8 +97,8 @@ class TagCommunication:
             save_log and self.logger.info(f"*** End read {tag_name}'s value *** -> "
                                           f"value_type: TC_STRUCT, value: {result}, read_state: {state.ToString()}")
             return result
-        except Exception:
-            raise PLCReadError(f"*** Read failure: may be not connect plc {self.ip}")
+        except Exception as exc:
+            raise PLCReadError(f"*** Read failure: may be not connect plc {self.ip}") from exc
 
     def execute_write(self, tag_name: str, write_type: str, value: Union[int, bool, str], save_log=True):
         """ Write data of the specified type to the designated tag location.
@@ -120,8 +127,8 @@ class TagCommunication:
             if result == self.tag_instance.TAResult.ERR_NOERROR:
                 return True
             return False
-        except Exception:
-            raise PLCWriteError(f"*** Write failure: may be not connect plc {self.ip}")
+        except Exception as exc:
+            raise PLCWriteError(f"*** Write failure: may be not connect plc {self.ip}") from exc
 
     def execute_write_struct(self, tag_name: str, value: Union[int, bool, str], save_log=True):
         """ Write data of the struct type to the designated tag location.
@@ -148,8 +155,8 @@ class TagCommunication:
             if result == self.tag_instance.TAResult.ERR_NOERROR:
                 return True
             return False
-        except Exception:
-            raise PLCWriteError(f"*** Write failure: may be not connect plc {self.ip}")
+        except Exception as exc:
+            raise PLCWriteError(f"*** Write failure: may be not connect plc {self.ip}") from exc
 
     @staticmethod
     def get_true_bit_with_num(number: int) -> list:

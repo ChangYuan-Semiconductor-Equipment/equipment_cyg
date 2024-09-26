@@ -1,3 +1,4 @@
+"""Airtable 封装."""
 import base64
 import io
 import logging
@@ -6,7 +7,9 @@ from pyairtable import Api
 from PIL import Image
 
 
+# pylint: disable=W1203
 class Airtable:
+    """Airtable class."""
     def __init__(self, access_token):
         self._access_token = access_token
         self._api = Api(access_token)
@@ -14,10 +17,12 @@ class Airtable:
 
     @property
     def logger(self):
+        """日志实例."""
         return self._logger
 
     @property
     def api(self):
+        """api实例."""
         return self._api
 
     def create_one_record(self, base_id: str, table_name: str, field_value: dict, typecast=False) -> str:
@@ -43,7 +48,7 @@ class Airtable:
             "file": self.get_photo_base64(photo_path)
         }
         url = f"https://content.airtable.com/v0/{base_id}/{record_id}/{field_name}/uploadAttachment"
-        response = requests.post(url=url, headers=headers, json=data)
+        response = requests.post(url=url, headers=headers, json=data, timeout=5)
         if response.status_code == 200:
             self.logger.info(f"*** 上传成功 *** -> 图片已上传到 {record_id}")
         else:

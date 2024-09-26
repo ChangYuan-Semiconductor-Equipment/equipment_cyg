@@ -7,7 +7,6 @@ class EquipmentBaseException(Exception):
     This exception class inherits from Exception and serves as the base for all
     exceptions related to Equipment operations.
     """
-    pass
 
 
 class EquipmentRuntimeError(EquipmentBaseException):
@@ -16,4 +15,3 @@ class EquipmentRuntimeError(EquipmentBaseException):
     This exception is a subclass of EquipmentBaseException and is raised when there
     is a runtime error during Equipment operations.
     """
-    pass
