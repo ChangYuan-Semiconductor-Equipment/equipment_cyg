@@ -8,7 +8,7 @@ permissions:
   contents: read
 
 jobs:
-  deploy:
+  publish:
     runs-on: windows-latest
 
     steps:
@@ -40,4 +40,4 @@ jobs:
       env:
         POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_API_TOKEN }}
       run: |
-        poetry publish --build --username __token__ --password ${{ secrets.PYPI_API_TOKEN }}
+        poetry publish --build
