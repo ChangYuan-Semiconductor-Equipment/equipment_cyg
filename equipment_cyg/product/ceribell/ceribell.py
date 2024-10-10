@@ -21,10 +21,11 @@ import time
 from datetime import datetime
 from typing import Optional
 
+from inovance_tag.exception import PLCWriteError
+from inovance_tag.tag_communication import TagCommunication
+
 from equipment_cyg.controller.controller import Controller
 from equipment_cyg.utils.airtable.airtable import Airtable
-from equipment_cyg.utils.plc.exception import PLCWriteError
-from equipment_cyg.utils.plc.tag_communication import TagCommunication
 from equipment_cyg.utils.socket.socket_server_asyncio import CygSocketServerAsyncio
 
 
@@ -50,7 +51,7 @@ class Ceribell(Controller):
         )
         self.socket_server.logger.addHandler(self.file_handler)  # 保存socket日志到文件
 
-        self.plc = TagCommunication(self.get_config_value("dll_path"), self.get_config_value("plc_ip"))
+        self.plc = TagCommunication(self.get_config_value("plc_ip"))
         self.plc.logger.addHandler(self.file_handler)  # 保存plc日志到文件
 
         self.enable_equipment()  # 启动MES服务
