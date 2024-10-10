@@ -1,0 +1,196 @@
+alarm_id,alarm_name,alarm_text,alarm_code,ce_on,ce_off,description
+-66,,TCP connection closed,,,,对等机器已关闭网络连接
+-500,,The Loop folder has non-CSV files,,,,Loop文件夹有非CSV文件
+-1050,,Failed to open the COM,,,,COM口打开失败
+-1060,,Robot TCP connection failure,,,,Robot连接失败
+-1063,,TCP connection failure,,,,TCP连接失败
+-1064,,PLC connection failure,,,,PLC连接失败
+-1065,,Carrier scan failed,,,,载具扫码失败
+-1067,,Carrier scan times out,,,,载具扫码超时
+-1069,,The length of TCP write characters is invalid,,,,TCP写入字符长度失效
+-1070,,Fail to open CCD,,,,XX相机打开失败
+-1071,,CCD Alarm,,,,XX相机报警
+-1100,,Undefined Section,,,,未定义的Section
+-2000,,Warning Error,,,,警告提示
+-2010,,Undefined Error,,,,未知错误
+-2060,,File type Error,,,,文件类型错误
+-3001,,The corresponding queue was not retrieved,,,,未检索到相应的队列
+-3002,,No Section was retrieved,,,,未检索到Section
+-3500,,Calibration_Failed to match Qr code area,,,,标定匹配二维码区域失败
+-3501,,Calibration_Squares not found,,,,标定未找到正方形
+-3502,,Quadrant out of camera resolution range or QR code reading failed,,,,象限超过相机分辨率范围或二维码读取失败
+-4001,,The main panel control reference was not found,,,,未找到主面板控件引用
+-4101,,Login Sysdata is not exist,,,,登录文件不存在
+-4300,,Bin not in safe position,,,,料仓不在安全位置
+-5100,,Photo failure,,,,拍照失败!
+-5101,,CCD Error,,,,CCD报错
+-6000,,GTN_Open card failure,,,,GTN开卡失败
+-6001,,Failed to enable the Axis,,,,有轴使能失败
+-6002,,Axis Num Error,,,,轴号错误
+-6003,,The axis is not defined or has an incorrect name,,,,轴未定义或名称错误
+-6004,,The point coordinate system does not exist,,,,点位坐标系不存在
+-6005,,Axis ServoON Error,,,,Axis  xx  ServoONError!
+-6010,,Read Axis status Error,,,,轴状态读取报错
+-6011,,Get Axis position Error,,,,轴位置读取报错
+-6100,,The point is not defined or has an incorrect name,,,,点位未定义或名称错误
+-6103,,Offset points  are not defined or have incorrect names,,,,补偿点位未定义或名称错误
+-6201,,Axial motion timeout,,,,轴运动超时
+-6202,,Axis Do not Move Done,,,,Axis xx  Do not Move Done!
+-6203,,Axis Move Done Error,,,,Axis xx  Move Done Error!
+-6204,,The z-axis is not in a safe position,,,,Z轴不在安全位置
+-7000,,DIO writing error,,,,DIO编写错误
+-7001,,IO Single Check Timeout,,,,DI检测超时
+-7002,,IO Card write or read error,,,,IO卡读写报错
+-7100,,The EXT_DI name is undefined or incorrect,,,,EXT_DI名称未定义或错误
+-7103,,Encoder detection timeout,,,,编码器检测超时
+-7801,,The ErrorLog database was not found,,,,ErrorLog数据库未找到
+-8000,,Stop abnormal,,,,急停异常
+-8001,,Abnormal safety door,,,,安全门异常
+-8002,,Grating abnormal,,,,光幕异常
+-8003,,Air Source pressure is insufficient,,,,气源气压不足
+-8004,,Abnormal Ion fan,,,,离子风扇异常！
+-8005,,The Rubber has reached its service life.Please replace it!,,,,胶垫达到使用寿命..请及时更换！
+-9000,,The interaction signal was not found locally,,,,本地未找到该交互信号
+-9001,,Read PLC Single Timeout,,,,PLC xx 检测超时
+-9005,,Error writing PLC address,,,,写入PLC地址信息错误
+-9010,,Error reading PLC address,,,,读取PLC地址信息错误
+60002,,GP-No Boolean variable found,,,,GP-未找到布尔变量
+60003,,GP- Error reading Boolean variable value,,,,GP-读取布尔变量值出错
+-110001,,Low pressure fault-Please check,,,,气压低故障-请检查
+-110003,,Recipe data not written-Please check,,,,配方数据未写入请检查
+-110005,,Grating abnormal-Please check,,,,光栅异常请检查
+-110006,,The emergency stop circuit is faulty-Please check,,,,急停回路故障请检查
+-110007,,The safety door loop is faulty-Please check,,,,安全门回路故障请检查
+-110100,,ROBOT claw 1_Inconsistent material-Please confirm,,,,ROBOT夹爪1_料账不一致报警-请确认
+-110101,,ROBOT claw 2_Inconsistent material-Please confirm,,,,ROBOT夹爪2_料账不一致报警-请确认
+-110102,,Marking platform_Inconsistent material-Please confirm,,,,打标平台_料账不一致报警-请确认
+-110103,,Assemble the jaws of the outer frame_Inconsistent material-Please confirm,,,,装配取外框夹爪_料账不一致报警-请确认
+-110104,,Assemble the clamping jaws of the base plate_Inconsistent material-Please confirm,,,,装配取基板夹爪_料账不一致报警-请确认
+-110105,,Left transplanting platform1_Inconsistent material-Please confirm,,,,左侧移栽平台位置1_料账不一致报警-请确认
+-110106,,Left transplanting platform2_Inconsistent material-Please confirm,,,,左侧移栽平台位置2_料账不一致报警-请确认
+-110107,,Left transplanting platform3_Inconsistent material-Please confirm,,,,左侧移栽平台位置3_料账不一致报警-请确认
+-110108,,Right transplanting platform1_Inconsistent material-Please confirm,,,,右侧移栽平台位置1_料账不一致报警-请确认
+-110109,,Right transplanting platform2_Inconsistent material-Please confirm,,,,右侧移栽平台位置2_料账不一致报警-请确认
+-110110,,Right transplanting platform3_Inconsistent material-Please confirm,,,,右侧移栽平台位置3_料账不一致报警-请确认
+-110111,,Tray receiving platform_Inconsistent material-Please confirm,,,,Tray盘接料平台_料账不一致报警-请确认
+-110200,,B841_Assembly platform shell scanner_Response timeout-Please confirm,,,,B841_装配平台外壳 扫码枪_响应超时请确认
+-110201,,B842_Dispensing cache bit scanner_Response timeout-Please confirm,,,,B842_点胶缓存位 扫码枪_响应超时请确认
+-110202,,B843_Assemble the cache bit scanner_Response timeout-Please confirm,,,,B843_装配缓存位 扫码枪_响应超时请确认
+-110203,,Dispensing working position MES_Response timeout-Please confirm,,,,点胶工作位 MES_响应超时请确认
+-110204,,The dispensing work bit camera_Response timeout-Please confirm,,,,点胶工作位 相机_响应超时请确认
+-110205,,Dispensing working position 3D_Response timeout-Please confirm,,,,点胶工作位 线扫_响应超时请确认
+-110206,,Assemble the working position MES_Response timeout-Please confirm,,,,装配工作位 MES_响应超时请确认
+-110207,,Assembly working position Top Camera_Response timeout-Please confirm,,,,装配工作位 顶部相机_响应超时请确认
+-110208,,Assembly working position Bottom Camera_Response timeout-Please confirm,,,,装配工作位 底部相机_响应超时请确认
+-110209,,Marking platform Camera_Response timeout-Please confirm,,,,打标平台 相机_响应超时请确认
+-110210,,Printer_Response timeout-Please confirm,,,,打标机_响应超时请确认
+-110211,,Marking platform MES_Response timeout-Please confirm,,,,打标平台 MES_响应超时请确认
+-110212,,Electronic scale_Response timeout-Please confirm,,,,电子秤_响应超时请确认
+-110302,,Dispensing cache station MES_Feedback abnormal-Please confirm,,,,点胶缓存工位MES_反馈信号状态异常-请确认
+-110303,,Dispensing working position MES_Feedback abnormal-Please confirm,,,,点胶工作位 MES_反馈信号状态异常请确认
+-110304,,Dispensing working position Camera_Feedback abnormal-Please confirm,,,,点胶工作位 相机_反馈信号状态异常请确认
+-110305,,Dispensing working position 3D_Feedback abnormal-Please confirm,,,,点胶工作位 线扫_反馈信号状态异常请确认
+-110306,,Assembly working position MES_Feedback abnormal-Please confirm,,,,装配工作位 MES_反馈信号状态异常请确认
+-110307,,Assembly working position Top Camera_Feedback abnormal-Please confirm,,,,装配工作位 顶部相机_反馈信号状态异常请确认
+-110308,,Assembly working position Bottom Camera_Feedback abnormal-Please confirm,,,,装配工作位 底部相机_反馈信号状态异常请确认
+-110309,,Marking platform Camera_Feedback abnormal-Please confirm,,,,打标平台 相机_反馈信号状态异常请确认
+-110310,,Printer_Feedback abnormal-Please confirm,,,,打标机_反馈信号状态异常-请确认
+-110312,,Electronic scale_Feedback abnormal-Please confirm,,,,电子秤_反馈信号状态异常请确认
+-110401,,Dispensing working position Line sweep the glue track_Result NG-Please confirm,,,,点胶工作位 线扫胶水轨迹_结果NG请确认
+-110407,,ROBOT Camera_Result NG-Please confirm,,,,ROBOT 相机拍照_结果NG请确认
+-110408,,Marking platform cylinder_Abnormal sensor-Please confirm,,,,打标平台夹具_传感器检测异常-请确认
+-110409,,Outer box cache area_Abnormal sensor-Please confirm,,,,外框暂存区_传感器检测异常-请确认
+-110410,,Dispensing NG platform_Abnormal sensor-Please confirm,,,,点胶NG平台_传感器检测异常-请确认
+-110411,,Left transplanting platform_Abnormal sensor-Please confirm,,,,左侧移栽平台_传感器检测异常-请确认
+-110412,,Right transplanting platform_Abnormal sensor-Please confirm,,,,右侧移栽平台_传感器检测异常-请确认
+-110413,,Jaws of the outer frame_Abnormal sensor-Please confirm,,,,装配取外壳夹爪_传感器检测异常-请确认
+-110414,,Clamping jaws of the base plate_Abnormal sensor-Please confirm,,,,装配取基板夹爪_传感器检测异常-请确认
+-110501,,ROBOT System failure,,,,ROBOT系统故障
+-110502,,ROBOT Camping jaw1 Manually confirm the availability of materials,,,,ROBOT 夹爪1 需人工确认有无物料
+-110503,,ROBOT Camping jaw2 Manually confirm the availability of materials,,,,ROBOT 夹爪2 需人工确认有无物料
+-110504,,The dispensing machine is faulty-Please confirm,,,,点胶机故障请确认
+-110507,,Calibration error of dispensing needle-Please confirm,,,,点胶针头校准超差-请确认
+-110508,,DWP MES The pallet information is Do not do -Please confirm,,,,点胶工作位 MES托盘信息为 不可做 -请确认
+-110509,,DWP Placode1 MES The information is inconsistent with the sensor-Please check the sensor,,,,点胶工作位 基板1 MES状态信息与传感器检测不一致-请检查传感器
+-110510,,DWP Placode2 MES The information is inconsistent with the sensor-Please check the sensor,,,,点胶工作位 基板2 MES状态信息与传感器检测不一致-请检查传感器
+-110511,,DWP Placode3 MES The information is inconsistent with the sensor-Please check the sensor,,,,点胶工作位 基板3 MES状态信息与传感器检测不一致-请检查传感器
+-110512,,DCWB Placode1 Abnormal sensor-Please check the sensor,,,,点胶缓存工作位 基板1检测传感器异常-请检查传感器
+-110513,,DCWB Placode2 Abnormal sensor-Please check the sensor,,,,点胶缓存工作位 基板2检测传感器异常-请检查传感器
+-110514,,DCWB Placode3 Abnormal sensor-Please check the sensor,,,,点胶缓存工作位 基板3检测传感器异常-请检查传感器
+-110515,,AWP MES The pallet information is Do not do -Please confirm,,,,装配工作位 MES托盘信息为 不可做 -请确认
+-110600,,AWP Placode1 MES The information is inconsistent with the sensor-Please check the sensor,,,,装配工作位 基板1 MES状态信息与传感器检测不一致-请检查传感器
+-110601,,AWP Placode2 MES The information is inconsistent with the sensor-Please check the sensor,,,,装配工作位 基板2 MES状态信息与传感器检测不一致-请检查传感器
+-110602,,AWP Placode3 MES The information is inconsistent with the sensor-Please check the sensor,,,,装配工作位 基板3 MES状态信息与传感器检测不一致-请检查传感器
+-110606,,Tray vacuum suction anomaly-Please check the sensor,,,,Tray盘吸气检测异常请检查
+-110607,,Tray NOK products exist-Please take away,,,,Tray盘内存在NOK产品请取走
+-110608,,Tray Go up to the lift platform timeout-Please check B606&B607,,,,Tray盘上料到达升降平台超时-请检查B606&B607
+-110609,,Tray Feeding servo reaches height limit position-Please check B601,,,,Tray盘上料伺服到达限高位置-请检查B601
+-110610,,Tray Feeding detected Tray being lifted-Please confirm,,,,Tray盘上料检测到Tray盘被带起-请确认
+-110611,,Serial port server port 2 is disconnected,,,,串口服务器端口2连接中断
+-110612,,There is no vehicle number matching the preloaded pallet on the transplanting platform,,,,移栽平台上没有与预装配托盘相匹配的载具号
+-110613,,Jaws of the outer frame The product information is inconsistent with the Placode,,,,装配模组取外框夹爪产品信息与基板信息不匹配(本地)
+-110614,,DCWB MES The pallet information is Do not do -Please confirm,,,,点胶缓存工作位 MES托盘信息为 不可做 -请确认
+-110615,,Jaws of the outer frame The product information is inconsistent with the Placode,,,,装配模组取外框夹爪产品状态与基板状态不一致
+-110700,,Clamping jaws of the base plate The product information is inconsistent with the Placode,,,,装配模组取基板夹爪产品状态与基板状态不一致
+-110701,,Both jaws of the assembly module are in the state-Please confirm,,,,装配模组两个夹爪均存在状态-请确认
+-110702,,AWP Jaws of the outer frame SN inconsistent with the scan results-Please confirm,,,,装配工作位 外框 夹爪条码与扫码结果不一致-请确认
+-110703,,Left transplanting platform Placode it is not all taken-Please check,,,,左侧移栽平台上基板未被全部取走信息错误-请检查
+-110704,,Right transplanting platform Placode it is not all taken-Please check,,,,右侧移栽平台上基板未被全部取走信息错误-请检查
+-110705,,AWP Pallet SN inconsistent with queue SN-Please check,,,,装配工位实际托盘号与队列托盘号不一致-请检查
+-110707,,3D Result judgment timeout-Please confirm,,,,测胶线扫结果判断超时请确认
+-110710,,Marking platform Camera locate NG-Please confirm,,,,打标顶部相机定位NG请确认
+-110711,,Marking platform Camera Grade NG-Please confirm,,,,打标顶部相机等级NG请确认
+-110712,,Bottom Camera locate NG-Please confirm,,,,装配底部相机外框定位NG请确认
+-110713,,Top Camera locate NG-Please confirm,,,,装配顶部相机基板定位NG请确认
+-210001,,Low pressure fault-Please check,,,,气压低故障-请检查
+-210003,,Recipe data not written-Please check,,,,配方数据未写入-请检查
+-210005,,Grating abnormal-Please check,,,,光栅异常-请检查
+-210006,,The emergency stop circuit is faulty-Please check,,,,急停回路故障-请检查
+-210007,,The safety door loop is faulty-Please check,,,,安全门回路故障-请检查
+-210101,,Bin1_Inconsistent material and account alarm-Please confirm,,,,加热仓1_料账不一致报警-请确认
+-210102,,Bin2_Inconsistent material and account alarm-Please confirm,,,,加热仓2_料账不一致报警-请确认
+-210103,,Bin3_Inconsistent material and account alarm-Please confirm,,,,加热仓3_料账不一致报警-请确认
+-210104,,Bin4_Inconsistent material and account alarm-Please confirm,,,,加热仓4_料账不一致报警-请确认
+-210105,,Bin5_Inconsistent material and account alarm-Please confirm,,,,加热仓5_料账不一致报警-请确认
+-210106,,Bin6_Inconsistent material and account alarm-Please confirm,,,,加热仓6_料账不一致报警-请确认
+-210107,,Bin7_Inconsistent material and account alarm-Please confirm,,,,加热仓7_料账不一致报警-请确认
+-210108,,Transplanting platform _Inconsistent material and account alarm-Please confirm,,,,移栽平台_料账不一致报警-请确认
+-210200,,B841_Mainstream line scanner_Response timeout-Please confirm,,,,B841_主流线扫码枪_响应超时-请确认
+-210201,,A871_Temperature controller_Response timeout-Please confirm,,,,A871_温控器_响应超时-请确认
+-210202,,A872_Temperature controller_Response timeout-Please confirm,,,,A872_温控器_响应超时-请确认
+-210203,,A873_Temperature controller_Response timeout-Please confirm,,,,A873_温控器_响应超时-请确认
+-210204,,A874_Temperature controller_Response timeout-Please confirm,,,,A874_温控器_响应超时-请确认
+-210205,,A875_Temperature controller_Response timeout-Please confirm,,,,A875_温控器_响应超时-请确认
+-210206,,A876_Temperature controller_Response timeout-Please confirm,,,,A876_温控器_响应超时-请确认
+-210207,,A877_Temperature controller_Response timeout-Please confirm,,,,A877_温控器_响应超时-请确认
+-210208,,Stock bin1 MES_Response timeout-Please confirm,,,,料仓1 MES_响应超时-请确认
+-210209,,Stock bin2 MES_Response timeout-Please confirm,,,,料仓2 MES_响应超时-请确认
+-210210,,Stock bin3 MES_Response timeout-Please confirm,,,,料仓3 MES_响应超时-请确认
+-210211,,Stock bin4 MES_Response timeout-Please confirm,,,,料仓4 MES_响应超时-请确认
+-210212,,Stock bin5 MES_Response timeout-Please confirm,,,,料仓5 MES_响应超时-请确认
+-210213,,Stock bin6 MES_Response timeout-Please confirm,,,,料仓6 MES_响应超时-请确认
+-210214,,Stock bin7 MES_Response timeout-Please confirm,,,,料仓7 MES_响应超时-请确认
+-210215,,Transplanting platform _MES_Response timeout-Please confirm,,,,移栽平台MES_响应超时-请确认
+-210300,,Cooling station_MES_Response timeout-Please confirm,,,,冷却工位MES_反馈信号状态异常-请确认
+-210308,,Stock bin1 MES_Abnormal feedback status-Please confirm,,,,料仓1 MES_反馈信号状态异常-请确认
+-210309,,Stock bin2 MES_Abnormal feedback status-Please confirm,,,,料仓2 MES_反馈信号状态异常-请确认
+-210310,,Stock bin3 MES_Abnormal feedback status-Please confirm,,,,料仓3 MES_反馈信号状态异常-请确认
+-210311,,Stock bin4 MES_Abnormal feedback status-Please confirm,,,,料仓4 MES_反馈信号状态异常-请确认
+-210312,,Stock bin5 MES_Abnormal feedback status-Please confirm,,,,料仓5 MES_反馈信号状态异常-请确认
+-210313,,Stock bin6 MES_Abnormal feedback status-Please confirm,,,,料仓6 MES_反馈信号状态异常-请确认
+-210314,,Stock bin7 MES_Abnormal feedback status-Please confirm,,,,料仓7 MES_反馈信号状态异常-请确认
+-210315,,Transplanting platform MES_Abnormal feedback status-Please confirm,,,,移栽平台MES_反馈信号状态异常-请确认
+-210509,,Transplanting platformMES The pallet information is Do not do -Please confirm,,,,移栽平台 MES托盘信息为 不可做 -请确认
+-210510,,Bin Feed timeout alarm-Please confirm,,,,加热仓 进料超时报警-请确认
+-210511,,Bin Discharge time out alarm-Please confirm,,,,加热仓 出料超时报警-请确认
+-210513,,Cooling station_MES_Response timeout-Please confirm,,,,冷却工位MES_响应超时-请确认
+-210601,,Stock bin1 Abnormal thermocouple of thermostat-Please check,,,,料仓1 温控器热电偶异常-请检查
+-210602,,Stock bin2 Abnormal thermocouple of thermostat-Please check,,,,料仓2 温控器热电偶异常-请检查
+-210603,,Stock bin3 Abnormal thermocouple of thermostat-Please check,,,,料仓3 温控器热电偶异常-请检查
+-210604,,Stock bin4 Abnormal thermocouple of thermostat-Please check,,,,料仓4 温控器热电偶异常-请检查
+-210605,,Stock bin5 Abnormal thermocouple of thermostat-Please check,,,,料仓5 温控器热电偶异常-请检查
+-210606,,Stock bin6 Abnormal thermocouple of thermostat-Please check,,,,料仓6 温控器热电偶异常-请检查
+-210607,,Stock bin7 Abnormal thermocouple of thermostat-Please check,,,,料仓7 温控器热电偶异常-请检查
+-210700,,Scanner results inconsistent with the upstream pallet SN-Please confirm,,,,扫码枪解码结果与上游来料托盘码不一致-请确认
+-210613,,Stock bin6 The heating time exceeds the setting time-Please confirm,,,,料仓6 加热时间超过设置时间请确认
+-210614,,Stock bin7 The heating time exceeds the setting time-Please confirm,,,,料仓7 加热时间超过设置时间请确认

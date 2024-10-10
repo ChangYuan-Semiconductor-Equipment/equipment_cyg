@@ -1,0 +1,41 @@
+[tool.poetry]
+name = "equipment_cyg"
+version = "1.1.5"
+description = ""
+repository = "https://github.com/ChangYuan-Semiconductor-Equipment/equipment_cyg.git"
+homepage = "https://github.com/ChangYuan-Semiconductor-Equipment/equipment_cyg.git"
+authors = ["WeiLiu <183074632@qq.com>"]
+readme = "README.md"
+packages = [{include = "equipment_cyg"},]
+
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.13"
+secsgem_cyg="^1.0.2"
+sqlalchemy = "^2.0.31"
+pymysql = "^1.1.1"
+modbus-tk = "^1.1.3"
+isort = "^5.13.2"
+flake8 = "^7.1.0"
+black = "^24.8.0"
+pyairtable = "^2.3.3"
+pillow = "^10.4.0"
+cffi = "^1.17.0"
+pythonnet = "3.0.3"
+suds-community = "^1.2.0"
+pylint = "^3.3.0"
+
+
+[tool.poetry.group.dev.dependencies]
+secsgem_cyg = { git = "https://github.com/ChangYuan-Semiconductor-Equipment/secsgem_cyg.git", branch = "main" }
+
+
+[[tool.poetry.source]]
+name = "mirrors"
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+priority = "primary"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
