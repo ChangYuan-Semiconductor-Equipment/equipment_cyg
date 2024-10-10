@@ -505,4 +505,3 @@ class ZhongCheYiXing(Controller):  # pylint: disable=R0901
             self.plc.execute_write(self.get_tag_name("equipment_stop"), TagTypeEnum.INT.value, 2)
         else:
             self.plc.execute_write(self.get_tag_name("equipment_stop"), TagTypeEnum.INT.value, 1)
-
