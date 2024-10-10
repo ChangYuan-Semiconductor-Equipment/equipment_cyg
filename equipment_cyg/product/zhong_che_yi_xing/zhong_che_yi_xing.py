@@ -498,3 +498,10 @@ class ZhongCheYiXing(Controller):  # pylint: disable=R0901
     def _on_rcmd_equipment_stop(self):
         """EAP让设备停止."""
         self.plc.execute_write(self.get_tag_name("equipment_stop"), TagTypeEnum.INT.value, 2)
+
+    def _on_rcmd_track_in_reply(self, state):
+        """进站回复产品状态, 要不要继续做."""
+        if state == "2":
+            self.plc.execute_write(self.get_tag_name("equipment_stop"), TagTypeEnum.INT.value, 2)
+        else:
+            self.plc.execute_write(self.get_tag_name("equipment_stop"), TagTypeEnum.INT.value, 1)
