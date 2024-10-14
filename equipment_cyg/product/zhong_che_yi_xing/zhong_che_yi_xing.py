@@ -2,19 +2,18 @@
 import json
 import threading
 import time
-from typing import Union, Optional
+from typing import Optional, Union
 
+from inovance_tag.exception import PLCReadError, PLCRuntimeError, PLCWriteError
+from inovance_tag.tag_communication import TagCommunication
+from inovance_tag.tag_type_enum import TagTypeEnum
 from secsgem.gem import StatusVariable
 from secsgem.secs.data_items import ACKC7, ACKC10
 from secsgem.secs.variables import I4, U4, Array, Base
 
 from equipment_cyg.controller.controller import Controller
-from equipment_cyg.utils.plc.exception import PLCReadError, PLCRuntimeError, PLCWriteError
-from equipment_cyg.utils.plc.tag_communication import TagCommunication
-from equipment_cyg.utils.plc.tag_type_enum import TagTypeEnum
 
 
-# pylint: disable=W1203, disable=R0913, disable=R0917, disable=R0904
 # noinspection DuplicatedCode
 class ZhongCheYiXing(Controller):  # pylint: disable=R0901
     """中车宜兴拨针设备class."""
@@ -25,7 +24,7 @@ class ZhongCheYiXing(Controller):  # pylint: disable=R0901
         self.alarm_id = I4(0)  # 保存报警id
         self.alarm_text = ""  # 保存报警内容
         self.set_sv_value_with_name("current_recipe_id_name", self.get_config_value("current_recipe_id_name", ""))
-        self.plc = TagCommunication(self.get_inovance_dll_path(), self.get_config_value("plc_ip"))
+        self.plc = TagCommunication(self.get_config_value("plc_ip"))
         self.plc.logger.addHandler(self.file_handler)  # 保存plc日志到文件
 
         self.enable_equipment()  # 启动MES服务
@@ -141,6 +140,8 @@ class ZhongCheYiXing(Controller):  # pylint: disable=R0901
                          f"地址位: {signal_info.get('tag_name')} {'=' * 40}")
 
         self.execute_call_backs(call_back_list)  # 根据配置文件下的call_back执行具体的操作
+        if "track_out" in self.get_current_thread_name():
+            self.send_track_out_carrier_event()
 
         self.logger.info(f"{'=' * 40} Signal clear: {signal_info.get('description')} {'=' * 40}")
 
@@ -155,25 +156,24 @@ class ZhongCheYiXing(Controller):  # pylint: disable=R0901
         Raises:
             PLCRuntimeError: 在执行配置文件下的步骤时出现异常.
         """
+        operation_func_map = {
+            "read": self.read_operation_update_sv,
+            "write": self.write_operation,
+            "wait_eap_reply": self.wait_eap_reply,
+            "save_recipe": self.save_recipe
+        }
         for i, call_back in enumerate(call_backs, 1):
-            description = call_back.get("description")
-            self.logger.info(f"{'-' * 30} Step {i} 开始: {description} {'-' * 30}")
-            if call_back.get("operation_type") == "read":
-                self.read_operation_update_sv(call_back)  # 读取 plc 地址位更新sv
-            elif call_back.get("operation_type") == "write":  # write操作
-                self.write_operation(call_back, time_out=time_out)  # 写入plc相关操作
-            elif call_back.get("operation_type") == "save_recipe":  # 保存配方详细信息
-                self.save_recipe(call_back["recipe_info_tags"])
+            self.logger.info(f"{'-' * 30} Step {i} 开始: {call_back.get('description')} {'-' * 30}")
+            operation_func = operation_func_map.get(call_back.get("operation_type"))
+            # noinspection PyArgumentList
+            operation_func(call_back=call_back, time_out=time_out)
+            self.is_send_event(call_back)
+            self.logger.info(f"{'-' * 30} 结束 Success: {call_back.get('description')} {'-' * 30}")
 
-            if "track_in" in self.get_current_thread_name():
-                self.track_in_operations()
-
-            if (event_name := call_back.get("event_name")) in self.get_config_value("collection_events"):  # 触发事件
-                self.send_s6f11(event_name)
-                if "track_out" in event_name:
-                    self.send_track_out_carrier_event()
-
-            self.logger.info(f"{'-' * 30} 结束 Success: {description} {'-' * 30}")
+    def is_send_event(self, call_back):
+        """判断是否要发送事件."""
+        if (event_name := call_back.get("event_name")) in self.get_config_value("collection_events"):  # 触发事件
+            self.send_s6f11(event_name)
 
     def track_in_operations(self):
         """进站时清空设备停止值, 保存进站数据给后面托盘出站用."""
@@ -427,6 +427,15 @@ class ZhongCheYiXing(Controller):  # pylint: disable=R0901
         }
         self.track_in_carrier_info[self.get_sv_value_with_name("track_in_carrier_sn")] = track_in_info
 
+    def wait_eap_reply(self, call_back=None, time_out=5):
+        """等待EAP回复进站."""
+        while not self.get_sv_value_with_name("track_in_reply_flag"):
+            time_out -= 1
+            time.sleep(1)
+            if time_out == 0:
+                self.logger.warning("*** EAP 回复超时 *** -> EAP 未在5秒内回复进站, 设备停止")
+                self.plc.execute_write(self.get_tag_name("equipment_stop"), TagTypeEnum.INT.value, 2)
+
     # pylint: disable=W0237
     def on_sv_value_request(self, sv_id: Base, status_variable: StatusVariable) -> Base:
         """Get the status variable value depending on its configuration.
@@ -466,8 +475,10 @@ class ZhongCheYiXing(Controller):  # pylint: disable=R0901
         """Host发送弹框信息显示."""
         del handler
         parser_result = self.get_receive_data(packet)
-        terminal_id = parser_result.get("TID")  # pylint: disable=W0612
-        terminal_text = parser_result.get("TEXT")  # pylint: disable=W0612
+        terminal_id = parser_result.get("TID")
+        terminal_text = parser_result.get("TEXT")
+        display_str = f"{terminal_id}:{terminal_text}"
+        self.plc.execute_write(self.get_tag_name("display_eap_str"), TagTypeEnum.STRING.value, display_str)
         return self.stream_function(10, 4)(ACKC10.ACCEPTED)
 
     def _on_rcmd_pp_select(self, recipe_id_name):
@@ -505,3 +516,4 @@ class ZhongCheYiXing(Controller):  # pylint: disable=R0901
             self.plc.execute_write(self.get_tag_name("equipment_stop"), TagTypeEnum.INT.value, 2)
         else:
             self.plc.execute_write(self.get_tag_name("equipment_stop"), TagTypeEnum.INT.value, 1)
+        self.set_sv_value_with_name("track_in_reply_flag", True)
