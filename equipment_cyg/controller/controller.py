@@ -348,15 +348,6 @@ class Controller(GemEquipmentHandler):  # pylint: disable=R0901
             return wrapper
         return wrap
 
-    @staticmethod
-    def get_inovance_dll_path() -> str:
-        """获取汇川plc标签通讯的dll路径.
-
-        Returns:
-            str: 返回汇川plc标签通讯的dll路径.
-        """
-        return f"{os.getcwd()}/equipment_cyg/external/inovance_tag_dll/TagAccessCS.dll"
-
     def get_alarm_path(self) -> Optional[pathlib.Path]:
         """获取报警表格的路径.
 

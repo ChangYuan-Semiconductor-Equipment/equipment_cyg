@@ -510,6 +510,25 @@ url = "https://pypi.tuna.tsinghua.edu.cn/simple"
 reference = "mirrors"
 
 [[package]]
+name = "inovance-tag-cyg"
+version = "0.2.2"
+description = "inovance tag communication"
+optional = false
+python-versions = ">=3.7,<3.13"
+files = [
+    {file = "inovance_tag_cyg-0.2.2-py3-none-any.whl", hash = "sha256:0cd656aec43b0e9d49f7f9f2dc0f654b84e0daf1cf89cebfb3ff0ea77c081f92"},
+    {file = "inovance_tag_cyg-0.2.2.tar.gz", hash = "sha256:869ee3707f4dc9c032a9582330a36c15c335a98245634e482f27bf52567bbb8f"},
+]
+
+[package.dependencies]
+pythonnet = ">=3.0.4,<4.0.0"
+
+[package.source]
+type = "legacy"
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+reference = "mirrors"
+
+[[package]]
 name = "iso8601"
 version = "2.1.0"
 description = "Simple module to parse ISO 8601 dates"
@@ -1046,13 +1065,13 @@ reference = "mirrors"
 
 [[package]]
 name = "pythonnet"
-version = "3.0.3"
+version = "3.0.4"
 description = ".NET and Mono integration for Python"
 optional = false
 python-versions = "<3.13,>=3.7"
 files = [
-    {file = "pythonnet-3.0.3-py3-none-any.whl", hash = "sha256:62486f860c7955b7dcf470e085e4d2b599512224ca24193f716e857b496c530f"},
-    {file = "pythonnet-3.0.3.tar.gz", hash = "sha256:8d4b2e97158a023875f8647458a58f38817f4fe39af60abdd6b0d8adf1d77e75"},
+    {file = "pythonnet-3.0.4-py3-none-any.whl", hash = "sha256:a63979eb66293368659849e0a7e0c55cc064c153b62cd540b614ac36895cc598"},
+    {file = "pythonnet-3.0.4.tar.gz", hash = "sha256:c92fbcfddd16575f7e75a643302271658b606d8557df7f0132ac240e03cc3a8f"},
 ]
 
 [package.dependencies]
@@ -1391,4 +1410,4 @@ reference = "mirrors"
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<3.13"
-content-hash = "9080df3587e44af2cbd3e5d4d7f488a67b8f22f84b4cb3a3e116a06f9719a311"
+content-hash = "7a931d8d6954c42cf2c3f5e335a1e72cebaad094648e6f2f09fe9def271104a4"
