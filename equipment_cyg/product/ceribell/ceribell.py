@@ -45,6 +45,10 @@ class Ceribell(Controller):
         self.update_current_lot_id(self.get_config_value("current_lot").get("lot_id", ""))
         self.update_current_recipe(self.get_config_value("current_lot").get("current_recipe", ""))
 
+        self.set_sv_value_with_name(
+            "print_label", self.get_config_value("current_lot").get("lot_id", "")
+        )
+
         self.socket_server = CygSocketServerAsyncio(
             self.get_config_value("socket_server_ip", "127.0.0.1"),
             self.get_config_value("socket_server_port", 8000)
