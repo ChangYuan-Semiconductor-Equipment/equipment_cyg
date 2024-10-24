@@ -3,10 +3,11 @@ import threading
 import time
 from typing import Union
 
+from inovance_tag.exception import PLCRuntimeError
+from inovance_tag.tag_communication import TagCommunication
+from inovance_tag.tag_type_enum import TagTypeEnum
+
 from equipment_cyg.controller.controller import Controller
-from equipment_cyg.utils.plc.exception import PLCRuntimeError
-from equipment_cyg.utils.plc.tag_communication import TagCommunication
-from equipment_cyg.utils.plc.tag_type_enum import TagTypeEnum
 from suds.client import Client
 from suds.xsd.doctor import ImportDoctor, Import
 
@@ -39,7 +40,7 @@ class EapWebService:
 class ZhongCheZhuZhouTemp(Controller):
     def __init__(self):
         super().__init__()
-        self.plc = TagCommunication(self.get_inovance_dll_path(), self.get_config_value("plc_ip"))
+        self.plc = TagCommunication(self.get_config_value("plc_ip"))
         self.plc.logger.addHandler(self.file_handler)  # 保存plc日志到文件
         self.eap_web_service = EapWebService()
 
