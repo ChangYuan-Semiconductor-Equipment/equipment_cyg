@@ -81,7 +81,7 @@ class SecondFloor(Controller):  # pylint: disable=R0901
 
     def machine_state_thread(self):
         """运行状态变化的线程."""
-        def _machine_state():  # test
+        def _machine_state():  ####
             """监控运行状态变化."""
             tag_name = self.get_tag_name("machine_state")
             while True:
