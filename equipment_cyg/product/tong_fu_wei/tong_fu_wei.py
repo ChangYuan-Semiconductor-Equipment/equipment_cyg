@@ -1,3 +1,4 @@
+# pylint: skip-file
 """
 EAP->PC: 建立通讯 s1f13
 
@@ -128,14 +129,14 @@ from secsgem.gem import StatusVariable
 from secsgem.secs.data_items import ACKC7, ACKC10, ALCD, PPGNT
 from secsgem.secs.variables import I4, Array, Base, String
 
+from socket_cyg.socket_server_asyncio import CygSocketServerAsyncio
+
 from equipment_cyg.controller.controller import Controller
 from equipment_cyg.controller.exception import EquipmentRuntimeError
-from equipment_cyg.utils.socket.socket_server_asyncio import CygSocketServerAsyncio
 
 
-# pylint: disable=W1203, disable=W0612, disable=C0103
 # noinspection PyUnresolvedReferences
-class TongFuWei(Controller):  # pylint: disable=R0901, disable=R0902, disable=R0904
+class TongFuWei(Controller):
     """通富微扫码压合设备类."""
 
     def __init__(self):

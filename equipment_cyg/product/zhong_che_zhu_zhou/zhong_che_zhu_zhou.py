@@ -4,13 +4,14 @@ import json
 import threading
 import time
 from typing import Union
+
+from inovance_tag.exception import PLCWriteError, PLCReadError, PLCRuntimeError
+from inovance_tag.tag_communication import TagCommunication
+from inovance_tag.tag_type_enum import TagTypeEnum
 from secsgem.gem import StatusVariable
 from secsgem.secs.data_items import ACKC7, ACKC10
 from secsgem.secs.variables import I4, Base, Array, U4
 from equipment_cyg.controller.controller import Controller
-from equipment_cyg.utils.plc.exception import PLCWriteError, PLCReadError, PLCRuntimeError
-from equipment_cyg.utils.plc.tag_communication import TagCommunication
-from equipment_cyg.utils.plc.tag_type_enum import TagTypeEnum
 
 
 # pylint: disable=W1203
@@ -28,16 +29,16 @@ class ZhongCheZhuZhou(Controller):  # pylint: disable=R0901
         self.set_plc_current_recipe("st1021")  # 断电重启, 设备plc上次执行的配方
         self.set_plc_current_recipe("st1022")  # 断电重启, 设备plc上次执行的配方
 
-        self.plc_in = TagCommunication(self.get_inovance_dll_path(), self.get_config_value("plc_ip_in"))
+        self.plc_in = TagCommunication(self.get_config_value("plc_ip_in"))
         self.plc_in.logger.addHandler(self.file_handler)  # 保存plc日志到文件
 
-        self.plc_st1020 = TagCommunication(self.get_inovance_dll_path(), self.get_config_value("plc_ip_st1020"))
+        self.plc_st1020 = TagCommunication(self.get_config_value("plc_ip_st1020"))
         self.plc_st1020.logger.addHandler(self.file_handler)  # 保存plc日志到文件
 
-        self.plc_st1021 = TagCommunication(self.get_inovance_dll_path(), self.get_config_value("plc_ip_st1021"))
+        self.plc_st1021 = TagCommunication(self.get_config_value("plc_ip_st1021"))
         self.plc_st1021.logger.addHandler(self.file_handler)  # 保存plc日志到文件
 
-        self.plc_st1022 = TagCommunication(self.get_inovance_dll_path(), self.get_config_value("plc_ip_st1022"))
+        self.plc_st1022 = TagCommunication(self.get_config_value("plc_ip_st1022"))
         self.plc_st1022.logger.addHandler(self.file_handler)  # 保存plc日志到文件
 
         self.enable_equipment()  # 启动MES服务

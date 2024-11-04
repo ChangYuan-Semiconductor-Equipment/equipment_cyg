@@ -23,10 +23,10 @@ from typing import Optional
 
 from inovance_tag.exception import PLCWriteError
 from inovance_tag.tag_communication import TagCommunication
+from socket_cyg.socket_server_asyncio import CygSocketServerAsyncio
 
 from equipment_cyg.controller.controller import Controller
 from equipment_cyg.utils.airtable.airtable import Airtable
-from equipment_cyg.utils.socket.socket_server_asyncio import CygSocketServerAsyncio
 
 
 class Ceribell(Controller):
