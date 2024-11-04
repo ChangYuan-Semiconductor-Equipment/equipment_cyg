@@ -8,7 +8,7 @@ from secsgem.common import DeviceType
 from secsgem.gem import GemHostHandler
 from secsgem.hsms import HsmsSettings, HsmsConnectMode
 
-from equipment_cyg.controller.help_functions import create_log_dir, log_format
+from equipment_cyg.controller.help_functions import create_log_dir, LOG_FORMAT
 
 
 class HostController(GemHostHandler):
@@ -41,14 +41,15 @@ class HostController(GemHostHandler):
             TimedRotatingFileHandler: 返回 TimedRotatingFileHandler 日志处理器.
         """
         if self._file_handler is None:
-            logging.basicConfig(level=logging.INFO, encoding="UTF-8", format=log_format)
+            logging.basicConfig(level=logging.INFO, encoding="UTF-8", format=LOG_FORMAT)
             log_file_name = f"{os.getcwd()}/log/{datetime.now().strftime('%Y-%m-%d')}"
             self._file_handler = TimedRotatingFileHandler(
                 log_file_name, when="D", interval=1, backupCount=10, encoding="UTF-8"
             )
-            self._file_handler.setFormatter(logging.Formatter(log_format))
+            self._file_handler.setFormatter(logging.Formatter(LOG_FORMAT))
         return self._file_handler
 
     def host_enable(self):
+        """启动host."""
         self.enable()
         self.logger.info("*** Host 已启动 *** -> 可以连接设备MES.")

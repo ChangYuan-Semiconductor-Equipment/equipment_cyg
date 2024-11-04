@@ -1,3 +1,4 @@
+"""Help functions."""
 import collections
 import json
 import os
@@ -5,7 +6,8 @@ import pathlib
 
 import pandas as pd
 
-log_format = "%(asctime)s - %(levelname)s - %(module)s:%(lineno)d - %(message)s"
+
+LOG_FORMAT = "%(asctime)s - %(levelname)s - %(module)s:%(lineno)d - %(message)s"
 
 
 def create_log_dir():
@@ -77,7 +79,7 @@ def get_remote_commands(manual_path: str) -> dict:
     """
     data_frame = pd.read_excel(manual_path, sheet_name="remote_commands")  # 使用工作表名称
     data_dict = data_frame.set_index("remote_command").T.to_dict(orient="dict")
-    for remote_command, remote_command_info, in data_dict.items():
+    for remote_command, _, in data_dict.items():
         params = data_dict[remote_command]["params"]
         data_dict[remote_command]["rcmd"] = remote_command
         data_dict[remote_command]["params"] = [] if isinstance(params, float) else params.split(",")
@@ -96,8 +98,3 @@ def generate_secs_conf(manual_path: str):
     secs_info.update({"remote_commands": get_remote_commands(manual_path)})
     with pathlib.Path("secs_gem.conf").open(mode="w", encoding="utf-8") as f:
         json.dump(secs_info, f, indent=4, ensure_ascii=False)
-
-
-if __name__ == '__main__':
-    path = r"D:\python_workspace\equipment_cyg\equipment_cyg\product\zhong_che_yi_xing\zhong_che_yi_xing_manual.xlsx"
-    generate_secs_conf(path)
