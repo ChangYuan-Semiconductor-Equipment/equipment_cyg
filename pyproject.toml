@@ -21,9 +21,12 @@ black = "^24.8.0"
 pyairtable = "^2.3.3"
 pillow = "^10.4.0"
 cffi = "^1.17.0"
-pythonnet = "3.0.3"
+pythonnet = "^3.0.3"
 suds-community = "^1.2.0"
 pylint = "^3.3.0"
+inovance-tag-cyg = "^0.2.2"
+pandas = "^2.2.3"
+openpyxl = "^3.1.5"
 
 
 [tool.poetry.group.dev.dependencies]

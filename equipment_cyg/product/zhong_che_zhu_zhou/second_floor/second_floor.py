@@ -1,4 +1,4 @@
-"""中车宜兴拨针机设备."""
+"""中车湖南株洲二楼拨针机设备."""
 import json
 import threading
 import time
@@ -15,8 +15,8 @@ from equipment_cyg.controller.controller import Controller
 
 
 # noinspection DuplicatedCode
-class ZhongCheYiXing(Controller):  # pylint: disable=R0901
-    """中车宜兴拨针设备class."""
+class SecondFloor(Controller):  # pylint: disable=R0901
+    """中车湖南株洲二楼拨针机设备class."""
     def __init__(self):
         super().__init__()
         self.track_in_carrier_info = {}  # 保存进站数据
@@ -81,7 +81,7 @@ class ZhongCheYiXing(Controller):  # pylint: disable=R0901
 
     def machine_state_thread(self):
         """运行状态变化的线程."""
-        def _machine_state():
+        def _machine_state():  ####
             """监控运行状态变化."""
             tag_name = self.get_tag_name("machine_state")
             while True:
@@ -160,7 +160,7 @@ class ZhongCheYiXing(Controller):  # pylint: disable=R0901
             "read": self.read_operation_update_sv,
             "write": self.write_operation,
             "wait_eap_reply": self.wait_eap_reply,
-            "save_recipe": self.save_recipe
+            "save_recipe": self.save_recipe,
         }
         for i, call_back in enumerate(call_backs, 1):
             self.logger.info(f"{'-' * 30} Step {i} 开始: {call_back.get('description')} {'-' * 30}")
@@ -429,6 +429,8 @@ class ZhongCheYiXing(Controller):  # pylint: disable=R0901
 
     def wait_eap_reply(self, call_back=None, time_out=5):
         """等待EAP回复进站."""
+        if call_back:
+            pass
         while not self.get_sv_value_with_name("track_in_reply_flag"):
             time_out -= 1
             time.sleep(1)
@@ -445,7 +447,7 @@ class ZhongCheYiXing(Controller):  # pylint: disable=R0901
             status_variable (StatusVariable): The status variable requested.
 
         Returns:
-            The value encoded in the corresponding type
+            The value encoded in the corresponding type.
         """
         del sv_id
         # noinspection PyTypeChecker
