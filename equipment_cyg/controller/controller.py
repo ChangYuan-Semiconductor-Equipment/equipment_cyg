@@ -17,6 +17,7 @@ from secsgem.secs.data_items.tiack import TIACK
 from secsgem.secs.functions import SecsS02F18
 from secsgem.secs.variables import U4, Array
 from secsgem.hsms import HsmsSettings, HsmsConnectMode
+from src.secsgem_cyg.secsgem.gem import DataValue
 
 from equipment_cyg.controller.enum_sece_data_type import EnumSecsDataType
 
@@ -43,6 +44,7 @@ class Controller(GemEquipmentHandler):  # pylint: disable=R0901
         self._initial_log_config()
         self._initial_evnet()
         self._initial_status_variable()
+        self._initial_data_value()
         self._initial_remote_command()
         self._initial_alarm()
 
@@ -72,6 +74,17 @@ class Controller(GemEquipmentHandler):  # pylint: disable=R0901
             sv_info["value_type"] = value_type
             self.status_variables.update({sv_id: StatusVariable(name=sv_name, **sv_info)})
             sv_info["value_type"] = value_type_str
+
+    def _initial_data_value(self):
+        """加载定义好的 data value."""
+        data_values = self.config.get("data_values", {})
+        for data_name, data_info in data_values.items():
+            data_id = data_info.get("dvid")
+            value_type_str = data_info.get("value_type")
+            value_type = getattr(EnumSecsDataType, value_type_str).value
+            data_info["value_type"] = value_type
+            self.data_values.update({data_id: DataValue(name=data_name, **data_info)})
+            data_info["value_type"] = value_type_str
 
     def _initial_remote_command(self):
         """加载定义好的远程命令."""
@@ -171,7 +184,10 @@ class Controller(GemEquipmentHandler):  # pylint: disable=R0901
             for report_id, sv_ids in link_reports.items():
                 variables = []
                 for sv_id in sv_ids:
-                    sv_instance: StatusVariable = self.status_variables[sv_id]
+                    if sv_id in self.status_variables:
+                        sv_instance: StatusVariable = self.status_variables.get(sv_id)
+                    else:
+                        sv_instance: DataValue = self.data_values.get(sv_id)
                     if issubclass(sv_instance.value_type, Array):
                         value = sv_instance.value
                         variables += value
@@ -190,6 +206,28 @@ class Controller(GemEquipmentHandler):  # pylint: disable=R0901
         """启动监控EAP连接的服务."""
         self.enable()  # 设备和host通讯
         self.logger.info("*** CYG SECSGEM 服务已启动 *** -> 等待工厂 EAP 连接!")
+
+    def get_tag_name(self, name):
+        """根据传入的 name 获取 plc 定义的标签.
+
+        Args:
+            name (str): 配置文件里给 plc 标签自定义的变量名.
+
+        Returns:
+            str: 返回 plc 定义的标签
+        """
+        return self.config["plc_signal_tag_name"][name]["tag_name"]
+
+    def get_tag_data_type(self, name):
+        """根据传入的 name 获取 plc 定义的标签的 data_type.
+
+        Args:
+            name (str): 配置文件里给 plc 标签自定义的变量名.
+
+        Returns:
+            str: 返回 plc 定义的标签的data_type
+        """
+        return self.config["plc_signal_tag_name"][name]["data_type"]
 
     def get_config_value(self, key, default=None) -> Union[str, int, dict, list, None]:
         """根据key获取配置文件里的值.
@@ -228,6 +266,19 @@ class Controller(GemEquipmentHandler):  # pylint: disable=R0901
             return sv_info["svid"]
         return None
 
+    def get_dv_id_with_name(self, dv_name: str) -> Optional[int]:
+        """根据data名获取data id.
+
+        Args:
+            dv_name: 变量名称.
+
+        Returns:
+            Optional[int]: 返回data id, 没有此data返回None.
+        """
+        if sv_info := self.get_config_value("data_values").get(dv_name):
+            return sv_info["dvid"]
+        return None
+
     def get_sv_value_with_name(self, sv_name: str) -> Union[int, str, bool, list, float]:
         """根据变量名获取变量值.
 
@@ -239,6 +290,17 @@ class Controller(GemEquipmentHandler):  # pylint: disable=R0901
         """
         return self.status_variables.get(self.get_sv_id_with_name(sv_name)).value
 
+    def get_dv_value_with_name(self, dv_name: str) -> Union[int, str, bool, list, float]:
+        """根据data名获取data值.
+
+        Args:
+            dv_name: data名称.
+
+        Returns:
+            Union[int, str, bool, list, float]: 返回对应变量的值.
+        """
+        return self.data_values.get(self.get_dv_id_with_name(dv_name)).value
+
     def set_sv_value_with_name(self, sv_name: str, sv_value: Union[str, int, float, list]):
         """设置指定变量的值.
 
@@ -247,6 +309,15 @@ class Controller(GemEquipmentHandler):  # pylint: disable=R0901
             sv_value (Union[str, int, float, list]): 要设定的值.
         """
         self.status_variables.get(self.get_sv_id_with_name(sv_name)).value = sv_value
+
+    def set_dv_value_with_name(self, dv_name: str, dv_value: Union[str, int, float, list]):
+        """设置指定变量的值.
+
+        Args:
+            dv_name (str): 变量名称.
+            dv_value (Union[str, int, float, list]): 要设定的值.
+        """
+        self.data_values.get(self.get_dv_id_with_name(dv_name)).value = dv_value
 
     # 静态通用函数
     @staticmethod
@@ -286,6 +357,7 @@ class Controller(GemEquipmentHandler):  # pylint: disable=R0901
             data: 新的配置文件数据.
         """
         with pathlib.Path(path).open(mode="w+", encoding="utf-8") as f:
+            # noinspection PyTypeChecker
             json.dump(data, f, indent=4, ensure_ascii=False)
 
     @staticmethod

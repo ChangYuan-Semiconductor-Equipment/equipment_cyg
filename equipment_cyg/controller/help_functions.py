@@ -97,4 +97,5 @@ def generate_secs_conf(manual_path: str):
     secs_info.update({"collection_events": get_collection_events(manual_path)})
     secs_info.update({"remote_commands": get_remote_commands(manual_path)})
     with pathlib.Path("secs_gem.conf").open(mode="w", encoding="utf-8") as f:
+        # noinspection PyTypeChecker
         json.dump(secs_info, f, indent=4, ensure_ascii=False)
