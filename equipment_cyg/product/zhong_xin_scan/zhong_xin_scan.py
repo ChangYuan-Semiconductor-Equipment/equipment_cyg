@@ -1,4 +1,5 @@
 """中心扫码设备."""
+import copy
 import json
 import re
 import threading
@@ -8,9 +9,8 @@ from typing import Union
 from inovance_tag.exception import PLCReadError, PLCRuntimeError, PLCWriteError
 from inovance_tag.tag_communication import TagCommunication
 from inovance_tag.tag_type_enum import TagTypeEnum
-from secsgem.gem import StatusVariable
 from secsgem.secs.data_items import ACKC7, ACKC10
-from secsgem.secs.variables import I4, U4, Array, Base
+from secsgem.secs.variables import I4
 
 from equipment_cyg.controller.controller import Controller
 
@@ -18,6 +18,7 @@ from equipment_cyg.controller.controller import Controller
 # noinspection DuplicatedCode
 class ZhongXinScan(Controller):  # pylint: disable=R0901
     """中心扫码设备 class."""
+
     def __init__(self):
         super().__init__()
         self.recipes = self.get_config_value("recipes", {})  # 获取所有上传过的配方信息
@@ -37,6 +38,7 @@ class ZhongXinScan(Controller):  # pylint: disable=R0901
             self.logger.warning(f"*** First connect to plc success *** -> plc地址是: {self.plc.ip}.")
         else:
             self.logger.warning(f"*** First connect to plc failure *** -> plc地址是: {self.plc.ip}.")
+
         self.mes_heart_thread()  # 心跳线程
         self.control_state_thread()  # 控制状态线程
         self.machine_state_thread()  # 运行状态线程
@@ -44,6 +46,7 @@ class ZhongXinScan(Controller):  # pylint: disable=R0901
 
     def mes_heart_thread(self):
         """mes 心跳的线程."""
+
         def _mes_heart():
             """mes 心跳, 每隔 2s 写入一次."""
             tag_name = self.get_tag_name("mes_heart")
@@ -63,27 +66,31 @@ class ZhongXinScan(Controller):  # pylint: disable=R0901
                         time.sleep(wait_time)
                     else:
                         self.logger.warning(f"*** After exception plc connect success *** -> plc地址是: {self.plc.ip}.")
+
         threading.Thread(target=_mes_heart, daemon=True, name="mes_heart_thread").start()
 
     def control_state_thread(self):
         """控制状态变化的线程."""
+
         def _control_state():
             """监控控制状态变化."""
             tag_name = self.get_tag_name("control_state")
             data_type = self.get_tag_data_type("control_state")
             while True:
                 try:
-                    control_state = 1 if self.plc.execute_read(tag_name, data_type, save_log=False) else 2
+                    control_state = 2 if self.plc.execute_read(tag_name, data_type, save_log=False) else 1
                     if control_state != self.get_sv_value_with_name("current_control_state"):
                         self.set_sv_value_with_name("current_control_state", control_state)
                         self.send_s6f11("control_state_change")
                 except PLCReadError as e:
                     self.logger.warning(f"*** Read failure: control_state *** -> reason: {str(e)}!")
                     time.sleep(self.get_config_value("wait_time_plc_disconnect"))
+
         threading.Thread(target=_control_state, daemon=True, name="control_state_thread").start()
 
     def machine_state_thread(self):
         """运行状态变化的线程."""
+
         def _machine_state():
             """监控运行状态变化."""
             tag_name = self.get_tag_name("machine_state")
@@ -101,10 +108,12 @@ class ZhongXinScan(Controller):  # pylint: disable=R0901
                 except PLCReadError as e:
                     self.logger.warning(f"*** Read failure: machine_state *** -> reason: {str(e)}!")
                     time.sleep(self.get_config_value("wait_time_plc_disconnect"))
+
         threading.Thread(target=_machine_state, daemon=True, name="machine_state_thread").start()
 
     def bool_signal_thread(self):
         """bool 类型信号的线程."""
+
         def _bool_signal(**kwargs):
             """监控 plc bool 信号."""
             self.monitor_plc_address(**kwargs)  # 实时监控plc信号
@@ -127,6 +136,8 @@ class ZhongXinScan(Controller):  # pylint: disable=R0901
             try:
                 current_value = self.plc.execute_read(kwargs.get("tag_name"), TagTypeEnum.BOOL.value, False)
                 # pylint: disable=W0106
+                if self.get_sv_value_with_name("current_control_state") in (0, 1):
+                    continue
                 current_value and self.signal_trigger_event(kwargs.get("call_back"), kwargs)  # 监控到bool信号触发事件
                 time.sleep(wait_time)
             except Exception:  # pylint: disable=W0718
@@ -147,7 +158,7 @@ class ZhongXinScan(Controller):  # pylint: disable=R0901
         self.logger.info(f"{'=' * 40} Signal clear: {signal_info.get('description')} {'=' * 40}")
 
     @Controller.try_except_exception(PLCRuntimeError("*** Execute call backs error ***"))
-    def execute_call_backs(self, call_backs: list, time_out=5):
+    def execute_call_backs(self, call_backs: list, time_out=180):
         """根据操作列表执行具体的操作.
 
         Args:
@@ -177,12 +188,12 @@ class ZhongXinScan(Controller):  # pylint: disable=R0901
         if (event_name := call_back.get("event_name")) in self.get_config_value("collection_events"):  # 触发事件
             self.send_s6f11(event_name)
 
-    def write_operation(self, call_back: dict, time_out=5):
+    def write_operation(self, call_back: dict, time_out=180):
         """向 plc 地址位写入数据.
 
         Args:
             call_back (dict): 要写入值的地址位信息.
-            time_out: 设置超时时间, 默认 5s 超时.
+            time_out: 设置超时时间, 默认 180s 超时.
         """
         tag_name, data_type = call_back.get("tag_name"), call_back.get("data_type")
         write_value = call_back.get("value")
@@ -212,7 +223,8 @@ class ZhongXinScan(Controller):  # pylint: disable=R0901
         self.plc.execute_write(tag_name, data_type, write_value)
 
     def write_with_condition(
-            self, tag_name, premise_tag_name, premise_value, data_type, write_value, time_out=5, premise_data_type="bool"
+            self, tag_name, premise_tag_name, premise_value, data_type, write_value, time_out=180,
+            premise_data_type="bool"
     ):
         """Write value with condition.
 
@@ -248,7 +260,7 @@ class ZhongXinScan(Controller):  # pylint: disable=R0901
                     self.logger.error(f"*** plc 超时 *** -> plc 未在 {expect_time}s 内及时回复! clear mes signal")
             self.plc.execute_write(tag_name, data_type, write_value)
 
-    def read_operation_update_sv(self, call_back: dict, time_out=5):
+    def read_operation_update_sv(self, call_back: dict, time_out=180):
         """读取 plc 数据, 更新sv.
 
         Args:
@@ -267,14 +279,29 @@ class ZhongXinScan(Controller):  # pylint: disable=R0901
                 plc_value = []
                 tag_num = int(re.findall(r'\$(\d+)', tag_name)[0])
                 for i in range(tag_num):
-                    _tag_name = re.sub(f"\$\d+", str(i), tag_name)
+                    _tag_name = re.sub(f"\$\d+", str(i + 1), tag_name)
                     plc_value.append(self.plc.execute_read(_tag_name, data_type.split("-")[-1]))
+                if "读取出站产品状态" == call_back.get("description"):
+                    current_success_count = self.get_sv_value_with_name("success_count")
+                    self.set_sv_value_with_name("success_count",
+                                                self.get_product_ok_num(plc_value) + current_success_count)
+                    if self.get_sv_value_with_name("success_count") >= self.get_sv_value_with_name("lot_number"):
+                        self.send_s6f11("lot_end")
             else:
                 plc_value = self.plc.execute_read(tag_name, data_type)
-            self.set_dv_value_with_name(call_back.get("sv_name"), plc_value)
+            self.set_dv_value_with_name(call_back.get("dv_name"), plc_value)
+
+    @staticmethod
+    def get_product_ok_num(product_states: list):
+        """获取OK产品的个数."""
+        ok_count = 0
+        for state in product_states:
+            if state == 1:
+                ok_count += 1
+        return ok_count
 
     def read_with_condition(
-            self, tag_name, premise_tag_name, premise_value, data_type, time_out=5, premise_data_type="bool"
+            self, tag_name, premise_tag_name, premise_value, data_type, time_out=180, premise_data_type="bool"
     ) -> Union[str, int, bool, list]:
         """根据条件信号读取指定标签的值.
 
@@ -356,6 +383,7 @@ class ZhongXinScan(Controller):  # pylint: disable=R0901
                     "ALCD": _alarm_code, "ALID": self.alarm_id, "ALTX": self.alarm_text
                 })
             )
+
         threading.Thread(target=_alarm_sender, args=(alarm_code,), daemon=True).start()
 
     # noinspection PyUnusedLocal
@@ -364,39 +392,26 @@ class ZhongXinScan(Controller):  # pylint: disable=R0901
         recipe_id = self.get_dv_value_with_name("upload_recipe_id")
         recipe_name = self.get_dv_value_with_name("upload_recipe_name")
         recipe_id_name = f"{recipe_id}_{recipe_name}"
+        temp_recipes = copy.deepcopy(self.recipes)
+        for recipe, recipe_info in temp_recipes.items():
+            if str(recipe_id) == recipe.split("_")[0]:
+                self.recipes.pop(recipe)
         self.recipes[recipe_id_name] = {}
         self.save_recipes_local()
 
-    def wait_eap_reply(self, call_back=None, time_out=5):
+    def wait_eap_reply(self, call_back=None, time_out=180):
         """等待EAP回复进站."""
         if call_back:
             pass
-        while not self.get_dv_id_with_name("track_in_reply_flag"):
+        while not self.get_dv_value_with_name("track_in_reply_flag"):
             time_out -= 1
             time.sleep(1)
             if time_out == 0:
-                self.logger.warning("*** EAP 回复超时 *** -> EAP 未在5秒内回复进站, 设备停止")
+                self.logger.warning("*** EAP 回复超时 *** -> EAP 未在180秒内回复进站, 告诉设备NG 2")
                 self.plc.execute_write(
                     self.get_tag_name("track_in_reply_result"), TagTypeEnum.INT.value,
                     self.get_config_value("track_in_ng_state")
                 )
-
-    # pylint: disable=W0237
-    def on_sv_value_request(self, sv_id: Base, status_variable: StatusVariable) -> Base:
-        """Get the status variable value depending on its configuration.
-
-        Args:
-            sv_id (Base): The id of the status variable encoded in the corresponding type.
-            status_variable (StatusVariable): The status variable requested.
-
-        Returns:
-            The value encoded in the corresponding type
-        """
-        del sv_id
-        # noinspection PyTypeChecker
-        if issubclass(status_variable.value_type, Array):
-            return status_variable.value_type(U4, status_variable.value)
-        return status_variable.value_type(status_variable.value)
 
     def _on_s07f03(self, handler, packet):
         """Host给PC下发配方, 保存EAP下发的配方, 针对这个设备不做任何操作."""
@@ -432,7 +447,12 @@ class ZhongXinScan(Controller):  # pylint: disable=R0901
         Args:
             recipe_id_name (str): 要切换的配方id_name.
         """
-        self.set_dv_value_with_name("pp_select_recipe_id_name", recipe_id_name)
+        recipe_name_eap = recipe_id_name
+        for recipe, recipe_info in self.recipes.items():
+            if str(recipe_id_name) in recipe:
+                recipe_id_name = recipe
+                break
+        self.set_dv_value_with_name("pp_select_recipe_id_name", recipe_name_eap)
         recipe_id, recipe_name = recipe_id_name.split("_")
         self.set_dv_value_with_name("pp_select_recipe_id", int(recipe_id))
         self.set_dv_value_with_name("pp_select_recipe_name", recipe_name)
@@ -446,7 +466,7 @@ class ZhongXinScan(Controller):  # pylint: disable=R0901
 
         # 切换成功, 更新当前配方id_name, 保存当前配方
         if self.get_dv_value_with_name("pp_select_state") == self.get_config_value("pp_select_success_state"):
-            self.set_sv_value_with_name("current_recipe_id_name", recipe_id_name)
+            self.set_sv_value_with_name("current_recipe_id_name", recipe_name_eap)
             self.save_current_recipe_local()
 
         self.send_s6f11("pp_select")  # 触发 pp_select 事件
@@ -455,3 +475,17 @@ class ZhongXinScan(Controller):  # pylint: disable=R0901
         """进站回复产品状态, 要不要继续做."""
         self.plc.execute_write(self.get_tag_name("track_in_reply_result"), TagTypeEnum.INT.value, int(state))
         self.set_dv_value_with_name("track_in_reply_flag", True)
+
+    def _on_rcmd_new_lot(self, lot_name, lot_number):
+        """开工单, 本次工单要做多少个."""
+        self.set_sv_value_with_name("success_count", 0)
+        self.set_sv_value_with_name("lot_name", lot_name)
+        self.set_sv_value_with_name("lot_number", int(lot_number))
+
+        self.plc.execute_write(self.get_tag_name("new_lot_quality"), "int", int(lot_number))
+        self.plc.execute_write(self.get_tag_name("new_lot_signal"), "bool", True)
+        while True:
+            if self.plc.execute_read(self.get_tag_name("new_lot_plc_reply"), "bool"):
+                self.plc.execute_write(self.get_tag_name("new_lot_signal"), "bool", False)
+                break
+            time.sleep(1)
