@@ -1,4 +1,3 @@
-# pylint: skip-file
 """中车宜兴拨针机设备."""
 import json
 import threading
@@ -10,11 +9,12 @@ from inovance_tag.tag_communication import TagCommunication
 from inovance_tag.tag_type_enum import TagTypeEnum
 from secsgem.gem import StatusVariable
 from secsgem.secs.data_items import ACKC7, ACKC10
-from secsgem.secs.variables import I4, U4, Array, Base
+from secsgem.secs.variables import U4, Array, Base
 
 from equipment_cyg.controller.controller import Controller
 
 
+# pylint: disable=W1203, disable=R0913, disable=R0917, disable=R0904
 # noinspection DuplicatedCode
 class ZhongCheYiXing(Controller):  # pylint: disable=R0901
     """中车宜兴拨针设备class."""
@@ -22,7 +22,7 @@ class ZhongCheYiXing(Controller):  # pylint: disable=R0901
         super().__init__()
         self.track_in_carrier_info = {}  # 保存进站数据
         self.recipes = self.get_config_value("recipes", {})  # 获取所有上传过的配方信息
-        self.alarm_id = I4(0)  # 保存报警id
+        self.alarm_id = U4(0)  # 保存报警id
         self.alarm_text = ""  # 保存报警内容
         self.set_sv_value_with_name("current_recipe_id_name", self.get_config_value("current_recipe_id_name", ""))
         self.plc = TagCommunication(self.get_config_value("plc_ip"))
@@ -30,7 +30,7 @@ class ZhongCheYiXing(Controller):  # pylint: disable=R0901
 
         self.enable_equipment()  # 启动MES服务
 
-        self.start_monitor_plc_thread()  # 启动监控plc信号线程
+        # self.start_monitor_plc_thread()  # 启动监控plc信号线程 10.188.200.46
 
     def start_monitor_plc_thread(self):
         """启动监控 plc 信号的线程."""
@@ -147,7 +147,7 @@ class ZhongCheYiXing(Controller):  # pylint: disable=R0901
         self.logger.info(f"{'=' * 40} Signal clear: {signal_info.get('description')} {'=' * 40}")
 
     @Controller.try_except_exception(PLCRuntimeError("*** Execute call backs error ***"))
-    def execute_call_backs(self, call_backs: list, time_out=5):
+    def execute_call_backs(self, call_backs: list, time_out=180):
         """根据操作列表执行具体的操作.
 
         Args:
@@ -216,12 +216,12 @@ class ZhongCheYiXing(Controller):  # pylint: disable=R0901
                     return carrier_sn
         return None
 
-    def write_operation(self, call_back: dict, time_out=5):
+    def write_operation(self, call_back: dict, time_out=180):
         """向 plc 地址位写入数据.
 
         Args:
             call_back (dict): 要写入值的地址位信息.
-            time_out: 设置超时时间, 默认 5s 超时.
+            time_out: 设置超时时间, 默认 18s 超时.
         """
         tag_name, data_type = call_back.get("tag_name"), call_back.get("data_type")
         write_value = call_back.get("value")
@@ -247,7 +247,7 @@ class ZhongCheYiXing(Controller):  # pylint: disable=R0901
         self.plc.execute_write(tag_name, data_type, write_value)
 
     def write_with_condition(
-            self, tag_name, premise_tag_name, premise_value, data_type, write_value, time_out=5
+            self, tag_name, premise_tag_name, premise_value, data_type, write_value, time_out=180
     ):
         """Write value with condition.
 
@@ -282,12 +282,12 @@ class ZhongCheYiXing(Controller):  # pylint: disable=R0901
                     self.logger.error(f"*** plc 超时 *** -> plc 未在 {expect_time}s 内及时回复! clear mes signal")
             self.plc.execute_write(tag_name, "bool", write_value)
 
-    def read_operation_update_sv(self, call_back: dict, time_out=5):
+    def read_operation_update_sv(self, call_back: dict, time_out=180):
         """读取 plc 数据, 更新sv.
 
         Args:
             call_back (dict): 读取地址位的信息.
-            time_out: 设置超时时间, 默认 5s 超时.
+            time_out: 设置超时时间, 默认 180s 超时.
         """
         tag_name, data_type = call_back.get("tag_name"), call_back.get("data_type")
         if premise_tag_name := call_back.get("premise_tag_name"):
@@ -306,7 +306,7 @@ class ZhongCheYiXing(Controller):  # pylint: disable=R0901
                 self.set_sv_value_with_name(call_back.get("sv_name"), plc_value)
 
     def read_with_condition(
-            self, tag_name, premise_tag_name, premise_value, data_type, time_out=5
+            self, tag_name, premise_tag_name, premise_value, data_type, time_out=180
     ) -> Union[str, int, bool]:
         """根据条件信号读取指定标签的值.
 
@@ -382,7 +382,8 @@ class ZhongCheYiXing(Controller):  # pylint: disable=R0901
         """
         if alarm_code == 2:
             alarm_id_str = self.plc.execute_read(self.get_tag_name("alarm_id"), TagTypeEnum.STRING.value)
-            self.alarm_id = I4(int(alarm_id_str))
+            self.logger.info(f"***当前报警id是: {alarm_id_str}***")
+            self.alarm_id = U4(int(alarm_id_str))
             self.alarm_text = self.alarms.get(alarm_id_str).text
 
         def _alarm_sender(_alarm_code):
@@ -428,7 +429,8 @@ class ZhongCheYiXing(Controller):  # pylint: disable=R0901
         }
         self.track_in_carrier_info[self.get_sv_value_with_name("track_in_carrier_sn")] = track_in_info
 
-    def wait_eap_reply(self, call_back=None, time_out=5):
+    # noinspection PyUnusedLocal
+    def wait_eap_reply(self, call_back=None, time_out=180):
         """等待EAP回复进站."""
         while not self.get_sv_value_with_name("track_in_reply_flag"):
             time_out -= 1
@@ -464,13 +466,17 @@ class ZhongCheYiXing(Controller):  # pylint: disable=R0901
         del handler
         parser_result = self.get_receive_data(packet)
         recipe_name = parser_result
-        pp_body = json.dumps(self.recipes[recipe_name])
+        pp_body = ""
+        for recipe_id_name, recipe_info in self.recipes.items():
+            if recipe_name in recipe_id_name:
+                pp_body = json.dumps(self.recipes[recipe_id_name])
         return self.stream_function(7, 6)([recipe_name, pp_body])
 
     def _on_s07f19(self, handler, packet):
         """Host查看设备的所有配方."""
         del handler
-        return self.stream_function(7, 20)(list(self.recipes.keys()))
+        recipes = [recipe_id_name.split("_")[-1] for recipe_id_name in list(self.recipes.keys())]
+        return self.stream_function(7, 20)(recipes)
 
     def _on_s10f03(self, handler, packet):
         """Host发送弹框信息显示."""
@@ -480,6 +486,10 @@ class ZhongCheYiXing(Controller):  # pylint: disable=R0901
         terminal_text = parser_result.get("TEXT")
         display_str = f"{terminal_id}:{terminal_text}"
         self.plc.execute_write(self.get_tag_name("display_eap_str"), TagTypeEnum.STRING.value, display_str)
+        if str(terminal_id) == "1":
+            self.plc.execute_write(self.get_tag_name("equipment_stop_other"), TagTypeEnum.INT.value, 1)
+        elif str(terminal_id) == "2":
+            self.plc.execute_write(self.get_tag_name("equipment_stop_other"), TagTypeEnum.INT.value, 2)
         return self.stream_function(10, 4)(ACKC10.ACCEPTED)
 
     def _on_rcmd_pp_select(self, recipe_id_name):
@@ -488,6 +498,11 @@ class ZhongCheYiXing(Controller):  # pylint: disable=R0901
         Args:
             recipe_id_name (str): 要切换的配方id_name.
         """
+        eap_recipe_id_name = recipe_id_name
+        for plc_recipe_id_name, _ in self.recipes.items():
+            if recipe_id_name in plc_recipe_id_name:
+                recipe_id_name = plc_recipe_id_name
+                break
         recipe_id, recipe_name = recipe_id_name.split("_")
         self.set_sv_value_with_name("pp_select_recipe_id", int(recipe_id))
         self.set_sv_value_with_name("pp_select_recipe_name", recipe_name)
@@ -501,15 +516,19 @@ class ZhongCheYiXing(Controller):  # pylint: disable=R0901
 
         # 切换成功, 更新当前配方id_name, 保存当前配方
         if self.get_sv_value_with_name("pp_select_state") == self.get_config_value("pp_select_success_state"):
-            self.set_sv_value_with_name("pp_select_recipe_id_name", recipe_id_name)
-            self.set_sv_value_with_name("current_recipe_id_name", recipe_id_name)
+            self.set_sv_value_with_name("current_recipe_id_name", eap_recipe_id_name)
             self.save_current_recipe_local()
 
+        self.set_sv_value_with_name("pp_select_recipe_id_name", eap_recipe_id_name)
         self.send_s6f11("pp_select")  # 触发 pp_select 事件
 
     def _on_rcmd_equipment_stop(self):
         """EAP让设备停止."""
-        self.plc.execute_write(self.get_tag_name("equipment_stop"), TagTypeEnum.INT.value, 2)
+        self.plc.execute_write(self.get_tag_name("equipment_stop_other"), TagTypeEnum.INT.value, 1)
+
+    def _on_rcmd_clear_equipment_stop(self):
+        """EAP让设备启动."""
+        self.plc.execute_write(self.get_tag_name("equipment_stop_other"), TagTypeEnum.INT.value, 0)
 
     def _on_rcmd_track_in_reply(self, state):
         """进站回复产品状态, 要不要继续做."""
@@ -518,3 +537,4 @@ class ZhongCheYiXing(Controller):  # pylint: disable=R0901
         else:
             self.plc.execute_write(self.get_tag_name("equipment_stop"), TagTypeEnum.INT.value, 1)
         self.set_sv_value_with_name("track_in_reply_flag", True)
+        
