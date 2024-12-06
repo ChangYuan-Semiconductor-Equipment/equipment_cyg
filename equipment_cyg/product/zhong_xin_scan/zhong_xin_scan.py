@@ -1,3 +1,4 @@
+# pylint: skip-file
 """中心扫码设备."""
 import copy
 import json

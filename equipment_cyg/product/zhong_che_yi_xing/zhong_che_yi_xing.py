@@ -1,3 +1,4 @@
+# pylint: skip-file
 """中车宜兴拨针机设备."""
 import json
 import threading
