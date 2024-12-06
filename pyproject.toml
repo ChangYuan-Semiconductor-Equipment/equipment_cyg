@@ -10,7 +10,7 @@ packages = [{include = "equipment_cyg"},]
 
 
 [tool.poetry.dependencies]
-python = ">=3.10,<3.13"
+python = ">=3.11,<3.13"
 secsgem_cyg="^1.0.2"
 pyairtable = "^2.3.3"
 pillow = "^10.4.0"
@@ -20,7 +20,14 @@ suds-community = "^1.2.0"
 inovance-tag-cyg = "^0.2.2"
 pandas = "^2.2.3"
 openpyxl = "^3.1.5"
-socket-cyg = "^0.1.4"
+socket-cyg = "0.1.2"
+python-snap7 = "^2.0.2"
+sqlalchemy = "^2.0.36"
+pymysql = "^1.1.1"
+mysql-api = "^0.1.0"
+siemens-plc = "^0.1.0"
+alembic = "^1.14.0"
+mysql-table-model = "^0.1.0"
 
 
 [tool.poetry.group.dev.dependencies]

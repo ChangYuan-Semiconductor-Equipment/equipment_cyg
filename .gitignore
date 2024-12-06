@@ -69,3 +69,5 @@ samples/log/*.log
 main.py
 liuwei.py
 equipment_cyg_run.bat
+alembic
+alembic.ini

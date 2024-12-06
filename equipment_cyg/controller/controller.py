@@ -17,7 +17,7 @@ from secsgem.secs.data_items.tiack import TIACK
 from secsgem.secs.functions import SecsS02F18
 from secsgem.secs.variables import U4, Array
 from secsgem.hsms import HsmsSettings, HsmsConnectMode
-from src.secsgem_cyg.secsgem.gem import DataValue
+from src.secsgem_cyg.secsgem.gem import DataValue, EquipmentConstant
 
 from equipment_cyg.controller.enum_sece_data_type import EnumSecsDataType
 
@@ -31,20 +31,23 @@ class Controller(GemEquipmentHandler):  # pylint: disable=R0901
         self._file_handler = None  # 保存日志的处理器
 
         hsms_settings = HsmsSettings(
-            address=self.get_config_value("secs_ip", "127.0.0.1"),
-            port=self.get_config_value("secs_port", 5000),
-            connect_mode=getattr(HsmsConnectMode, self.get_config_value("connect_mode", "PASSIVE")),
+            address=self.get_config_value("secs_ip", "127.0.0.1", parent_name="secs_conf"),
+            port=self.get_config_value("secs_port", 5000, parent_name="secs_conf"),
+            connect_mode=getattr(
+                HsmsConnectMode, self.get_config_value("connect_mode", "PASSIVE", parent_name="secs_conf"),
+            ),
             device_type=DeviceType.EQUIPMENT
         )
         super().__init__(settings=hsms_settings, **kwargs)
 
-        self.model_name = self.config.get("model_name")
-        self.software_version = self.config.get("software_version")
+        self.model_name = self.get_config_value("model_name", parent_name="secs_conf")
+        self.software_version = self.get_config_value("software_version", parent_name="secs_conf")
 
         self._initial_log_config()
         self._initial_evnet()
         self._initial_status_variable()
         self._initial_data_value()
+        self._initial_equipment_constant()
         self._initial_remote_command()
         self._initial_alarm()
 
@@ -86,6 +89,18 @@ class Controller(GemEquipmentHandler):  # pylint: disable=R0901
             self.data_values.update({data_id: DataValue(name=data_name, **data_info)})
             data_info["value_type"] = value_type_str
 
+    def _initial_equipment_constant(self):
+        """加载定义好的常量."""
+        equipment_constants = self.config.get("equipment_constant", {})
+        for ec_name, ec_info in equipment_constants.items():
+            ec_id = ec_info.get("ecid")
+            value_type_str = ec_info.get("value_type")
+            value_type = getattr(EnumSecsDataType, value_type_str).value
+            ec_info["value_type"] = value_type
+            ec_info.update({"min_value": 0, "max_value": 0})
+            self.equipment_constants.update({ec_id: EquipmentConstant(name=ec_name, **ec_info)})
+            ec_info["value_type"] = value_type_str
+
     def _initial_remote_command(self):
         """加载定义好的远程命令."""
         remote_commands = self.config.get("remote_commands", {})
@@ -96,7 +111,7 @@ class Controller(GemEquipmentHandler):  # pylint: disable=R0901
     def _initial_alarm(self):
         """加载定义好的报警."""
         if alarm_path := self.get_alarm_path():
-            with pathlib.Path(alarm_path).open("r", encoding="UTF-8") as file:
+            with pathlib.Path(alarm_path).open("r+") as file:
                 csv_reader = csv.reader(file)
                 next(csv_reader)
                 for row in csv_reader:
@@ -218,6 +233,28 @@ class Controller(GemEquipmentHandler):  # pylint: disable=R0901
         """
         return self.config["plc_signal_tag_name"][name]["tag_name"]
 
+    def get_siemens_start(self, name) -> int:
+        """根据传入的 name 获取西门子 plc 定义的变量的起始位.
+
+        Args:
+            name (str): 配置文件里给 plc 变量自定义的起始位.
+
+        Returns:
+            int: 返回变量的起始位.
+        """
+        return self.config["plc_signal_start"][name]["start"]
+
+    def get_siemens_size(self, name) -> int:
+        """根据传入的 name 获取西门子 plc 定义的变量的大小.
+
+        Args:
+            name (str): 配置文件里给 plc 变量自定义的变量名称.
+
+        Returns:
+            int: 返回变量的大小.
+        """
+        return self.config["plc_signal_start"][name]["start"]
+
     def get_tag_data_type(self, name):
         """根据传入的 name 获取 plc 定义的标签的 data_type.
 
@@ -229,16 +266,30 @@ class Controller(GemEquipmentHandler):  # pylint: disable=R0901
         """
         return self.config["plc_signal_tag_name"][name]["data_type"]
 
-    def get_config_value(self, key, default=None) -> Union[str, int, dict, list, None]:
+    def get_address_data_type(self, name):
+        """根据传入的 name 获取 plc 定义的地址位的 data_type.
+
+        Args:
+            name (str): 配置文件里给 plc 地址自定义的变量名.
+
+        Returns:
+            str: 返回 plc 定义的地址位的data_type
+        """
+        return self.config["plc_signal_start"][name]["data_type"]
+
+    def get_config_value(self, key, default=None, parent_name=None) -> Union[str, int, dict, list, None]:
         """根据key获取配置文件里的值.
 
         Args:
             key(str): 获取值对应的key.
             default: 找不到值时的默认值.
+            parent_name: 父级名称.
 
         Returns:
             Union[str, int, dict, list]: 从配置文件中获取的值.
         """
+        if parent_name:
+            return self.config.get(parent_name).get(key, default)
         return self.config.get(key, default)
 
     def get_receive_data(self, message: Message) -> Union[dict, str]:
@@ -264,7 +315,6 @@ class Controller(GemEquipmentHandler):  # pylint: disable=R0901
         """
         if sv_info := self.get_config_value("status_variable").get(sv_name):
             return sv_info["svid"]
-        return None
 
     def get_dv_id_with_name(self, dv_name: str) -> Optional[int]:
         """根据data名获取data id.
@@ -300,6 +350,30 @@ class Controller(GemEquipmentHandler):  # pylint: disable=R0901
             Union[int, str, bool, list, float]: 返回对应变量的值.
         """
         return self.data_values.get(self.get_dv_id_with_name(dv_name)).value
+
+    def get_ec_id_with_name(self, ec_name: str) -> Optional[int]:
+        """根据常量名获取常量 id.
+
+        Args:
+            ec_name: 常量名称.
+
+        Returns:
+            Optional[int]: 返回常量 id, 没有此常量返回None.
+        """
+        if ec_info := self.get_config_value("equipment_constant").get(ec_name):
+            return ec_info["ecid"]
+        return None
+
+    def get_ec_value_with_name(self, ec_name: str) -> Union[int, str, bool, list, float]:
+        """根据常量名获取常量值.
+
+        Args:
+            ec_name: 常量名称.
+
+        Returns:
+            Union[int, str, bool, list, float]: 返回对应常量的值.
+        """
+        return self.equipment_constants.get(self.get_ec_id_with_name(ec_name)).value
 
     def set_sv_value_with_name(self, sv_name: str, sv_value: Union[str, int, float, list]):
         """设置指定变量的值.
