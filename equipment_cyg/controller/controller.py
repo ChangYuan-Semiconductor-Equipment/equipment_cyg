@@ -12,18 +12,18 @@ from logging.handlers import TimedRotatingFileHandler
 from typing import Union, Optional
 
 from secsgem.common import DeviceType, Message
-from secsgem.gem import CollectionEvent, GemEquipmentHandler, StatusVariable, RemoteCommand, Alarm
+from secsgem.gem import CollectionEvent, GemEquipmentHandler, StatusVariable, RemoteCommand, Alarm, DataValue, \
+    EquipmentConstant
 from secsgem.secs.data_items.tiack import TIACK
 from secsgem.secs.functions import SecsS02F18
 from secsgem.secs.variables import U4, Array
 from secsgem.hsms import HsmsSettings, HsmsConnectMode
-from src.secsgem_cyg.secsgem.gem import DataValue, EquipmentConstant
 
 from equipment_cyg.controller.enum_sece_data_type import EnumSecsDataType
 
 
 # pylint: disable=W1203
-class Controller(GemEquipmentHandler):  # pylint: disable=R0901
+class Controller(GemEquipmentHandler):  # pylint: disable=R0901, R0904
     """Equipment controller class."""
 
     def __init__(self, **kwargs):
@@ -111,7 +111,7 @@ class Controller(GemEquipmentHandler):  # pylint: disable=R0901
     def _initial_alarm(self):
         """加载定义好的报警."""
         if alarm_path := self.get_alarm_path():
-            with pathlib.Path(alarm_path).open("r+") as file:
+            with pathlib.Path(alarm_path).open("r+") as file:  # pylint: disable=W1514
                 csv_reader = csv.reader(file)
                 next(csv_reader)
                 for row in csv_reader:
@@ -315,6 +315,7 @@ class Controller(GemEquipmentHandler):  # pylint: disable=R0901
         """
         if sv_info := self.get_config_value("status_variable").get(sv_name):
             return sv_info["svid"]
+        return None
 
     def get_dv_id_with_name(self, dv_name: str) -> Optional[int]:
         """根据data名获取data id.
