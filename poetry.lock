@@ -1304,13 +1304,13 @@ reference = "mirrors"
 
 [[package]]
 name = "siemens-plc"
-version = "0.1.0"
+version = "0.1.1"
 description = "西门子plc通讯"
 optional = false
 python-versions = ">=3.11,<4.0"
 files = [
-    {file = "siemens_plc-0.1.0-py3-none-any.whl", hash = "sha256:f4050d7bd9142b26187e28cdc43cf315b68fd504792b36e682ad4516c57f7d02"},
-    {file = "siemens_plc-0.1.0.tar.gz", hash = "sha256:f675e4f205383eee92c3681c787fcfa347fde407d9f740d240f37b12aa57f48c"},
+    {file = "siemens_plc-0.1.1-py3-none-any.whl", hash = "sha256:3b2c60769d967e4322f4caf25a70a6df53ac5e5c4e4365b4a1cda966e7edb42c"},
+    {file = "siemens_plc-0.1.1.tar.gz", hash = "sha256:06044bedcf69f379d3702b1291e9525efefd169ec932fef16e4aa23fc2233e26"},
 ]
 
 [package.dependencies]
