@@ -550,8 +550,12 @@ class Semikron(Controller):  # pylint: disable=R0901
         if premise_value == real_premise_value:
             self.plc.execute_write(data_type, self.db_num, start, write_value, bit_index)
             if data_type == "bool":
-                plc_value = self.plc.execute_read(data_type, self.db_num, start, 1, bit_index)
-                self.logger.info(f"*** 检查是否清除反馈信号 *** -> {plc_value}")
+                clear_count = 1
+                while self.plc.execute_read(data_type, self.db_num, start, 1, bit_index):
+                    self.logger.info(f"*** 清空 MES 反馈信号失败 *** -> 第 {clear_count} 次清空失败")
+                    self.plc.execute_write(data_type, self.db_num, start, write_value, bit_index)
+                    clear_count += 1
+                self.logger.info(f"*** 清空 MES 反馈信号成功 *** -> 第 {clear_count} 次清空成功")
         else:
             while time_out:
                 time.sleep(1)
@@ -574,8 +578,12 @@ class Semikron(Controller):  # pylint: disable=R0901
                     self.logger.error(f"*** plc 超时 *** -> plc 未在 {expect_time}s 内及时回复! clear mes signal")
             self.plc.execute_write(data_type, self.db_num, start, write_value, bit_index)
             if data_type == "bool":
-                plc_value = self.plc.execute_read(data_type, self.db_num, start, 1, bit_index)
-                self.logger.info(f"*** 检查是否清除反馈信号 *** -> {plc_value}")
+                clear_count = 1
+                while self.plc.execute_read(data_type, self.db_num, start, 1, bit_index):
+                    self.logger.info(f"*** 清空 MES 反馈信号失败 *** -> 第 {clear_count} 次清空失败")
+                    self.plc.execute_write(data_type, self.db_num, start, write_value, bit_index)
+                    clear_count += 1
+                self.logger.info(f"*** 清空 MES 反馈信号成功 *** -> 第 {clear_count} 次清空成功")
 
     def read_operation_update_sv_or_dv(self, call_back: dict):
         """读取 plc 数据, 更新sv.
