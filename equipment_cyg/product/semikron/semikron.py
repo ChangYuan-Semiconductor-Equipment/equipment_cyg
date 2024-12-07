@@ -496,6 +496,13 @@ class Semikron(Controller):  # pylint: disable=R0901
             self.write_value_continue(data_type, start, size, value, call_back.get("interval", 0))
         else:
             self.plc.execute_write(data_type, self.db_num, start, value, bit_index)
+            if data_type == "bool":
+                count = 1
+                while not self.plc.execute_read(data_type, self.db_num, start, 1, bit_index):
+                    self.logger.warning(f"*** 写入 MES 反馈信号失败 *** -> 第 {count} 次写入失败")
+                    self.plc.execute_write(data_type, self.db_num, start, write_value, bit_index)
+                    count += 1
+                self.logger.info(f"*** 写入 MES 反馈信号成功 *** -> 第 {count} 次写入成功")
 
     def write_value_continue(self, data_type: str, start: int, size: int, values: list, interval: int = 0):
         """连续写入数据.
@@ -552,7 +559,7 @@ class Semikron(Controller):  # pylint: disable=R0901
             if data_type == "bool":
                 clear_count = 1
                 while self.plc.execute_read(data_type, self.db_num, start, 1, bit_index):
-                    self.logger.info(f"*** 清空 MES 反馈信号失败 *** -> 第 {clear_count} 次清空失败")
+                    self.logger.warning(f"*** 清空 MES 反馈信号失败 *** -> 第 {clear_count} 次清空失败")
                     self.plc.execute_write(data_type, self.db_num, start, write_value, bit_index)
                     clear_count += 1
                 self.logger.info(f"*** 清空 MES 反馈信号成功 *** -> 第 {clear_count} 次清空成功")
@@ -580,7 +587,7 @@ class Semikron(Controller):  # pylint: disable=R0901
             if data_type == "bool":
                 clear_count = 1
                 while self.plc.execute_read(data_type, self.db_num, start, 1, bit_index):
-                    self.logger.info(f"*** 清空 MES 反馈信号失败 *** -> 第 {clear_count} 次清空失败")
+                    self.logger.warning(f"*** 清空 MES 反馈信号失败 *** -> 第 {clear_count} 次清空失败")
                     self.plc.execute_write(data_type, self.db_num, start, write_value, bit_index)
                     clear_count += 1
                 self.logger.info(f"*** 清空 MES 反馈信号成功 *** -> 第 {clear_count} 次清空成功")
