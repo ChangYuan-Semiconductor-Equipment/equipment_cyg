@@ -246,7 +246,29 @@ class Semikron(Controller):  # pylint: disable=R0901
         if request_key == "end_lot":
             return json.dumps(self.end_lot(request_value_dict))
 
+        if request_key == "clear_signal":
+            return json.dumps(self.clear_signal())
+
         return None
+
+    def clear_signal(self):
+        """清除信号."""
+        self.plc.execute_write("bool", self.db_num, 92, False, 1)  # plc 进站请求信号
+        self.plc.execute_write("bool", self.db_num, 92, False, 2)  # plc 进站请求信号
+        self.plc.execute_write("bool", self.db_num, 92, False, 3)  # plc 进站请求信号
+
+        self.plc.execute_write("bool", self.db_num, 166, False, 1)  # 进站请求反馈
+        self.plc.execute_write("bool", self.db_num, 166, False, 2)  # 进站请求反馈
+        self.plc.execute_write("bool", self.db_num, 166, False, 3)  # 进站请求反馈
+
+        self.plc.execute_write("bool", self.db_num, 94, False, 1)  # plc dbc放入塑料盒请求信号
+        self.plc.execute_write("bool", self.db_num, 94, False, 2)  # plc dbc放入塑料盒请求信号
+        self.plc.execute_write("bool", self.db_num, 94, False, 3)  # plc dbc放入塑料盒请求信号
+
+        self.plc.execute_write("bool", self.db_num, 168, False, 1)  # dbc放入塑料盒反馈
+        self.plc.execute_write("bool", self.db_num, 168, False, 2)  # dbc放入塑料盒反馈
+        self.plc.execute_write("bool", self.db_num, 168, False, 3)  # dbc放入塑料盒反馈
+        return {}
 
     def get_current_lot_info(self) -> dict:
         """获取当前工单信息, 包含工单名 所有的配方名列表 当前配方名."""
@@ -279,7 +301,7 @@ class Semikron(Controller):  # pylint: disable=R0901
         self.set_dv_value_with_name("new_lot_state", 1)
 
         # 设置要切换的配方id和配方名称
-        point_instance = self.mysql.query_data_one(Point, point_name=new_lot_article_name[:9])
+        point_instance = self.mysql.query_data_one(Point, point_name=new_lot_article_name[:8])
         # noinspection PyUnresolvedReferences
         recipe_name = point_instance.recipe_name
         recipe_id = self.get_recipe_id_with_name(recipe_name)

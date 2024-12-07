@@ -892,13 +892,13 @@ reference = "mirrors"
 
 [[package]]
 name = "pyairtable"
-version = "2.3.6"
+version = "2.3.7"
 description = "Python Client for the Airtable API"
 optional = false
 python-versions = "*"
 files = [
-    {file = "pyairtable-2.3.6-py2.py3-none-any.whl", hash = "sha256:58c4409776847bcc99dfa2d2305e659271b40311e90ab5ee6c8e39444f4c52bb"},
-    {file = "pyairtable-2.3.6.tar.gz", hash = "sha256:fa56713167b3afb57d7d497b5f344f8fa531610a22e7c754860ff1ebe79c6722"},
+    {file = "pyairtable-2.3.7-py2.py3-none-any.whl", hash = "sha256:cd1651355774c1212e618f3407b3b3bf51640438f5db22f436f689898011d71c"},
+    {file = "pyairtable-2.3.7.tar.gz", hash = "sha256:2afd6f095bce99f1114c36bf729e80ced3d3f4235325db0d32f53a87078ba04b"},
 ]
 
 [package.dependencies]
@@ -1304,13 +1304,13 @@ reference = "mirrors"
 
 [[package]]
 name = "siemens-plc"
-version = "0.1.1"
+version = "0.1.2"
 description = "西门子plc通讯"
 optional = false
 python-versions = ">=3.11,<4.0"
 files = [
-    {file = "siemens_plc-0.1.1-py3-none-any.whl", hash = "sha256:3b2c60769d967e4322f4caf25a70a6df53ac5e5c4e4365b4a1cda966e7edb42c"},
-    {file = "siemens_plc-0.1.1.tar.gz", hash = "sha256:06044bedcf69f379d3702b1291e9525efefd169ec932fef16e4aa23fc2233e26"},
+    {file = "siemens_plc-0.1.2-py3-none-any.whl", hash = "sha256:b8584ed9476faadd252c587046158849fc36e22a56f4b2061406cef2b29e5220"},
+    {file = "siemens_plc-0.1.2.tar.gz", hash = "sha256:c9b067f0f7e07dea4e43f050903452b0050adc968233311df8d145291b320b22"},
 ]
 
 [package.dependencies]
