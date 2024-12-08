@@ -498,7 +498,7 @@ class Semikron(Controller):  # pylint: disable=R0901
             self.plc.execute_write(data_type, self.db_num, start, value, bit_index)
             if data_type == "bool":
                 count = 1
-                while not self.plc.execute_read(data_type, self.db_num, start, 1, bit_index):
+                while self.plc.execute_read(data_type, self.db_num, start, 1, bit_index) != write_value:
                     self.logger.warning(f"*** 写入 MES 反馈信号失败 *** -> 第 {count} 次写入失败")
                     self.plc.execute_write(data_type, self.db_num, start, write_value, bit_index)
                     count += 1
@@ -558,7 +558,7 @@ class Semikron(Controller):  # pylint: disable=R0901
             self.plc.execute_write(data_type, self.db_num, start, write_value, bit_index)
             if data_type == "bool":
                 clear_count = 1
-                while self.plc.execute_read(data_type, self.db_num, start, 1, bit_index):
+                while self.plc.execute_read(data_type, self.db_num, start, 1, bit_index) != write_value:
                     self.logger.warning(f"*** 清空 MES 反馈信号失败 *** -> 第 {clear_count} 次清空失败")
                     self.plc.execute_write(data_type, self.db_num, start, write_value, bit_index)
                     clear_count += 1
@@ -586,7 +586,7 @@ class Semikron(Controller):  # pylint: disable=R0901
             self.plc.execute_write(data_type, self.db_num, start, write_value, bit_index)
             if data_type == "bool":
                 clear_count = 1
-                while self.plc.execute_read(data_type, self.db_num, start, 1, bit_index):
+                while self.plc.execute_read(data_type, self.db_num, start, 1, bit_index) != write_value:
                     self.logger.warning(f"*** 清空 MES 反馈信号失败 *** -> 第 {clear_count} 次清空失败")
                     self.plc.execute_write(data_type, self.db_num, start, write_value, bit_index)
                     clear_count += 1
