@@ -395,12 +395,13 @@ class ZhongCheYiXing(Controller):  # pylint: disable=R0901
             )
         threading.Thread(target=_alarm_sender, args=(alarm_code,), daemon=True).start()
 
-    def save_recipe(self, recipe_info_tags):
+    def save_recipe(self, call_back, **kwargs):
         """保存plc上传的配方信息.
 
         Args:
-            recipe_info_tags (dict): 配方信息的字典, key是配方信息描述, value是plc标签.
+            call_back (dict): call_back.
         """
+        recipe_info_tags = call_back.get("recipe_info_tags")
         recipe_id = self.get_sv_value_with_name("upload_recipe_id")
         recipe_name = self.get_sv_value_with_name("upload_recipe_name")
         recipe_id_name = f"{recipe_id}_{recipe_name}"
