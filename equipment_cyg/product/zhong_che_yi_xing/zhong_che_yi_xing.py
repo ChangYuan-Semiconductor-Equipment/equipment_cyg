@@ -1,4 +1,3 @@
-# pylint: skip-file
 """中车宜兴拨针机设备."""
 import json
 import threading
@@ -31,7 +30,7 @@ class ZhongCheYiXing(Controller):  # pylint: disable=R0901
 
         self.enable_equipment()  # 启动MES服务
 
-        # self.start_monitor_plc_thread()  # 启动监控plc信号线程 10.188.200.46
+        self.start_monitor_plc_thread()  # 启动监控plc信号线程
 
     def start_monitor_plc_thread(self):
         """启动监控 plc 信号的线程."""
@@ -395,7 +394,7 @@ class ZhongCheYiXing(Controller):  # pylint: disable=R0901
             )
         threading.Thread(target=_alarm_sender, args=(alarm_code,), daemon=True).start()
 
-    def save_recipe(self, call_back, **kwargs):
+    def save_recipe(self, call_back=None, **kwargs):
         """保存plc上传的配方信息.
 
         Args:
