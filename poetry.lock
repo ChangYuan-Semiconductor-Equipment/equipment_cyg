@@ -458,6 +458,21 @@ url = "https://pypi.tuna.tsinghua.edu.cn/simple"
 reference = "mirrors"
 
 [[package]]
+name = "hslcommunication"
+version = "1.2.0"
+description = "An industrial IoT underlying architecture framework, focusing on the underlying technical communications."
+optional = false
+python-versions = ">=3.5"
+files = [
+    {file = "HslCommunication-1.2.0.tar.gz", hash = "sha256:dad0da5b98274b445d3b0dc69b7e33878462193e4f5e4301769a9986ffeb639f"},
+]
+
+[package.source]
+type = "legacy"
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+reference = "mirrors"
+
+[[package]]
 name = "idna"
 version = "3.10"
 description = "Internationalized Domain Names in Applications (IDNA)"
@@ -620,6 +635,25 @@ files = [
     {file = "MarkupSafe-3.0.2-cp39-cp39-win_amd64.whl", hash = "sha256:6e296a513ca3d94054c2c881cc913116e90fd030ad1c656b3869762b754f5f8a"},
     {file = "markupsafe-3.0.2.tar.gz", hash = "sha256:ee55d3edf80167e48ea11a923c7386f4669df67d7994554387f84e7d8b0a2bf0"},
 ]
+
+[package.source]
+type = "legacy"
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+reference = "mirrors"
+
+[[package]]
+name = "mitsubishi-plc"
+version = "0.1.0"
+description = ""
+optional = false
+python-versions = ">=3.11,<4.0"
+files = [
+    {file = "mitsubishi_plc-0.1.0-py3-none-any.whl", hash = "sha256:0b4592f081f6d5afe6c35d23903504d7cb7e75cede1ce9919407961317be5618"},
+    {file = "mitsubishi_plc-0.1.0.tar.gz", hash = "sha256:0a9ea9645ad8b281c44c0308e47f300f4b63505217f3379ba5c6f8edb868b291"},
+]
+
+[package.dependencies]
+hslcommunication = ">=1.2.0,<2.0.0"
 
 [package.source]
 type = "legacy"
@@ -1583,4 +1617,4 @@ reference = "mirrors"
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.11,<3.13"
-content-hash = "7a12dfc038d83b455eebf71af8f390162636d37372be7af86976d7f5170bfa08"
+content-hash = "7f7b2d35f941cec2be50c4838f877a4ff7708f7df5be457143da0178a001cb16"

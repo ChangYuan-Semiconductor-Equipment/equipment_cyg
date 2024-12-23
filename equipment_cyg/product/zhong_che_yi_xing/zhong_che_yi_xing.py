@@ -1,8 +1,9 @@
 """中车宜兴拨针机设备."""
+import copy
 import json
 import threading
 import time
-from typing import Optional, Union
+from typing import Union
 
 from inovance_tag.exception import PLCReadError, PLCRuntimeError, PLCWriteError
 from inovance_tag.tag_communication import TagCommunication
@@ -20,6 +21,7 @@ class ZhongCheYiXing(Controller):  # pylint: disable=R0901
     """中车宜兴拨针设备class."""
     def __init__(self):
         super().__init__()
+        self.pp_select_fail = False
         self.track_in_carrier_info = {}  # 保存进站数据
         self.recipes = self.get_config_value("recipes", {})  # 获取所有上传过的配方信息
         self.alarm_id = U4(0)  # 保存报警id
@@ -141,8 +143,8 @@ class ZhongCheYiXing(Controller):  # pylint: disable=R0901
                          f"地址位: {signal_info.get('tag_name')} {'=' * 40}")
 
         self.execute_call_backs(call_back_list)  # 根据配置文件下的call_back执行具体的操作
-        if "track_out" in self.get_current_thread_name():
-            self.send_track_out_carrier_event()
+        # if "track_out" in self.get_current_thread_name():
+        #     self.send_track_out_carrier_event()
 
         self.logger.info(f"{'=' * 40} Signal clear: {signal_info.get('description')} {'=' * 40}")
 
@@ -176,46 +178,6 @@ class ZhongCheYiXing(Controller):  # pylint: disable=R0901
         if (event_name := call_back.get("event_name")) in self.get_config_value("collection_events"):  # 触发事件
             self.send_s6f11(event_name)
 
-    def track_in_operations(self):
-        """进站时清空设备停止值, 保存进站数据给后面托盘出站用."""
-        # 每次都清空让设备停止的值
-        self.plc.execute_write(self.get_tag_name("equipment_stop"), TagTypeEnum.INT.value, 1)
-        # 保存进站的托盘码, 产品1出站的sn, 产品2出站的sn, 产品1出站状态, 产品2出站状态
-        self.save_track_in_carrier_info()
-
-    def send_track_out_carrier_event(self):
-        """判断是否要发送托盘出站事件."""
-        track_out_product_sn = self.get_sv_value_with_name("track_out_product_sn")
-
-        carrier_sn = self.get_product_carrier(track_out_product_sn)
-        self.track_in_carrier_info[carrier_sn]["track_out_num"] += 1
-        if self.track_in_carrier_info[carrier_sn]["track_out_num"] == 2:
-            self.set_sv_value_with_name("track_out_product2_sn", track_out_product_sn)
-            self.set_sv_value_with_name(
-                "track_out_product2_state", self.get_sv_value_with_name("track_out_product_state")
-            )
-            self.send_s6f11("track_out_carrier")
-        else:
-            self.set_sv_value_with_name("track_out_product1_sn", track_out_product_sn)
-            self.set_sv_value_with_name(
-                "track_out_product1_state", self.get_sv_value_with_name("track_out_product_state")
-            )
-
-    def get_product_carrier(self, track_out_product_sn) -> Optional[str]:
-        """根据产品码获取产品进站时对应的托盘码.
-
-        Args:
-            track_out_product_sn (str): 产品码.
-
-        Returns:
-            str: 产品进站时对应的托盘码.
-        """
-        for carrier_sn, track_in_info in self.track_in_carrier_info.items():
-            for key, value in track_in_info.items():  # pylint: disable=W0612
-                if value == track_out_product_sn:
-                    return carrier_sn
-        return None
-
     def write_operation(self, call_back: dict, time_out=180):
         """向 plc 地址位写入数据.
 
@@ -231,7 +193,8 @@ class ZhongCheYiXing(Controller):  # pylint: disable=R0901
 
         if premise_tag_name := call_back.get("premise_tag_name"):
             self.write_with_condition(
-                tag_name, premise_tag_name, call_back.get("premise_value"), data_type, write_value, time_out=time_out
+                tag_name, premise_tag_name, call_back.get("premise_value"), data_type, write_value,
+                time_out=call_back.get("premise_time_out", time_out)
             )
         else:
             self.write_no_condition(tag_name, write_value, data_type)
@@ -292,7 +255,8 @@ class ZhongCheYiXing(Controller):  # pylint: disable=R0901
         tag_name, data_type = call_back.get("tag_name"), call_back.get("data_type")
         if premise_tag_name := call_back.get("premise_tag_name"):
             plc_value = self.read_with_condition(
-                tag_name, premise_tag_name, call_back.get("premise_value"), data_type, time_out=time_out
+                tag_name, premise_tag_name, call_back.get("premise_value"), data_type,
+                time_out=call_back.get("premise_time_out", time_out)
             )
             self.set_sv_value_with_name(call_back.get("sv_name"), plc_value)
         else:
@@ -339,6 +303,7 @@ class ZhongCheYiXing(Controller):  # pylint: disable=R0901
                 break
             time_out -= 1
             if time_out == 0:
+                self.pp_select_fail = True
                 self.logger.error(f"*** plc 超时 *** -> plc 未在 {expect_time}s 内及时回复!")
         return self.plc.execute_read(tag_name, data_type)
 
@@ -402,6 +367,12 @@ class ZhongCheYiXing(Controller):  # pylint: disable=R0901
         """
         recipe_info_tags = call_back.get("recipe_info_tags")
         recipe_id = self.get_sv_value_with_name("upload_recipe_id")
+        recipes = copy.deepcopy(self.recipes)
+        for recipe_id_name, recipe_info in recipes.items():
+            origin_recipe_id, origin_recipe_name = recipe_id_name.split("_", 1)
+            if str(recipe_id) == str(origin_recipe_id):
+                self.recipes.pop(recipe_id_name)
+
         recipe_name = self.get_sv_value_with_name("upload_recipe_name")
         recipe_id_name = f"{recipe_id}_{recipe_name}"
         self.recipes[recipe_id_name] = {}
@@ -421,15 +392,6 @@ class ZhongCheYiXing(Controller):  # pylint: disable=R0901
 
         threading.Thread(target=_save_recipe_thread, args=(recipe_id_name, recipe_info_tags,), daemon=True).start()
 
-    def save_track_in_carrier_info(self):
-        """保存进站时的托盘, 产品1信息, 产品2信息."""
-        track_in_info = {
-            "product1_sn": self.get_sv_value_with_name("track_in_product1_sn"),
-            "product2_sn": self.get_sv_value_with_name("track_in_product2_sn"),
-            "track_out_num": 0
-        }
-        self.track_in_carrier_info[self.get_sv_value_with_name("track_in_carrier_sn")] = track_in_info
-
     # noinspection PyUnusedLocal
     def wait_eap_reply(self, call_back=None, time_out=180):
         """等待EAP回复进站."""
@@ -437,7 +399,7 @@ class ZhongCheYiXing(Controller):  # pylint: disable=R0901
             time_out -= 1
             time.sleep(1)
             if time_out == 0:
-                self.logger.warning("*** EAP 回复超时 *** -> EAP 未在5秒内回复进站, 设备停止")
+                self.logger.warning("*** EAP 回复超时 *** -> EAP 未在 180 秒内回复进站, 设备停止")
                 self.plc.execute_write(self.get_tag_name("equipment_stop"), TagTypeEnum.INT.value, 2)
 
     # pylint: disable=W0237
@@ -516,7 +478,9 @@ class ZhongCheYiXing(Controller):  # pylint: disable=R0901
             pass
 
         # 切换成功, 更新当前配方id_name, 保存当前配方
-        if self.get_sv_value_with_name("pp_select_state") == self.get_config_value("pp_select_success_state"):
+        if (self.get_sv_value_with_name("pp_select_state") == self.get_config_value("pp_select_success_state") and
+                not self.pp_select_fail):
+            self.set_sv_value_with_name("pp_select_state", 0)
             self.set_sv_value_with_name("current_recipe_id_name", eap_recipe_id_name)
             self.save_current_recipe_local()
 
@@ -537,5 +501,7 @@ class ZhongCheYiXing(Controller):  # pylint: disable=R0901
             self.plc.execute_write(self.get_tag_name("equipment_stop"), TagTypeEnum.INT.value, 2)
         else:
             self.plc.execute_write(self.get_tag_name("equipment_stop"), TagTypeEnum.INT.value, 1)
+        value = self.plc.execute_read(self.get_tag_name("equipment_stop"), TagTypeEnum.INT.value)
+        self.logger.info("写入的进站回复值是: %s", value)
         self.set_sv_value_with_name("track_in_reply_flag", True)
         

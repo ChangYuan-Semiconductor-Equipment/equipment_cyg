@@ -7,6 +7,7 @@ from secsgem.secs.variables.string import String
 from secsgem.secs.variables.boolean import Boolean
 from secsgem.secs.variables.u1 import U1
 from secsgem.secs.variables.u4 import U4
+from secsgem.secs.variables.i4 import I4
 from secsgem.secs.variables.binary import Binary
 
 
@@ -17,6 +18,7 @@ class EnumSecsDataType(Enum):
     BOOL = Boolean
     UINT_1 = U1
     UINT_4 = U4
+    I4 = I4
     BINARY = Binary
     ARRAY = Array
     LIST = List

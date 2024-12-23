@@ -28,6 +28,8 @@ mysql-api = "^0.1.0"
 siemens-plc = "^0.1.0"
 alembic = "^1.14.0"
 mysql-table-model = "^0.1.0"
+hslcommunication = "^1.2.0"
+mitsubishi-plc = "^0.1.0"
 
 
 [tool.poetry.group.dev.dependencies]

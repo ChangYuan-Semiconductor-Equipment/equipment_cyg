@@ -179,6 +179,10 @@ class Controller(GemEquipmentHandler):  # pylint: disable=R0901, R0904
         """host请求配方列表."""
         raise NotImplementedError("如果使用,这个方法必须要根据产品重写！")
 
+    def _on_s07f25(self, handler, packet):
+        """host请求格式化配方信息."""
+        raise NotImplementedError("如果使用,这个方法必须要根据产品重写！")
+
     def _on_s10f03(self, handler, packet):
         """host terminal display signal, need override."""
         raise NotImplementedError("如果使用,这个方法必须要根据产品重写！")
@@ -243,6 +247,28 @@ class Controller(GemEquipmentHandler):  # pylint: disable=R0901, R0904
             int: 返回变量的起始位.
         """
         return self.config["plc_signal_start"][name]["start"]
+
+    def get_mitsubishi_address(self, name) -> str:
+        """根据传入的 name 获取三菱 plc 定义的变量的地址.
+
+        Args:
+            name (str): 配置文件里给 plc 变量自定义的地址.
+
+        Returns:
+            str: 返回变量的地址.
+        """
+        return self.config["plc_signal_start"][name]["start"]
+
+    def get_mitsubishi_address_size(self, name) -> int:
+        """根据传入的 name 获取三菱 plc 定义的变量的地址大小.
+
+        Args:
+            name (str): 配置文件里给 plc 变量自定义的地址.
+
+        Returns:
+            str: 返回变量的地址大小.
+        """
+        return self.config["plc_signal_start"][name]["size"]
 
     def get_siemens_size(self, name) -> int:
         """根据传入的 name 获取西门子 plc 定义的变量的大小.
@@ -365,6 +391,19 @@ class Controller(GemEquipmentHandler):  # pylint: disable=R0901, R0904
             return ec_info["ecid"]
         return None
 
+    def get_sv_name_with_id(self, sv_id: int) -> Optional[str]:
+        """根据变量id获取变量名称.
+
+        Args:
+            sv_id: 变量id.
+
+        Returns:
+            Optional[int]: 返回变量名称, 没有此变量返回None.
+        """
+        if sv_instance := self.status_variables.get(sv_id):
+            return sv_instance.name
+        return None
+
     def get_ec_value_with_name(self, ec_name: str) -> Union[int, str, bool, list, float]:
         """根据常量名获取常量值.
 
@@ -393,6 +432,15 @@ class Controller(GemEquipmentHandler):  # pylint: disable=R0901, R0904
             dv_value (Union[str, int, float, list]): 要设定的值.
         """
         self.data_values.get(self.get_dv_id_with_name(dv_name)).value = dv_value
+
+    def set_ec_value_with_name(self, ec_name: str, ec_value: Union[str, int, float]):
+        """设置指定变量的值.
+
+        Args:
+            ec_name (str): 变量名称.
+            ec_value (Union[str, int, float]): 要设定的值.
+        """
+        self.equipment_constants.get(self.get_ec_id_with_name(ec_name)).value = ec_value
 
     # 静态通用函数
     @staticmethod
