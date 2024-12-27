@@ -9,6 +9,8 @@ from inovance_tag.exception import PLCReadError, PLCRuntimeError, PLCWriteError
 from inovance_tag.tag_communication import TagCommunication
 from inovance_tag.tag_type_enum import TagTypeEnum
 from secsgem.gem import StatusVariable
+from secsgem.secs import SecsHandler, SecsStreamFunction, data_items
+from secsgem.common import Message
 from secsgem.secs.data_items import ACKC7, ACKC10
 from secsgem.secs.variables import U4, Array, Base
 
@@ -26,9 +28,13 @@ class ZhongCheYiXing(Controller):  # pylint: disable=R0901
         self.recipes = self.get_config_value("recipes", {})  # 获取所有上传过的配方信息
         self.alarm_id = U4(0)  # 保存报警id
         self.alarm_text = ""  # 保存报警内容
-        self.set_sv_value_with_name("current_recipe_id_name", self.get_config_value("current_recipe_id_name", ""))
         self.plc = TagCommunication(self.get_config_value("plc_ip"))
         self.plc.logger.addHandler(self.file_handler)  # 保存plc日志到文件
+        self.plc.communication_open()
+
+        recipe_name = self.plc.execute_read("Application.gvl_OPMODE01_MES.plc2mes.changeOver.recipeName", "string")
+
+        self.set_sv_value_with_name("current_recipe_id_name", recipe_name)
 
         self.enable_equipment()  # 启动MES服务
 
@@ -176,6 +182,8 @@ class ZhongCheYiXing(Controller):  # pylint: disable=R0901
     def is_send_event(self, call_back):
         """判断是否要发送事件."""
         if (event_name := call_back.get("event_name")) in self.get_config_value("collection_events"):  # 触发事件
+            if event_name == "track_out_carrier":
+                time.sleep(5)
             self.send_s6f11(event_name)
 
     def write_operation(self, call_back: dict, time_out=180):
@@ -347,9 +355,9 @@ class ZhongCheYiXing(Controller):  # pylint: disable=R0901
         """
         if alarm_code == 2:
             alarm_id_str = self.plc.execute_read(self.get_tag_name("alarm_id"), TagTypeEnum.STRING.value)
-            self.logger.info(f"***当前报警id是: {alarm_id_str}***")
+            self.logger.info(f"*** 当前报警id是: {alarm_id_str} ***")
             self.alarm_id = U4(int(alarm_id_str))
-            self.alarm_text = self.alarms.get(alarm_id_str).text
+            self.alarm_text = self.alarms.get(alarm_id_str).text if self.alarms.get(alarm_id_str) else "not define"
 
         def _alarm_sender(_alarm_code):
             self.send_and_waitfor_response(
@@ -397,10 +405,11 @@ class ZhongCheYiXing(Controller):  # pylint: disable=R0901
         """等待EAP回复进站."""
         while not self.get_sv_value_with_name("track_in_reply_flag"):
             time_out -= 1
-            time.sleep(1)
+            time.sleep(0.2)
             if time_out == 0:
                 self.logger.warning("*** EAP 回复超时 *** -> EAP 未在 180 秒内回复进站, 设备停止")
                 self.plc.execute_write(self.get_tag_name("equipment_stop"), TagTypeEnum.INT.value, 2)
+        self.set_sv_value_with_name("track_in_reply_flag", False)
 
     # pylint: disable=W0237
     def on_sv_value_request(self, sv_id: Base, status_variable: StatusVariable) -> Base:
@@ -413,6 +422,8 @@ class ZhongCheYiXing(Controller):  # pylint: disable=R0901
         Returns:
             The value encoded in the corresponding type
         """
+        recipe_name = self.plc.execute_read("Application.gvl_OPMODE01_MES.plc2mes.changeOver.recipeName", "string")
+        self.set_sv_value_with_name("current_recipe_id_name", recipe_name)
         del sv_id
         # noinspection PyTypeChecker
         if issubclass(status_variable.value_type, Array):
@@ -461,6 +472,7 @@ class ZhongCheYiXing(Controller):  # pylint: disable=R0901
         Args:
             recipe_id_name (str): 要切换的配方id_name.
         """
+        self.pp_select_fail = False
         eap_recipe_id_name = recipe_id_name
         for plc_recipe_id_name, _ in self.recipes.items():
             if recipe_id_name in plc_recipe_id_name:
@@ -478,12 +490,11 @@ class ZhongCheYiXing(Controller):  # pylint: disable=R0901
             pass
 
         # 切换成功, 更新当前配方id_name, 保存当前配方
-        if (self.get_sv_value_with_name("pp_select_state") == self.get_config_value("pp_select_success_state") and
-                not self.pp_select_fail):
-            self.set_sv_value_with_name("pp_select_state", 0)
+        if self.get_sv_value_with_name("pp_select_state") == self.get_config_value("pp_select_success_state") and self.pp_select_fail is False:
             self.set_sv_value_with_name("current_recipe_id_name", eap_recipe_id_name)
             self.save_current_recipe_local()
-
+        else:
+            self.set_sv_value_with_name("pp_select_state", 0)
         self.set_sv_value_with_name("pp_select_recipe_id_name", eap_recipe_id_name)
         self.send_s6f11("pp_select")  # 触发 pp_select 事件
 
@@ -497,11 +508,59 @@ class ZhongCheYiXing(Controller):  # pylint: disable=R0901
 
     def _on_rcmd_track_in_reply(self, state):
         """进站回复产品状态, 要不要继续做."""
+
         if str(state) == "2":
             self.plc.execute_write(self.get_tag_name("equipment_stop"), TagTypeEnum.INT.value, 2)
         else:
             self.plc.execute_write(self.get_tag_name("equipment_stop"), TagTypeEnum.INT.value, 1)
         value = self.plc.execute_read(self.get_tag_name("equipment_stop"), TagTypeEnum.INT.value)
         self.logger.info("写入的进站回复值是: %s", value)
+
         self.set_sv_value_with_name("track_in_reply_flag", True)
+
+    def _on_s02f41(self, handler: SecsHandler, message: Message) -> SecsStreamFunction | None:
+        """Handle Stream 2, Function 41, host command send.
+
+        The remote command handing differs from usual stream function handling, because we send the ack with later
+        completion first.
+        Then we run the actual remote command callback and signal success with the matching collection event.
+
+        Args:
+            handler: handler the message was received on
+            message: complete message received
+
+        """
+        del handler  # unused parameters
+
+        function = self.settings.streams_functions.decode(message)
+
+        rcmd_name = function.RCMD.get()
+        rcmd_callback_name = "rcmd_" + rcmd_name
+
+        callback = getattr(self._callback_handler, rcmd_callback_name)
+        kwargs = {}
+        for param in function.PARAMS.get():
+            kwargs[param["CPNAME"]] = param["CPVAL"]
+        callback(**kwargs)
+        self.trigger_collection_events([self._remote_commands[rcmd_name].ce_finished])
+
+        if rcmd_name not in self._remote_commands:
+            self._logger.info("remote command %s not registered", rcmd_name)
+            return self.stream_function(2, 42)({"HCACK": data_items.HCACK.INVALID_COMMAND, "PARAMS": []})
+
+        if rcmd_callback_name not in self._callback_handler:
+            self._logger.warning("callback for remote command %s not available", rcmd_name)
+            return self.stream_function(2, 42)({"HCACK": data_items.HCACK.INVALID_COMMAND, "PARAMS": []})
+
+        for param in function.PARAMS:
+            if param.CPNAME.get() not in self._remote_commands[rcmd_name].params:
+                self._logger.warning("parameter %s for remote command %s not available", param.CPNAME.get(), rcmd_name)
+                return self.stream_function(2, 42)({"HCACK": data_items.HCACK.PARAMETER_INVALID,
+                                                    "PARAMS": []})
+
+        self.send_response(self.stream_function(2, 42)({"HCACK": data_items.HCACK.ACK_FINISH_LATER,
+                                                        "PARAMS": []}),
+                           message.header.system)
+
+        return None
         
