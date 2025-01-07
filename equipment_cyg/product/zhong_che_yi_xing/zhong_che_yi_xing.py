@@ -521,7 +521,7 @@ class ZhongCheYiXing(Controller):  # pylint: disable=R0901
     def _on_s02f41(self, handler: SecsHandler, message: Message) -> SecsStreamFunction | None:
         """Handle Stream 2, Function 41, host command send.
 
-        The remote command handing differs from usual stream function magazine_to_transfer, because we send the ack with later
+        The remote command handing differs from usual stream function handling, because we send the ack with later
         completion first.
         Then we run the actual remote command callback and signal success with the matching collection event.
 
