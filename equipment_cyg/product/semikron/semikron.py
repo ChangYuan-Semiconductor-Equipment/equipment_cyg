@@ -60,10 +60,10 @@ import json
 import os.path
 import threading
 import time
+from datetime import datetime
 from typing import Union, Optional
 
 import pandas as pd
-from future.backports.datetime import datetime
 from inovance_tag.exception import PLCReadError, PLCRuntimeError, PLCWriteError
 from mysql_api.exception import MySQLAPIAddError
 from mysql_api.mysql_database import MySQLDatabase

@@ -509,13 +509,13 @@ reference = "mirrors"
 
 [[package]]
 name = "inovance-tag-cyg"
-version = "0.2.4"
+version = "0.2.5"
 description = "inovance tag communication"
 optional = false
 python-versions = ">=3.7,<3.13"
 files = [
-    {file = "inovance_tag_cyg-0.2.4-py3-none-any.whl", hash = "sha256:24abed87d309882ee3dc3c5826856e5a6568ff95fcb8769fcc3eadef5c080a88"},
-    {file = "inovance_tag_cyg-0.2.4.tar.gz", hash = "sha256:27cecdfb70ec95fd6ab76bfe5dfd1ce2a25bf366d756b97af12e6b8870b9d3d0"},
+    {file = "inovance_tag_cyg-0.2.5-py3-none-any.whl", hash = "sha256:766257b4f52c163c621608505bba54a171dbf572e05b1b95d00ff8e26f441b30"},
+    {file = "inovance_tag_cyg-0.2.5.tar.gz", hash = "sha256:1bc5bf1a1095b3fdc56ddb92129af5c844dee1b21f54d44e26d2a1d3ecfc1b07"},
 ]
 
 [package.dependencies]
@@ -654,6 +654,44 @@ files = [
 
 [package.dependencies]
 hslcommunication = ">=1.2.0,<2.0.0"
+
+[package.source]
+type = "legacy"
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+reference = "mirrors"
+
+[[package]]
+name = "modbus-api"
+version = "0.1.0"
+description = ""
+optional = false
+python-versions = ">=3.11,<4.0"
+files = [
+    {file = "modbus_api-0.1.0-py3-none-any.whl", hash = "sha256:fa905a74bba496636e1cb5b7b6d9a337d63dc944529c2ffee44021ea82018a38"},
+    {file = "modbus_api-0.1.0.tar.gz", hash = "sha256:caa373e50da8445817a52e1a9ca83573c358d4ae80452b6af835196aeb91a11c"},
+]
+
+[package.dependencies]
+modbus-tk = ">=1.1.4,<2.0.0"
+
+[package.source]
+type = "legacy"
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+reference = "mirrors"
+
+[[package]]
+name = "modbus-tk"
+version = "1.1.4"
+description = "Implementation of modbus protocol in python"
+optional = false
+python-versions = "*"
+files = [
+    {file = "modbus_tk-1.1.4-py3-none-any.whl", hash = "sha256:e218ef96c7b5f4e9f83dce6f683e4b67f9be4a97935184427e6e14bdd3d3269c"},
+    {file = "modbus_tk-1.1.4.tar.gz", hash = "sha256:68977766eb10469973dd56a2814bd981b85dd180b79043248786d88008f2593b"},
+]
+
+[package.dependencies]
+pyserial = ">=3.1"
 
 [package.source]
 type = "legacy"
@@ -1183,6 +1221,25 @@ url = "https://pypi.tuna.tsinghua.edu.cn/simple"
 reference = "mirrors"
 
 [[package]]
+name = "pyserial"
+version = "3.5"
+description = "Python Serial Port Extension"
+optional = false
+python-versions = "*"
+files = [
+    {file = "pyserial-3.5-py2.py3-none-any.whl", hash = "sha256:c4451db6ba391ca6ca299fb3ec7bae67a5c55dde170964c7a14ceefec02f2cf0"},
+    {file = "pyserial-3.5.tar.gz", hash = "sha256:3c77e014170dfffbd816e6ffc205e9842efb10be9f58ec16d3e8675b4925cddb"},
+]
+
+[package.extras]
+cp2110 = ["hidapi"]
+
+[package.source]
+type = "legacy"
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+reference = "mirrors"
+
+[[package]]
 name = "python-dateutil"
 version = "2.9.0.post0"
 description = "Extensions to the standard Python datetime module"
@@ -1355,8 +1412,8 @@ reference = "mirrors"
 
 [[package]]
 name = "secsgem-cyg"
-version = "1.0.3"
-description = ""
+version = "1.0.4"
+description = "secsgem 封装"
 optional = false
 python-versions = ">=3.10,<3.13"
 files = []
@@ -1370,7 +1427,7 @@ serial = "^0.0.97"
 type = "git"
 url = "https://github.com/ChangYuan-Semiconductor-Equipment/secsgem_cyg.git"
 reference = "main"
-resolved_reference = "9859efcbc23341154f6961cfe48516e8129824b9"
+resolved_reference = "48bd2b4af50ea997e3d9813ff4300890bd0c4419"
 
 [[package]]
 name = "serial"
@@ -1617,4 +1674,4 @@ reference = "mirrors"
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.11,<3.13"
-content-hash = "7f7b2d35f941cec2be50c4838f877a4ff7708f7df5be457143da0178a001cb16"
+content-hash = "1f1ddd844d2efd2be07013d155a0c2df3e34b30221eb47271482d64e6c36de3d"

@@ -1,0 +1,38 @@
+{
+    "mysql": {
+        "user_name": "root",
+        "password": "liuwei.520"
+    },
+    "equipment_ip": {
+        "loading": "192.168.10.100",
+        "printer_paint": "192.168.10.100",
+        "printer_solder_paste": "192.168.10.101",
+        "smk_cutting": "192.168.10.100"
+    },
+    "equipment_port": {
+        "printer_paint": 5000,
+        "printer_solder_paste": 5000
+    },
+    "report_link_event": {
+        "loading": {
+            "337": {
+                "101": [40007, 40008, 40009, 40018, 40019]
+            }
+        },
+        "printer_paint": {
+            "337": {
+                "101": [40007, 40008, 40009, 40018, 40019]
+            }
+        },
+        "printer_solder_paste": {
+            "337": {
+                "201": [40007, 40008, 40009, 40018, 40019]
+            }
+        },
+        "smk_cutting": {
+            "1004": {
+                "4": [40007, 40008, 40009, 40018, 40019]
+            }
+        }
+    }
+}

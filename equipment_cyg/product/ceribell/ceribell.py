@@ -402,6 +402,12 @@ class Ceribell(Controller):
             return "NG"
         return "OK"
 
+    def get_track_out_state_str(self):
+        """根据出站状态获取出站结果中文状态."""
+        if self.get_sv_value_with_name("track_out_state") != self.get_config_value("track_out_ok"):
+            return "NG"
+        return "OK"
+
     def save_track_in(self, photo_dir):
         """保存track_in上传数据."""
         index = self.get_sv_value_with_name("track_in_index")
@@ -440,12 +446,16 @@ class Ceribell(Controller):
             reason_list = self.append_reason(reason_list, "check_state_2")
             reason_list = self.append_reason(reason_list, "check_state_3")
             reason_list = self.append_reason(reason_list, "check_state_4")
+        elif event_name == "track_out" and self.get_sv_value_with_name("track_out_state") != 63:
+            reason_list = self.append_reason(reason_list, "track_out_state")
+
         return ",".join(reason_list)
 
     def append_reason(self, reasons, sv_name):
         """Append failure reason."""
         state_num = self.get_sv_value_with_name(sv_name)
         states = self.plc.get_true_bit_with_num(state_num)
+
         ng_reasons = self.get_config_value("ng_reason")
         for state in states:
             if str(state) in ng_reasons:
@@ -480,6 +490,8 @@ class Ceribell(Controller):
             self.track_out_count: {
                 "Index": str(self.track_out_count),
                 "QR": self.get_sv_value_with_name("track_out_label"),
+                "Inspection Result": self.get_track_out_state_str(),
+                "Inspection Failure Reason": self.get_state_reason("track_out"),
                 "Image Take Time": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             }
         }

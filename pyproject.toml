@@ -30,10 +30,8 @@ alembic = "^1.14.0"
 mysql-table-model = "^0.1.0"
 hslcommunication = "^1.2.0"
 mitsubishi-plc = "^0.1.0"
-
-
-[tool.poetry.group.dev.dependencies]
-secsgem_cyg = { git = "https://github.com/ChangYuan-Semiconductor-Equipment/secsgem_cyg.git", branch = "main" }
+modbus-tk = "^1.1.4"
+modbus-api = "^0.1.0"
 
 
 [[tool.poetry.source]]

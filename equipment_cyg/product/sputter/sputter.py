@@ -9,7 +9,7 @@ from mitsubishi_plc.mitsubishi_plc import MitsubishiPlc
 from mitsubishi_plc.exception import PLCReadError, PLCRuntimeError
 from secsgem.common import Message
 from secsgem.secs import variables, SecsHandler, SecsStreamFunction, data_items
-from secsgem.secs.variables import U4
+from secsgem.secs.variables import U4, Binary
 
 from equipment_cyg.controller.controller import Controller
 
@@ -25,6 +25,10 @@ class Sputter(Controller):
         self.current_alarm_text = ""
         self.plc = MitsubishiPlc(self.get_dv_value_with_name("plc_ip"), self.get_dv_value_with_name("plc_port"))
         self.plc.logger.addHandler(self.file_handler)  # 保存plc日志到文件
+
+        recipe_name = self.plc.execute_read("str", "D8420", 10)
+        self.set_sv_value_with_name("current_recipe_name", recipe_name)
+        self.save_current_recipe_local()
 
         self.enable_equipment()  # 启动MES服务
         self.start_monitor_plc_thread()  # 启动监控plc信号线程
@@ -57,6 +61,7 @@ class Sputter(Controller):
                             self.set_clear_alarm(self.get_dv_value_with_name("clear_alarm_code"))
                         self.set_sv_value_with_name("current_machine_state", machine_state)
                         self.send_s6f11("machine_state_change")
+                        self.save_current_machine_state_local()
                 except PLCReadError as e:
                     self.logger.warning(f"*** Read failure: machine_state *** -> reason: {str(e)}!")
                     time.sleep(self.get_dv_value_with_name("reconnect_plc_wait_time"))
@@ -382,12 +387,11 @@ class Sputter(Controller):
         self.config["status_variable"]["current_recipe_name"]["value"] = recipe_name
         self.update_config(f"{'/'.join(self.__module__.split('.'))}.conf", self.config)
 
-    def get_recipe_id_name(self, recipe_name: str) -> Optional[str]:
-        """根据配方名称获取配方id和name."""
-        for recipe_id_name, recipe_info in self.recipes.items():
-            if recipe_name and str(recipe_name) in recipe_id_name:
-                return recipe_id_name
-        return None
+    def save_current_machine_state_local(self):
+        """保存当前配方到本地."""
+        current_machine_state = self.get_sv_value_with_name("current_machine_state")
+        self.config["status_variable"]["current_recipe_name"]["value"] = current_machine_state
+        self.update_config(f"{'/'.join(self.__module__.split('.'))}.conf", self.config)
 
     def get_callback(self, signal_name: str) -> list:
         """根据 signal_name 获取对应的 callback.
@@ -469,9 +473,10 @@ class Sputter(Controller):
         """host请求配方数据."""
         del handler
         recipe_name = self.get_receive_data(packet)
-        recipe_id_name = self.get_recipe_id_name(recipe_name)
+        recipe_id_name = self.get_recipe_id_name(recipe_name, self.recipes)
         pp_body = json.dumps(self.recipes.get(recipe_id_name, ""))
-        return self.stream_function(7, 6)([recipe_name, pp_body])
+        pp_body_b = Binary(pp_body)
+        return self.stream_function(7, 6)([recipe_name, pp_body_b])
 
     def _on_s07f19(self, handler, packet):
         """Host查看设备的所有配方."""
@@ -484,7 +489,7 @@ class Sputter(Controller):
         """host请求格式化配方信息."""
         del handler
         recipe_name = self.get_receive_data(packet)
-        recipe_id_name = self.get_recipe_id_name(recipe_name)
+        recipe_id_name = self.get_recipe_id_name(recipe_name, self.recipes)
         recipe_info = self.recipes.get(recipe_id_name)
         ccode_list = []
         for code, param_value_dict in recipe_info.items():
@@ -500,7 +505,7 @@ class Sputter(Controller):
         Args:
             recipe_name (str): 要切换的配方name.
         """
-        recipe_id_name = self.get_recipe_id_name(recipe_name)
+        recipe_id_name = self.get_recipe_id_name(recipe_name, self.recipes)
         recipe_id, recipe_name = recipe_id_name.split("_")
         self.set_dv_value_with_name("pp_select_recipe_id", int(recipe_id))
         self.set_dv_value_with_name("pp_select_recipe_name", recipe_name)
