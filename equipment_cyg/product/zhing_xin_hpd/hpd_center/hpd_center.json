@@ -1,0 +1,316 @@
+{
+    "secs_conf": {
+        "secs_ip": "127.0.0.1",
+        "secs_port": 5000,
+        "connect_mode": "PASSIVE",
+        "model_name": "CYG SECSGEM",
+        "software_version": "1.0.0"
+    },
+    "status_variable": {
+        "current_control_state": {
+            "svid": 501,
+            "unit": "",
+            "value": 0,
+            "value_type": "BINARY",
+            "description": "当前控制状态"
+        },
+        "current_machine_state": {
+            "svid": 502,
+            "unit": "",
+            "value": 2,
+            "value_type": "BINARY",
+            "description": "当前运行状态"
+        },
+        "current_recipe_name": {
+            "svid": 503,
+            "unit": "",
+            "value": "123",
+            "value_type": "ASCII",
+            "description": "当前配方name"
+        },
+        "lot_name": {
+            "svid": 504,
+            "unit": "",
+            "value": "",
+            "value_type": "ASCII",
+            "description": "lot name"
+        },
+        "lot_quality": {
+            "svid": 505,
+            "unit": "",
+            "value": 0,
+            "value_type": "UINT_4",
+            "description": "lot 数量"
+        },
+        "lot_state": {
+            "svid": 506,
+            "unit": "",
+            "value": 3,
+            "value_type": "UINT_4",
+            "description": "lot 状态"
+        }
+    },
+    "data_values": {
+        "plc_ip": {
+            "dvid": 601,
+            "value_type": "ASCII",
+            "value": "10.21.142.10",
+            "description": "plc_ip"
+        },
+        "occur_alarm_code": {
+            "dvid": 602,
+            "value_type": "UINT_4",
+            "value": 2,
+            "description": "发生报警代码"
+        },
+        "clear_alarm_code": {
+            "dvid": 603,
+            "value_type": "UINT_4",
+            "value": 9,
+            "description": "清除报警代码"
+        },
+        "reconnect_plc_wait_time": {
+            "dvid": 604,
+            "value_type": "UINT_4",
+            "value": 120,
+            "description": "当plc断联等待时间重连"
+        },
+        "alarm_state": {
+            "dvid": 605,
+            "value_type": "UINT_4",
+            "value": 4,
+            "description": "报警状态"
+        },
+        "mes_heart_time_gap": {
+            "dvid": 606,
+            "value_type": "UINT_4",
+            "value": 2,
+            "description": "mes 写入心跳间隔"
+        },
+        "pp_select_recipe_id": {
+            "dvid": 607,
+            "value_type": "UINT_4",
+            "description": "切换配方id"
+        },
+        "pp_select_recipe_name": {
+            "dvid": 608,
+            "value_type": "ASCII",
+            "description": "切换配方name"
+        },
+        "pp_select_state": {
+            "dvid": 609,
+            "value_type": "UINT_4",
+            "description": "配方切换结果"
+        },
+        "upload_recipe_id": {
+            "dvid": 610,
+            "value_type": "UINT_4",
+            "description": "上传的配方id"
+        },
+        "upload_recipe_name": {
+            "dvid": 611,
+            "value_type": "ASCII",
+            "description": "上传的配方name"
+        },
+        "current_recipe_id": {
+            "dvid": 612,
+            "value_type": "ASCII",
+            "description": "当前配方id"
+        },
+        "reply_flag": {
+            "dvid": 613,
+            "value_type": "BOOL",
+            "value": false,
+            "description": "EAP是否回复"
+        },
+        "is_allow_carrier_in": {
+            "dvid": 614,
+            "value_type": "UINT_4",
+            "description": "是否允许托盘进站"
+        },
+        "product_code": {
+            "dvid": 615,
+            "value_type": "ASCII",
+            "description": "产品码"
+        },
+        "product_state": {
+            "dvid": 616,
+            "value_type": "UINT_4",
+            "description": "产品状态"
+        },
+        "product_index": {
+            "dvid": 617,
+            "value_type": "UINT_4",
+            "description": "产品所在托盘穴位"
+        },
+        "carrier_code": {
+            "dvid": 618,
+            "value_type": "ASCII",
+            "description": "托盘码"
+        },
+        "limit_code_1": {
+            "dvid": 619,
+            "value_type": "ASCII",
+            "description": "限位框1码"
+        },
+        "limit_code_2": {
+            "dvid": 620,
+            "value_type": "ASCII",
+            "description": "限位框2码"
+        },
+        "high_u": {
+            "dvid": 621,
+            "value_type": "F4",
+            "description": "焊片U测高数据"
+        },
+        "high_m": {
+            "dvid": 622,
+            "value_type": "F4",
+            "description": "焊片M测高数据"
+        },
+        "high_d": {
+            "dvid": 623,
+            "value_type": "F4",
+            "description": "焊片D测高数据"
+        },
+        "key_carrier_code": {
+            "dvid": 628,
+            "value_type": "ASCII",
+            "description": "键合托盘码"
+        },
+        "is_allow_key_carrier_in": {
+            "dvid": 629,
+            "value_type": "UINT_4",
+            "description": "是否允许键合托盘进站"
+        },
+        "socket_server_ip": {
+            "dvid": 630,
+            "value": "10.192.13.39",
+            "value_type": "ASCII",
+            "description": "socket_server_ip"
+        },
+        "socket_server_port": {
+            "dvid": 631,
+            "value": 8000,
+            "value_type": "UINT_4",
+            "description": "socket_server_port"
+        },
+        "is_allow_dbc_in": {
+            "dvid": 632,
+            "value_type": "UINT_4",
+            "description": "是否允许dbc放入基板"
+        },
+        "dbc_code": {
+            "dvid": 633,
+            "value_type": "ASCII",
+            "description": "dbc_code"
+        },
+        "dbc_index": {
+            "dvid": 634,
+            "value_type": "UINT_4",
+            "description": "所在基板穴位"
+        },
+        "real_dbc_index": {
+            "dvid": 635,
+            "value_type": "UINT_4",
+            "description": "所在基板穴位"
+        },
+        "alarm_id": {
+            "dvid": 636,
+            "value": "",
+            "value_type": "ASCII",
+            "description": "alarm_id"
+        }
+    },
+    "collection_events": {
+        "control_state_change": {
+            "ceid": 1001,
+            "description": "控制状态改变",
+            "link_reports": {
+                "1": [
+                    501
+                ]
+            }
+        },
+        "machine_state_change": {
+            "ceid": 1002,
+            "description": "运行状态变化",
+            "link_reports": {
+                "2": [
+                    502
+                ]
+            }
+        },
+        "pp_select": {
+            "ceid": 1003,
+            "description": "配方切换完成",
+            "link_reports": {
+                "3": [
+                    503,
+                    609,
+                    608
+                ]
+            }
+        },
+        "dbc_code_link_request": {
+            "ceid": 1009,
+            "description": "dbc请求放入基板",
+            "link_reports": {
+                "9": [
+                    633
+                ]
+            }
+        },
+        "dbc_link": {
+            "ceid": 1010,
+            "description": "dbc放入基板",
+            "link_reports": {
+                "10": [
+                    633,
+                    635,
+                    617,
+                    618
+                ]
+            }
+        },
+        "carrier_in": {
+            "ceid": 1011,
+            "description": "带有基板的大回流托盘进站",
+            "link_reports": {
+                "11": [
+                    618
+                ]
+            }
+        },
+        "carrier_out": {
+            "ceid": 1012,
+            "description": "带有基板的大回流托盘出站",
+            "link_reports": {
+                "12": [
+                    618
+                ]
+            }
+        }
+    },
+    "remote_commands": {
+        "pp_select": {
+            "rcmd": "pp_select",
+            "params": [
+                "recipe_name"
+            ],
+            "description": "切换配方"
+        },
+        "dbc_in_request_reply": {
+            "rcmd": "dbc_in_request_reply",
+            "params": [
+                "state"
+            ],
+            "description": "是否允许dbc放入基板"
+        }
+    },
+    "recipes": {
+        "123": {},
+        "333": {},
+        "444": {}
+    }
+}

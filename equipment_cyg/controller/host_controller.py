@@ -22,20 +22,13 @@ class HostController:
         self.config = self.get_config(self.get_config_path(f"{'/'.join(self.__module__.split('.'))}.json"))
         self._create_gem_host_handler()
         self._file_handler = None  # 保存日志的处理器
+
+        self._initial_log_config()
         self.logger = logging.getLogger("HostController")
         self.logger.addHandler(self.file_handler)
-        self._initial_log_config()
-        self.host_enable()
-        self.report_link_event()
 
-    def report_link_event(self):
-        """将变量和报告绑定, 将报告和事件绑定."""
-        report_link_event_dict = self.get_config_value("report_link_event")
-        for equipment_name, report_link_event_info in report_link_event_dict.items():
-            host_handler  = self.get_host_handler_with_name(equipment_name)
-            for event_id, report_info in report_link_event_info.items():
-                for report_id, sv_ids in report_info.items():
-                    host_handler.subscribe_collection_event(int(event_id), sv_ids, int(report_id))
+        self.host_enable()
+        self._report_link_event()
 
     def _create_gem_host_handler(self):
         """根据配置文件创建连接设备的客户端."""
@@ -61,6 +54,28 @@ class HostController:
             host_handler = getattr(self, f"host_handler_{equipment_name}")
             host_handler.logger.addHandler(self.file_handler)
             host_handler.protocol.communication_logger.addHandler(self.file_handler)  # secs 通讯日志
+
+    def _report_link_event(self):
+        """将变量和报告绑定, 将报告和事件绑定."""
+        report_link_event_dict = self.get_config_value("report_link_event")
+        for equipment_name, report_link_event_info, in report_link_event_dict.items():
+            self.__report_link_event(equipment_name, report_link_event_info)
+
+    def __report_link_event(self, equipment_name: str, report_link_event_info: dict):
+        """解绑事件关联报告, 注册事件报告."""
+        host_handler = self.get_host_handler_with_name(equipment_name)
+        is_subscribe = report_link_event_info.pop("is_subscribe")
+        for event_id, report_info in report_link_event_info.items():
+            for report_id, sv_ids in report_info.items():
+                if not is_subscribe:
+                    # 清除所有事件
+                    host_handler.clear_collection_events()
+                    # 清除所有事件关联的报告
+                    host_handler.disable_ceid_reports()
+                    # 将事件和报告绑定
+                    host_handler.subscribe_collection_event(int(event_id), sv_ids, int(report_id))
+                else:
+                    host_handler.report_subscriptions[int(report_id)] = sv_ids
 
     # 静态通用函数
     @staticmethod
@@ -148,6 +163,45 @@ class HostController:
         """
         return getattr(self, f"host_handler_{equipment_name}")
 
+    def get_equipment_name_with_ip(self, ip: str) -> Optional[str]:
+        """根据设备ip获取设备名称.
+
+        Args:
+            ip: 设备 ip.
+
+        Returns:
+            Optional[str]: 设备名称.
+        """
+        equipment_ip_dict = self.get_config_value("equipment_ip")
+        for equipment_name, equipment_ip in equipment_ip_dict.items():
+            if ip == equipment_ip:
+                return equipment_name
+        return None
+
+    def get_data_of_add_to_database(self, equipment_name: str, data_list: list) -> dict:
+        """获取要写入数据库的数据字典.
+
+        Args:
+            equipment_name: 设备名称.
+            data_list: 原始数据列表.
+
+        Returns:
+            dict: 要写入数据库的数据字典.
+        """
+        variable_id_name_map = self.get_config_value("variable_id_name_map")[equipment_name]
+        result_dict = {}
+        for data_dict in data_list:
+            id_, value = data_dict.get("dvid"), data_dict.get("value")
+            variable_name = variable_id_name_map.get(str(id_))
+            result_dict.update({variable_name: value})
+
+        return result_dict
+
+    @staticmethod
+    def get_table_model_with_name(equipment_module, equipment_name: str):
+        """根据设备名称获取数据表模型."""
+        table_model_str = "".join([_.capitalize() for _ in equipment_name.split("_")])
+        return getattr(equipment_module, table_model_str)
 
     def _on_event_collection_event_received(self, data):
         """接收到设备发来的事件进行处理."""

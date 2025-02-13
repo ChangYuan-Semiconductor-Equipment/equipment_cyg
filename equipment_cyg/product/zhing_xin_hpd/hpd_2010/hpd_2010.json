@@ -1,0 +1,664 @@
+{
+    "secs_conf": {
+        "secs_ip": "127.0.0.1",
+        "secs_port": 5000,
+        "connect_mode": "PASSIVE",
+        "model_name": "CYG SECSGEM",
+        "software_version": "1.0.0"
+    },
+    "status_variable": {
+        "current_control_state": {
+            "svid": 501,
+            "unit": "",
+            "value": 0,
+            "value_type": "BINARY",
+            "description": "当前控制状态"
+        },
+        "current_machine_state": {
+            "svid": 502,
+            "unit": "",
+            "value": 2,
+            "value_type": "BINARY",
+            "description": "当前运行状态"
+        },
+        "current_recipe_name": {
+            "svid": 503,
+            "unit": "",
+            "value": "A1",
+            "value_type": "ASCII",
+            "description": "当前配方name"
+        },
+        "lot_name": {
+            "svid": 504,
+            "unit": "",
+            "value": "",
+            "value_type": "ASCII",
+            "description": "lot name"
+        },
+        "lot_quality": {
+            "svid": 505,
+            "unit": "",
+            "value": 0,
+            "value_type": "UINT_4",
+            "description": "lot 数量"
+        },
+        "lot_state": {
+            "svid": 506,
+            "unit": "",
+            "value": 3,
+            "value_type": "UINT_4",
+            "description": "lot 状态"
+        }
+
+    },
+    "data_values": {
+        "plc_ip": {
+            "dvid": 601,
+            "value_type": "ASCII",
+            "value": "10.21.142.10",
+            "description": "plc_ip"
+        },
+        "occur_alarm_code": {
+            "dvid": 602,
+            "value_type": "UINT_4",
+            "value": 2,
+            "description": "发生报警代码"
+        },
+        "clear_alarm_code": {
+            "dvid": 603,
+            "value_type": "UINT_4",
+            "value": 9,
+            "description": "清除报警代码"
+        },
+        "reconnect_plc_wait_time": {
+            "dvid": 604,
+            "value_type": "UINT_4",
+            "value": 120,
+            "description": "当plc断联等待时间重连"
+        },
+        "alarm_state": {
+            "dvid": 605,
+            "value_type": "UINT_4",
+            "value": 4,
+            "description": "报警状态"
+        },
+        "mes_heart_time_gap": {
+            "dvid": 606,
+            "value_type": "UINT_4",
+            "value": 2,
+            "description": "mes 写入心跳间隔"
+        },
+        "pp_select_recipe_id": {
+            "dvid": 607,
+            "value_type": "UINT_4",
+            "description": "切换配方id"
+        },
+        "pp_select_recipe_name": {
+            "dvid": 608,
+            "value_type": "ASCII",
+            "description": "切换配方name"
+        },
+        "pp_select_state": {
+            "dvid": 609,
+            "value_type": "UINT_4",
+            "description": "配方切换结果"
+        },
+        "upload_recipe_id": {
+            "dvid": 610,
+            "value_type": "UINT_4",
+            "description": "上传的配方id"
+        },
+        "upload_recipe_name": {
+            "dvid": 611,
+            "value_type": "ASCII",
+            "description": "上传的配方name"
+        },
+        "current_recipe_id": {
+            "dvid": 612,
+            "value_type": "ASCII",
+            "description": "当前配方id"
+        },
+        "reply_flag": {
+            "dvid": 613,
+            "value_type": "BOOL",
+            "value": false,
+            "description": "EAP是否回复"
+        },
+        "is_allow_carrier_in": {
+            "dvid": 614,
+            "value_type": "UINT_4",
+            "description": "是否允许托盘进站"
+        },
+        "product_code": {
+            "dvid": 615,
+            "value_type": "ASCII",
+            "description": "产品码"
+        },
+        "product_state": {
+            "dvid": 616,
+            "value_type": "UINT_4",
+            "description": "产品状态"
+        },
+        "product_index": {
+            "dvid": 617,
+            "value_type": "UINT_4",
+            "description": "产品所在托盘穴位"
+        },
+        "carrier_code": {
+            "dvid": 618,
+            "value_type": "ASCII",
+            "description": "托盘码"
+        },
+        "limit_code_1": {
+            "dvid": 619,
+            "value_type": "ASCII",
+            "description": "限位框1码"
+        },
+        "limit_code_2": {
+            "dvid": 620,
+            "value_type": "ASCII",
+            "description": "限位框2码"
+        },
+        "high_u": {
+            "dvid": 621,
+            "value_type": "F4",
+            "description": "焊片U测高数据"
+        },
+        "high_m": {
+            "dvid": 622,
+            "value_type": "F4",
+            "description": "焊片M测高数据"
+        },
+        "high_d": {
+            "dvid": 623,
+            "value_type": "F4",
+            "description": "焊片D测高数据"
+        },
+        "key_carrier_code": {
+            "dvid": 628,
+            "value_type": "ASCII",
+            "description": "键合托盘码"
+        },
+        "is_allow_key_carrier_in": {
+            "dvid": 629,
+            "value_type": "UINT_4",
+            "description": "是否允许键合托盘进站"
+        }
+    },
+    "collection_events": {
+        "control_state_change": {
+            "ceid": 1001,
+            "description": "控制状态改变",
+            "link_reports": {
+                "1": [
+                    501
+                ]
+            }
+        },
+        "machine_state_change": {
+            "ceid": 1002,
+            "description": "运行状态变化",
+            "link_reports": {
+                "2": [
+                    502
+                ]
+            }
+        },
+        "pp_select": {
+            "ceid": 1003,
+            "description": "配方切换完成",
+            "link_reports": {
+                "3": [
+                    503,
+                    609,
+                    608
+                ]
+            }
+        },
+        "carrier_in_request": {
+            "ceid": 1009,
+            "description": "带有产品的托盘进站事件",
+            "link_reports": {
+                "9": [
+                    615
+                ]
+            }
+        },
+        "key_carrier_in_request": {
+            "ceid": 1012,
+            "description": "带有产品的键合托盘进站事件",
+            "link_reports": {
+                "12": [
+                    628
+                ]
+            }
+        },
+        "product_out_ok": {
+            "ceid": 1010,
+            "description": "ok产品出站",
+            "link_reports": {
+                "10": [
+                    615,
+                    616,
+                    617,
+                    618,
+                    619,
+                    620,
+                    621,
+                    622,
+                    623
+                ]
+            }
+        },
+        "product_out_ng": {
+            "ceid": 1011,
+            "description": "ng产品出站",
+            "link_reports": {
+                "11": [
+                    615,
+                    616
+                ]
+            }
+        }
+    },
+    "remote_commands": {
+        "pp_select": {
+            "rcmd": "pp_select",
+            "params": [
+                "recipe_name"
+            ],
+            "description": "切换配方"
+        },
+        "carrier_in_request_reply": {
+            "rcmd": "carrier_in_request_reply",
+            "params": [
+                "state"
+            ],
+            "description": "托盘进站反馈"
+        },
+        "new_lot": {
+            "rcmd": "new_lot",
+            "params": [
+                "lot_name", "lot_quality"
+            ],
+            "description": "开工单"
+        }
+    },
+    "plc_signal_tag_name": {
+        "new_lot": {
+            "description": "eap开工单",
+            "call_back": [
+                {
+                    "description": "写入EAP下发的工单号",
+                    "operation_type": "write",
+                    "tag_name": "Application.gvl_OPMODE01_MES.mes2plc.geneal.Lot_name",
+                    "data_type": "string",
+                    "value": "sv:lot_name"
+                },
+                {
+                    "description": "写入EAP下发的工单数量",
+                    "operation_type": "write",
+                    "tag_name": "Application.gvl_OPMODE01_MES.mes2plc.geneal.Lot_quantity",
+                    "data_type": "int",
+                    "value": "sv:lot_quality"
+                },
+                {
+                    "description": "写入工单状态",
+                    "operation_type": "write",
+                    "tag_name": "Application.gvl_OPMODE01_MES.mes2plc.geneal.Lot_status",
+                    "data_type": "int",
+                    "value": "sv:lot_state"
+                }
+            ]
+        },
+        "mes_heart": {
+            "description": "MES 心跳 2s 更新一次",
+            "tag_name": "Application.gvl_OPMODE01_MES.mes2plc.geneal.heartBeat"
+        },
+        "control_state": {
+            "description": "实时监控设备的控制状态",
+            "tag_name": "Application.gvl_OPMODE01_RECIPE.RecipeCtrl.Active.Mode"
+        },
+        "machine_state": {
+            "description": "实时监控设备的运行状态",
+            "tag_name": "Application.gvl_OPMODE01_MES.plc2mes.geneal.deviceState"
+        },
+        "alarm_id": {
+            "description": "出现报警时, 报警id",
+            "tag_name": "Application.gvl_OPMODE01_MES.plc2mes.geneal.alarmCode"
+        },
+        "current_recipe_name": {
+            "description": "当前配方名称",
+            "tag_name": "Application.gvl_OPMODE01_MES.plc2mes.changeOver.recipeName"
+        },
+        "upload_recipe": {
+            "loop": true,
+            "description": "上传配方",
+            "data_type": "bool",
+            "value": true,
+            "tag_name": "Application.gvl_OPMODE01_MES.plc2mes.changeOver.recipe_UpLoad_Request",
+            "call_back": [
+                {
+                    "description": "读取配方id",
+                    "operation_type": "read",
+                    "tag_name": "Application.gvl_OPMODE01_MES.plc2mes.changeOver.recipeID",
+                    "data_type": "int",
+                    "dv_name": "upload_recipe_id"
+                },
+                {
+                    "description": "读取配方name",
+                    "operation_type": "read",
+                    "tag_name": "Application.gvl_OPMODE01_MES.plc2mes.changeOver.recipeName",
+                    "data_type": "string",
+                    "dv_name": "upload_recipe_name"
+                },
+                {
+                    "description": "将上传的配方保存到配置文件",
+                    "operation_type": "save_recipe"
+                },
+                {
+                    "description": "MES 反馈上传配方",
+                    "operation_type": "write",
+                    "tag_name": "Application.gvl_OPMODE01_MES.mes2plc.changeOver.recipe_UpLoad_Response",
+                    "data_type": "bool",
+                    "value": true
+                },
+                {
+                    "description": "清空 MES 反馈 信号",
+                    "premise_tag_name": "Application.gvl_OPMODE01_MES.plc2mes.changeOver.recipe_UpLoad_Request",
+                    "premise_data_type": "bool",
+                    "premise_value": false,
+                    "operation_type": "write",
+                    "tag_name": "Application.gvl_OPMODE01_MES.mes2plc.changeOver.recipe_UpLoad_Response",
+                    "data_type": "bool",
+                    "value": false
+                }
+            ]
+        },
+        "pp_select": {
+            "description": "EAP 切换配方",
+            "call_back": [
+                {
+                    "description": "写入要切换的配方id",
+                    "operation_type": "write",
+                    "tag_name": "Application.gvl_OPMODE01_MES.mes2plc.changeOver.recipeID",
+                    "data_type": "int",
+                    "value": "dv:pp_select_recipe_id"
+                },
+                {
+                    "description": "写入要切换的配方指令",
+                    "operation_type": "write",
+                    "tag_name": "Application.gvl_OPMODE01_MES.mes2plc.changeOver.cmdID",
+                    "data_type": "int",
+                    "value": 2
+                },
+                {
+                    "description": "通知 plc 切换配方信号",
+                    "operation_type": "write",
+                    "tag_name": "Application.gvl_OPMODE01_MES.mes2plc.changeOver.cmd",
+                    "data_type": "bool",
+                    "value": true
+                },
+                {
+                    "description": "清空 通知 plc 切换配方信号",
+                    "premise_tag_name": "Application.gvl_OPMODE01_MES.plc2mes.changeOver.done",
+                    "premise_value": true,
+                    "premise_data_type": "bool",
+                    "premise_time_out": 3,
+                    "operation_type": "write",
+                    "tag_name": "Application.gvl_OPMODE01_MES.mes2plc.changeOver.cmd",
+                    "data_type": "bool",
+                    "value": false
+                },
+                {
+                    "description": "读取设备当前配方id",
+                    "operation_type": "read",
+                    "tag_name": "Application.gvl_OPMODE01_MES.plc2mes.changeOver.recipeID",
+                    "data_type": "int",
+                    "dv_name": "current_recipe_id"
+                }
+            ]
+        },
+        "carrier_in_request": {
+            "loop": true,
+            "description": "带有产品的托盘进站事件",
+            "data_type": "int",
+            "value": 1,
+            "tag_name": "Application.gvl_OPMODE01_MES.plc2mes.geneal.request_InterLock[1]",
+            "call_back": [
+                {
+                    "description": "读取托盘码",
+                    "operation_type": "read",
+                    "tag_name": "Application.gvl_OPMODE01_MES.plc2mes.Interlock.st_1_code",
+                    "data_type": "string",
+                    "dv_name": "carrier_code",
+                    "event_name": "carrier_in_request"
+                },
+                {
+                    "description": "等待eap回复是否可以进站",
+                    "operation_type": "wait_eap_reply",
+                    "is_need_reply": false,
+                    "dv_name_values": {
+                        "is_allow_carrier_in": 1
+                    }
+                },
+                {
+                    "description": "写入托盘是否可以进站",
+                    "operation_type": "write",
+                    "tag_name": "Application.gvl_OPMODE01_MES.mes2plc.Interlock.st_1_status",
+                    "data_type": "int",
+                    "value": "dv:is_allow_carrier_in"
+                },
+                {
+                    "description": "写入托盘码",
+                    "operation_type": "write",
+                    "tag_name": "Application.gvl_OPMODE01_MES.mes2plc.Interlock.st_1_code",
+                    "data_type": "string",
+                    "value": "dv:carrier_code"
+                },
+                {
+                    "description": "MES 反馈带有产品的托盘进站事件",
+                    "operation_type": "write",
+                    "tag_name": "Application.gvl_OPMODE01_MES.mes2plc.geneal.response_InterLock[1]",
+                    "data_type": "int",
+                    "value": 1
+                },
+                {
+                    "description": "清空 MES 反馈 信号",
+                    "premise_tag_name": "Application.gvl_OPMODE01_MES.plc2mes.geneal.request_InterLock[1]",
+                    "premise_data_type": "int",
+                    "premise_value": 0,
+                    "operation_type": "write",
+                    "tag_name": "Application.gvl_OPMODE01_MES.mes2plc.geneal.response_InterLock[1]",
+                    "data_type": "int",
+                    "value": 0
+                }
+            ]
+        },
+        "key_carrier_in_request": {
+            "loop": true,
+            "description": "将产品从键合托盘拿出来请求事件",
+            "data_type": "int",
+            "value": 1,
+            "tag_name": "Application.gvl_OPMODE01_MES.plc2mes.geneal.request_InterLock[2]",
+            "call_back": [
+                {
+                    "description": "读取键合托盘码",
+                    "operation_type": "read",
+                    "tag_name": "Application.gvl_OPMODE01_MES.plc2mes.Interlock.st_2_code",
+                    "data_type": "string",
+                    "dv_name": "key_carrier_code",
+                    "event_name": "key_carrier_in_request"
+                },
+                {
+                    "description": "等待eap回复是否可以进站",
+                    "operation_type": "wait_eap_reply",
+                    "is_need_reply": false,
+                    "dv_name_values": {
+                        "is_allow_key_carrier_in": 1
+                    }
+                },
+                {
+                    "description": "写入托盘是否可以进站",
+                    "operation_type": "write",
+                    "tag_name": "Application.gvl_OPMODE01_MES.mes2plc.Interlock.st_2_status",
+                    "data_type": "int",
+                    "value": "dv:is_allow_key_carrier_in"
+                },
+                {
+                    "description": "MES 反馈带有产品的托盘进站事件",
+                    "operation_type": "write",
+                    "tag_name": "Application.gvl_OPMODE01_MES.mes2plc.geneal.response_InterLock[2]",
+                    "data_type": "int",
+                    "value": 1
+                },
+                {
+                    "description": "清空 MES 反馈 信号",
+                    "premise_tag_name": "Application.gvl_OPMODE01_MES.plc2mes.geneal.request_InterLock[2]",
+                    "premise_data_type": "int",
+                    "premise_value": 0,
+                    "operation_type": "write",
+                    "tag_name": "Application.gvl_OPMODE01_MES.mes2plc.geneal.response_InterLock[2]",
+                    "data_type": "int",
+                    "value": 0
+                }
+            ]
+        },
+        "product_out_ok": {
+            "loop": true,
+            "description": "OK产品出站",
+            "data_type": "int",
+            "value": 1,
+            "tag_name": "Application.gvl_OPMODE01_MES.plc2mes.geneal.request_partDone[1]",
+            "call_back": [
+                {
+                    "description": "读取产品码",
+                    "operation_type": "read",
+                    "tag_name": "Application.gvl_OPMODE01_MES.plc2mes.partDone.st_1_code[2]",
+                    "data_type": "string",
+                    "dv_name": "product_code"
+                },
+                {
+                    "description": "读取产品状态",
+                    "operation_type": "read",
+                    "tag_name": "Application.gvl_OPMODE01_MES.plc2mes.partDone.st_1_status",
+                    "data_type": "int",
+                    "dv_name": "product_state"
+                },
+                {
+                    "description": "读取穴位号",
+                    "operation_type": "read",
+                    "tag_name": "Application.gvl_OPMODE01_MES.plc2mes.partDone.st_1_position[1]",
+                    "data_type": "int",
+                    "dv_name": "product_index"
+                },
+                {
+                    "description": "读取托盘码",
+                    "operation_type": "read",
+                    "tag_name": "Application.gvl_OPMODE01_MES.plc2mes.partDone.st_1_code[1]",
+                    "data_type": "string",
+                    "dv_name": "carrier_code"
+                },
+                {
+                    "description": "读取限位框1码",
+                    "operation_type": "read",
+                    "tag_name": "Application.gvl_OPMODE01_MES.plc2mes.partDone.st_1_code[3]",
+                    "data_type": "string",
+                    "dv_name": "limit_code_1"
+                },
+                {
+                    "description": "读取限位框2码",
+                    "operation_type": "read",
+                    "tag_name": "Application.gvl_OPMODE01_MES.plc2mes.partDone.st_1_code[4]",
+                    "data_type": "string",
+                    "dv_name": "limit_code_2"
+                },
+                {
+                    "description": "读取焊片U测高数据",
+                    "operation_type": "read",
+                    "tag_name": "Application.gvl_OPMODE01_MES.plc2mes.partDone.st_1_data[1]",
+                    "data_type": "real",
+                    "dv_name": "high_u"
+                },
+                {
+                    "description": "读取焊片M测高数据",
+                    "operation_type": "read",
+                    "tag_name": "Application.gvl_OPMODE01_MES.plc2mes.partDone.st_1_data[2]",
+                    "data_type": "real",
+                    "dv_name": "high_m"
+                },
+                {
+                    "description": "读取焊片D测高数据",
+                    "operation_type": "read",
+                    "tag_name": "Application.gvl_OPMODE01_MES.plc2mes.partDone.st_1_data[3]",
+                    "data_type": "real",
+                    "dv_name": "high_d"
+                },
+                {
+                    "description": "MES 反馈ok产品出站事件",
+                    "operation_type": "write",
+                    "tag_name": "Application.gvl_OPMODE01_MES.mes2plc.geneal.response_partDone[1]",
+                    "data_type": "int",
+                    "value": 1
+                },
+                {
+                    "description": "清空 MES 反馈 信号",
+                    "premise_tag_name": "Application.gvl_OPMODE01_MES.plc2mes.geneal.request_partDone[1]",
+                    "premise_data_type": "int",
+                    "premise_value": 0,
+                    "operation_type": "write",
+                    "tag_name": "Application.gvl_OPMODE01_MES.mes2plc.geneal.response_partDone[1]",
+                    "data_type": "int",
+                    "value": 0
+                }
+            ]
+        },
+        "product_out_ng": {
+            "loop": true,
+            "description": "产品放入转盘事件",
+            "data_type": "int",
+            "value": 1,
+            "tag_name": "Application.gvl_OPMODE01_MES.plc2mes.geneal.request_partDone[2]",
+            "call_back": [
+                {
+                    "description": "读取产品码",
+                    "operation_type": "read",
+                    "tag_name": "Application.gvl_OPMODE01_MES.plc2mes.partDone.st_2_code[1]",
+                    "data_type": "string",
+                    "dv_name": "product_code"
+                },
+                {
+                    "description": "读取产品状态",
+                    "operation_type": "read",
+                    "tag_name": "Application.gvl_OPMODE01_MES.plc2mes.partDone.st_2_status",
+                    "data_type": "int",
+                    "dv_name": "product_state"
+                },
+                {
+                    "description": "MES 反馈ng产品出站事件",
+                    "operation_type": "write",
+                    "tag_name": "Application.gvl_OPMODE01_MES.mes2plc.geneal.response_partDone[2]",
+                    "data_type": "int",
+                    "value": 1
+                },
+                {
+                    "description": "清空 MES 反馈 信号",
+                    "premise_tag_name": "Application.gvl_OPMODE01_MES.plc2mes.geneal.request_partDone[2]",
+                    "premise_data_type": "int",
+                    "premise_value": 0,
+                    "operation_type": "write",
+                    "tag_name": "Application.gvl_OPMODE01_MES.mes2plc.geneal.response_partDone[2]",
+                    "data_type": "int",
+                    "value": 0
+                }
+            ]
+        }
+    },
+    "recipes": {
+        "1_A1": {},
+        "2_A2": {},
+        "3_A3": {},
+        "4_567": {},
+        "6_A6": {}
+    }
+}

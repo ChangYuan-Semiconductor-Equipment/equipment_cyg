@@ -32,6 +32,7 @@ hslcommunication = "^1.2.0"
 mitsubishi-plc = "^0.1.0"
 modbus-tk = "^1.1.4"
 modbus-api = "^0.1.0"
+websockets = "^14.1"
 
 
 [[tool.poetry.source]]

@@ -4,35 +4,47 @@
         "password": "liuwei.520"
     },
     "equipment_ip": {
-        "loading": "192.168.10.100",
-        "printer_paint": "192.168.10.100",
-        "printer_solder_paste": "192.168.10.101",
-        "smk_cutting": "192.168.10.100"
+        "print_paint": "192.168.1.101",
+        "print_solder_paste": "192.168.1.102"
     },
     "equipment_port": {
-        "printer_paint": 5000,
-        "printer_solder_paste": 5000
+        "print_paint": 5000,
+        "print_solder_paste": 5000
     },
     "report_link_event": {
-        "loading": {
+        "print_paint": {
+            "is_subscribe": true,
             "337": {
-                "101": [40007, 40008, 40009, 40018, 40019]
+                "101": [30002, 30004, 40121, 40122, 40008, 40009, 40123, 40124]
             }
         },
-        "printer_paint": {
+        "print_solder_paste": {
+            "is_subscribe": true,
             "337": {
-                "101": [40007, 40008, 40009, 40018, 40019]
+                "101": [30002, 30004, 40121, 40122, 40008, 40009, 40123, 40124]
             }
+        }
+    },
+    "variable_id_name_map": {
+        "print_paint": {
+            "30002": "article_code",
+            "30004": "lot_code",
+            "40121": "vacuum_carrier_code",
+            "40122": "nozzle_code",
+            "40008": "silk_code",
+            "40009": "carrier_dcbs",
+            "40123": "paint_code",
+            "40124": "paint_batch_code"
         },
-        "printer_solder_paste": {
-            "337": {
-                "201": [40007, 40008, 40009, 40018, 40019]
-            }
-        },
-        "smk_cutting": {
-            "1004": {
-                "4": [40007, 40008, 40009, 40018, 40019]
-            }
+        "print_solder_paste": {
+            "30002": "article_code",
+            "30004": "lot_code",
+            "40121": "vacuum_carrier_code",
+            "40122": "nozzle_code",
+            "40008": "silk_code",
+            "40009": "carrier_dcbs",
+            "40123": "solder_paste_code",
+            "40124": "solder_paste_batch_code"
         }
     }
 }

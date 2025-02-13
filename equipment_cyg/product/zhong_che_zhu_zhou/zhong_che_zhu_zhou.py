@@ -213,7 +213,8 @@ class ZhongCheZhuZhou(Controller):
         """
         self.logger.info(f"{'=' * 40} Get Signal: {signal_info.get('description')}, "
                          f"地址位: {signal_info.get('tag_name')} {'=' * 40}")
-
+        if signal_info.get('description') == "产品进站":
+            self.set_sv_value_with_name("track_in_reply_flag", False)
         self.execute_call_backs(call_back_list, plc_instance)  # 根据配置文件下的call_back执行具体的操作
 
         self.logger.info(f"{'=' * 40} Signal clear: {signal_info.get('description')} {'=' * 40}")
@@ -221,6 +222,7 @@ class ZhongCheZhuZhou(Controller):
     # noinspection PyUnusedLocal
     def wait_eap_reply(self, call_back=None, **kwargs):
         """等待EAP回复进站."""
+
         time_out = call_back.get("time_out", 360000)
         wait_time = 1
         while not self.get_sv_value_with_name("track_in_reply_flag"):
@@ -231,7 +233,6 @@ class ZhongCheZhuZhou(Controller):
 
             if time_out == 0:
                 self.logger.warning("*** EAP 回复超时 *** -> EAP 未在规定时间内回复进站.")
-        self.set_sv_value_with_name("track_in_reply_flag", False)
 
     def save_recipe(self, **kwargs):
         """保存plc上传的配方."""

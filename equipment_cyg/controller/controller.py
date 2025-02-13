@@ -20,7 +20,7 @@ from secsgem.gem import CollectionEvent, GemEquipmentHandler, StatusVariable, Re
     EquipmentConstant
 from secsgem.secs.data_items.tiack import TIACK
 from secsgem.secs.functions import SecsS02F18
-from secsgem.secs.variables import U4, Array, Base
+from secsgem.secs.variables import U4, Array, Base, String
 from secsgem.hsms import HsmsSettings, HsmsConnectMode
 
 from equipment_cyg.controller.enum_sece_data_type import EnumSecsDataType
@@ -65,6 +65,7 @@ class Controller(GemEquipmentHandler):  # pylint: disable=R0901, R0904
         self.create_log_dir()
         self.logger.addHandler(self.file_handler)  # 所有 self.__module__ + "." + self.__class__.__name__ 日志
         self.protocol.communication_logger.addHandler(self.file_handler)  # secs 通讯日志
+
 
     def _initial_evnet(self):
         """加载定义好的事件."""
@@ -217,7 +218,10 @@ class Controller(GemEquipmentHandler):  # pylint: disable=R0901, R0904
                     else:
                         sv_instance: DataValue = self.data_values.get(sv_id)
                     if issubclass(sv_instance.value_type, Array):
-                        value = Array(U4, sv_instance.value)
+                        try:
+                            value = Array(U4, sv_instance.value)
+                        except Exception:
+                            value = Array(String, sv_instance.value)
                     else:
                         value = sv_instance.value_type(sv_instance.value)
                     variables.append(value)
@@ -513,7 +517,7 @@ class Controller(GemEquipmentHandler):  # pylint: disable=R0901, R0904
             recipe_name = plc_instance.execute_read(self.get_tag_name("current_recipe_name"), "string")
         self.set_sv_value_with_name("current_recipe_name", recipe_name)
         self.config["status_variable"]["current_recipe_name"]["value"] = recipe_name
-        self.update_config(f"{'/'.join(self.__module__.split('.'))}.conf", self.config)
+        self.update_config(f"{'/'.join(self.__module__.split('.'))}.json", self.config)
 
     # 静态通用函数
     @staticmethod
@@ -769,11 +773,13 @@ class Controller(GemEquipmentHandler):  # pylint: disable=R0901, R0904
         Args:
             signal_info (dict): 要监控的信号信息.
         """
+        signal_value, data_type = signal_info.get("value"), signal_info.get("data_type")
         while True:
             # noinspection PyBroadException
             try:
-                current_value = self.plc.execute_read(signal_info.get("tag_name"), TagTypeEnum.BOOL.value, False)
-                current_value and self.signal_trigger_event(signal_info.get("call_back", []), signal_info, plc_type="tag")  # 监控到bool信号触发事件
+                current_value = self.plc.execute_read(signal_info.get("tag_name"), data_type, False)
+                if current_value == signal_value:
+                    self.signal_trigger_event(signal_info.get("call_back", []), signal_info, plc_type="tag")  # 监控到bool信号触发事件
                 time.sleep(0.001)
             except Exception:  # pylint: disable=W0718
                 pass  # 出现任何异常不做处理
@@ -790,6 +796,13 @@ class Controller(GemEquipmentHandler):  # pylint: disable=R0901, R0904
         self.execute_call_backs(call_back_list, plc_type=plc_type)  # 根据配置文件下的call_back执行具体的操作
         self.logger.info(f"{'=' * 40} 流程结束: {signal_info.get('description')} {'=' * 40}")
 
+    def is_send_event(self, call_back):
+        """判断是否要发送事件."""
+        if (event_name := call_back.get("event_name")) in self.get_config_value("collection_events"):  # 触发事件
+            if event_name == "track_out_carrier":
+                time.sleep(5)
+            self.send_s6f11(event_name)
+
     @try_except_exception(PLCRuntimeError("*** Execute call backs error ***"))
     def execute_call_backs(self, call_backs: list, plc_type: str):
         """根据操作列表执行具体的操作.
@@ -805,6 +818,7 @@ class Controller(GemEquipmentHandler):  # pylint: disable=R0901, R0904
             self.logger.info(f"{'-' * 30} Step {i} 开始: {call_back.get('description')} {'-' * 30}")
             operation_func = self.get_operation_func(call_back.get("operation_type"))
             operation_func(call_back=call_back, plc_type=plc_type)
+            self.is_send_event(call_back)
             self.logger.info(f"{'-' * 30} 结束 Success: {call_back.get('description')} {'-' * 30}")
 
     def read_operation_update_sv_or_dv(self, call_back: dict, plc_type: str):
@@ -847,7 +861,7 @@ class Controller(GemEquipmentHandler):  # pylint: disable=R0901, R0904
         if dv_name := call_back.get("dv_name"):
             self.logger.info(f"*** 更新dv值: {dv_name} *** 值为: {plc_value} ***")
             self.set_dv_value_with_name(dv_name, plc_value)
-        elif sv_name := call_back.get("sv_name"):
+        elif sv_name := call_back["value"].get("sv_name"):
             self.logger.info(f"*** 更新sv值: {sv_name} *** 值为: {plc_value} ***")
             self.set_sv_value_with_name(sv_name, plc_value)
 
@@ -882,7 +896,7 @@ class Controller(GemEquipmentHandler):  # pylint: disable=R0901, R0904
             time_out: 超时时间.
         """
         count = 1
-        while (real_premise_value := self.plc.execute_read(premise_data_type, premise_tag_name)) != premise_value:
+        while (real_premise_value := self.plc.execute_read(premise_tag_name, premise_data_type)) != premise_value:
             self.logger.info(f"*** 第 %s 次读取前提值 *** 实际值: %s, 期待值: %s", count, real_premise_value, premise_value)
             count += 1
             time_out -= 1
@@ -970,7 +984,7 @@ class Controller(GemEquipmentHandler):  # pylint: disable=R0901, R0904
             "read": self.read_operation_update_sv_or_dv,
             "write": self.write_operation,
             "wait_eap_reply": self.wait_eap_reply,
-            "save_recipe_recipe": self.save_recipe_recipe
+            "save_recipe": self.save_recipe
         }
         return operation_func_map[operation_type]
 
@@ -982,7 +996,7 @@ class Controller(GemEquipmentHandler):  # pylint: disable=R0901, R0904
             time.sleep(0.2)
         self.set_dv_value_with_name("reply_flag", False)
 
-    def save_recipe_recipe(self, *args, **kwargs):
+    def save_recipe(self, *args, **kwargs):
         """保存上传的recipe."""
         self.logger.info(args, kwargs)
         upload_recipe_id = self.get_dv_value_with_name("upload_recipe_id")
@@ -1007,3 +1021,25 @@ class Controller(GemEquipmentHandler):  # pylint: disable=R0901, R0904
         if issubclass(status_variable.value_type, Array):
             return status_variable.value_type(U4, status_variable.value)
         return status_variable.value_type(status_variable.value)
+
+    def get_dv_base_value_type_with_name(self, dv_name: str) -> callable:
+        """根据data名获取列表数据元素的类型.
+
+        Args:
+            dv_name: data名称.
+
+        Returns:
+           str: 列表数据元素的类型.
+        """
+        data_value_instance = self.data_values.get(self.get_dv_id_with_name(dv_name))
+        if hasattr(data_value_instance, "base_value_type"):
+            func_str = data_value_instance.base_value_type
+            if func_str == "UINT_4":
+                return int
+            if func_str == "F4":
+                return float
+            if func_str == "BOOL":
+                return bool
+            if func_str == "ASCII":
+                return str
+        return None
