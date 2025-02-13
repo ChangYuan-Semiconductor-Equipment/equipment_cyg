@@ -1,6 +1,6 @@
 {
     "secs_conf": {
-        "secs_ip": "127.0.0.1",
+        "secs_ip": "10.20.9.11",
         "secs_port": 5000,
         "connect_mode": "PASSIVE",
         "model_name": "CYG SECSGEM",
@@ -31,9 +31,16 @@
         "current_lot_name": {
             "svid": 504,
             "unit": "",
-            "value": "",
+            "value": "2025-2-13",
             "value_type": "ASCII",
             "description": "当前lot name"
+        },
+        "current_lot_state": {
+            "svid": 505,
+            "unit": "",
+            "value": 1,
+            "value_type": "UINT_4",
+            "description": "当前lot状态"
         }
     },
     "data_values": {
@@ -137,6 +144,34 @@
             "dvid": 626,
             "value_type": "UINT_4",
             "description": "上料机托盘状态"
+        },
+        "carrier_out_reply_flag": {
+            "dvid": 628,
+            "value_type": "BOOL",
+            "description": "eap回复出站结果"
+        },
+        "carrier_code_out": {
+            "dvid": 630,
+            "value_type": "ASCII",
+            "description": "上料设备托盘出站托盘码"
+        },
+        "carrier_out_state": {
+            "dvid": 631,
+            "value_type": "UINT_4",
+            "value": 1,
+            "description": "托盘是否可以出站"
+        },
+        "product_codes": {
+            "dvid": 623,
+            "value_type": "ARRAY",
+            "value": [],
+            "description": "产品码列表"
+        },
+        "product_states": {
+            "dvid": 624,
+            "value_type": "ARRAY",
+            "value": [],
+            "description": "产品状态列表"
         }
     },
     "collection_events": {
@@ -189,7 +224,7 @@
         },
         "product_link_carrier_left": {
             "ceid": 1008,
-            "description": "产品放入托盘事件",
+            "description": "左侧产品放入托盘事件",
             "link_reports": {
                 "8": [
                     614,
@@ -202,7 +237,7 @@
         },
         "product_link_carrier_right": {
             "ceid": 1009,
-            "description": "产品放入托盘事件",
+            "description": "右侧产品放入托盘事件",
             "link_reports": {
                 "9": [
                     614,
@@ -210,6 +245,36 @@
                     616,
                     617,
                     626
+                ]
+            }
+        },
+        "carrier_out_request": {
+            "ceid": 1010,
+            "description": "带有产品的托盘请求出站事件",
+            "link_reports": {
+                "10": [
+                    504,
+                    630,
+                    623,
+                    624
+                ]
+            }
+        },
+        "new_lot": {
+            "ceid": 1011,
+            "description": "新工单",
+            "link_reports": {
+                "11": [
+                    504
+                ]
+            }
+        },
+        "end_lot": {
+            "ceid": 1012,
+            "description": "结束工单",
+            "link_reports": {
+                "12": [
+                    504
                 ]
             }
         }
@@ -229,18 +294,33 @@
             ],
             "description": "托盘弹夹进站反馈"
         },
-        "magazine_in_request_prodtct_reply": {
-            "rcmd": "magazine_in_request_prodtct_reply",
+        "magazine_in_request_product_reply": {
+            "rcmd": "magazine_in_request_product_reply",
             "params": [
                 "state"
             ],
             "description": "产品弹夹进站反馈"
+        },
+        "carrier_out_reply": {
+            "rcmd": "carrier_out_reply",
+            "params": [
+                "state"
+            ],
+            "description": "托盘出站请求"
         }
     },
     "plc_signal_tag_name": {
         "mes_heart": {
             "description": "MES 心跳 2s 更新一次",
             "tag_name": "Application.gvl_OPMODE01_MES.mes2plc.geneal.heartBeat"
+        },
+        "lot_state": {
+            "description": "工单状态",
+            "tag_name": "Application.gvl_OPMODE01_MES.mes2plc.geneal.Lot_status"
+        },
+        "lot_quantity": {
+            "description": "工单数量",
+            "tag_name": "Application.gvl_OPMODE01_MES.mes2plc.geneal.Lot_quantity"
         },
         "control_state": {
             "description": "实时监控设备的控制状态",
@@ -358,8 +438,7 @@
                     "operation_type": "read",
                     "tag_name": "Application.gvl_OPMODE01_MES.plc2mes.Interlock.st_3_code",
                     "data_type": "string",
-                    "dv_name": "magazine_code_carrier",
-                    "event_name": "magazine_in_request_carrier"
+                    "dv_name": "magazine_code_carrier"
                 },
                 {
                     "description": "写入进站结果",
@@ -399,8 +478,7 @@
                     "operation_type": "read",
                     "tag_name": "Application.gvl_OPMODE01_MES.plc2mes.Interlock.st_2_code",
                     "data_type": "string",
-                    "dv_name": "magazine_code_product",
-                    "event_name": "magazine_in_request_product"
+                    "dv_name": "magazine_code_product"
                 },
                 {
                     "description": "写入进站结果",
@@ -410,7 +488,7 @@
                     "value": 1
                 },
                 {
-                    "description": "MES 反馈托盘弹夹请求进站事件",
+                    "description": "MES 反馈产品弹夹请求进站事件",
                     "operation_type": "write",
                     "tag_name": "Application.gvl_OPMODE01_MES.mes2plc.geneal.response_InterLock[2]",
                     "data_type": "int",
@@ -551,10 +629,55 @@
                     "value": 0
                 }
             ]
+        },
+        "carrier_out_request": {
+            "loop": true,
+            "value": 1,
+            "description": "带有产品的托盘请求出站事件",
+            "data_type": "int",
+            "tag_name": "Application.gvl_OPMODE01_MES.plc2mes.geneal.request_InterLock[4]",
+            "call_back": [
+                {
+                    "description": "读取托盘码",
+                    "operation_type": "read",
+                    "tag_name": "Application.gvl_OPMODE01_MES.plc2mes.Interlock.st_4_code",
+                    "data_type": "string",
+                    "dv_name": "carrier_code_out"
+                },
+                {
+                    "description": "等待eap回复是否可以出站",
+                    "operation_type": "wait_eap_reply"
+                },
+                {
+                    "description": "写入出站结果",
+                    "operation_type": "write",
+                    "tag_name": "Application.gvl_OPMODE01_MES.mes2plc.Interlock.st_4_status",
+                    "data_type": "int",
+                    "value": "dv:carrier_out_state"
+                },
+                {
+                    "description": "MES 反馈带有产品的托盘请求出站事件",
+                    "operation_type": "write",
+                    "tag_name": "Application.gvl_OPMODE01_MES.mes2plc.geneal.response_InterLock[4]",
+                    "data_type": "int",
+                    "value": 1
+                },
+                {
+                    "description": "清空 MES 反馈 信号",
+                    "premise_tag_name": "Application.gvl_OPMODE01_MES.plc2mes.geneal.request_InterLock[4]",
+                    "premise_data_type": "int",
+                    "premise_value": 2,
+                    "operation_type": "write",
+                    "tag_name": "Application.gvl_OPMODE01_MES.mes2plc.geneal.response_InterLock[4]",
+                    "data_type": "int",
+                    "value": 0
+                }
+            ]
         }
     },
     "recipes": {
         "2_AMBX": {},
-        "1_AMBD": {}
+        "1_AMBD": {},
+        "5_AMBD": {}
     }
 }

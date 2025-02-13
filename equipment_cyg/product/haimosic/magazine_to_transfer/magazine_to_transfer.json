@@ -1,6 +1,6 @@
 {
     "secs_conf": {
-        "secs_ip": "127.0.0.1",
+        "secs_ip": "10.20.9.19",
         "secs_port": 5000,
         "connect_mode": "PASSIVE",
         "model_name": "CYG SECSGEM",
@@ -24,7 +24,7 @@
         "current_recipe_name": {
             "svid": 503,
             "unit": "",
-            "value": "AMB-D",
+            "value": "AMB-X",
             "value_type": "ASCII",
             "description": "当前配方name"
         },
@@ -145,6 +145,7 @@
         },
         "is_allow_carrier_in": {
             "dvid": 621,
+            "value": 1,
             "value_type": "UINT_4",
             "description": "是否允许托盘进站"
         },
@@ -160,11 +161,11 @@
             "value_type": "ARRAY",
             "description": "产品状态列表"
         },
-        "product_indexes": {
+        "match_state": {
             "dvid": 625,
-            "value": [],
-            "value_type": "ARRAY",
-            "description": "产品穴位列表"
+            "value": 0,
+            "value_type": "UINT_4",
+            "description": "配方匹配结果"
         },
         "transfer_carrier_state": {
             "dvid": 627,
@@ -176,6 +177,12 @@
             "value_type": "BOOL",
             "value": false,
             "description": "EAP是否回复"
+        },
+        "eap_recipe_name": {
+            "dvid": 629,
+            "value_type": "ASCII",
+            "value": "",
+            "description": "托盘进站请求时eap下发的配方name"
         }
     },
     "collection_events": {
@@ -241,10 +248,32 @@
         },
         "transfer_carrier_roll_request": {
             "ceid": 1012,
-            "description": "银烧结托盘(人工)进站",
+            "description": "银烧结托盘(回流)进站",
             "link_reports": {
                 "12": [
                     618
+                ]
+            }
+        },
+        "transfer_carrier_out": {
+            "ceid": 1013,
+            "description": "银烧结托盘出站",
+            "link_reports": {
+                "13": [
+                    618,
+                    623,
+                    624
+                ]
+            }
+        },
+        "carrier_in_result": {
+            "ceid": 1014,
+            "description": "当前设备配方和eap下发配方匹配结果事件",
+            "link_reports": {
+                "14": [
+                    503,
+                    625,
+                    629
                 ]
             }
         }
@@ -257,16 +286,19 @@
             ],
             "description": "切换配方"
         },
-        "carrier_in_request_reply": {
-            "rcmd": "carrier_in_request_reply",
+        "carrier_in_reply": {
+            "rcmd": "carrier_in_reply",
             "params": [
-                "state",
-                "product_infos"
+                "recipe_name"
             ],
             "description": "转盘设备1带有产品的托盘进站反馈"
         }
     },
     "plc_signal_tag_name": {
+        "transfer_carrier_indexes": {
+            "description": "银烧结盘穴位数",
+            "tag_name": "Application.gvl_OPMODE01_MES.plc2mes.geneal.request_InterLock[10]"
+        },
         "mes_heart": {
             "description": "MES 心跳 2s 更新一次",
             "tag_name": "Application.gvl_OPMODE01_MES.mes2plc.geneal.heartBeat"
@@ -395,20 +427,6 @@
                     "operation_type": "wait_eap_reply"
                 },
                 {
-                    "description": "写入产品码",
-                    "operation_type": "write",
-                    "tag_name": "Application.gvl_OPMODE01_MES.mes2plc.Interlock.st_1_pallet_mapping[$].code",
-                    "data_type": "string",
-                    "value": "dv:product_codes"
-                },
-                {
-                    "description": "写入产品状态",
-                    "operation_type": "write",
-                    "tag_name": "Application.gvl_OPMODE01_MES.mes2plc.Interlock.st_1_pallet_mapping[$].status",
-                    "data_type": "int",
-                    "value": "dv:product_states"
-                },
-                {
                     "description": "写入托盘是否可以进站",
                     "operation_type": "write",
                     "tag_name": "Application.gvl_OPMODE01_MES.mes2plc.Interlock.st_1_status",
@@ -508,8 +526,7 @@
                     "operation_type": "read",
                     "tag_name": "Application.gvl_OPMODE01_MES.plc2mes.Interlock.st_2_code",
                     "data_type": "string",
-                    "dv_name": "transfer_carrier_code",
-                    "event_name": "transfer_carrier_in_request"
+                    "dv_name": "transfer_carrier_code"
                 },
                 {
                     "description": "写入是否可以进站",
@@ -549,8 +566,7 @@
                     "operation_type": "read",
                     "tag_name": "Application.gvl_OPMODE01_MES.plc2mes.Interlock.st_3_code",
                     "data_type": "string",
-                    "dv_name": "transfer_carrier_code",
-                    "event_name": "transfer_carrier_roll_request"
+                    "dv_name": "transfer_carrier_code"
                 },
                 {
                     "description": "写入是否可以进站",
