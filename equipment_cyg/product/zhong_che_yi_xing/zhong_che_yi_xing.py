@@ -151,7 +151,9 @@ class ZhongCheYiXing(Controller):  # pylint: disable=R0901
         self.execute_call_backs(call_back_list)  # 根据配置文件下的call_back执行具体的操作
         # if "track_out" in self.get_current_thread_name():
         #     self.send_track_out_carrier_event()
-
+        if signal_info.get("description") == "产品进站":
+            self.plc.execute_write(self.get_tag_name("equipment_stop"), TagTypeEnum.INT.value, 0)
+            self.set_sv_value_with_name("track_in_reply_flag", False)
         self.logger.info(f"{'=' * 40} Signal clear: {signal_info.get('description')} {'=' * 40}")
 
     @Controller.try_except_exception(PLCRuntimeError("*** Execute call backs error ***"))
@@ -403,12 +405,15 @@ class ZhongCheYiXing(Controller):  # pylint: disable=R0901
     # noinspection PyUnusedLocal
     def wait_eap_reply(self, call_back=None, time_out=180):
         """等待EAP回复进站."""
+        count_time_out = 0
         while not self.get_sv_value_with_name("track_in_reply_flag"):
-            time_out -= 1
-            time.sleep(0.2)
-            if time_out == 0:
-                self.logger.warning("*** EAP 回复超时 *** -> EAP 未在 180 秒内回复进站, 设备停止")
+            time.sleep(1)
+            count_time_out += 1
+            self.logger.warning(f"等待EAP回复： 等待 {count_time_out} s")
+            if count_time_out == 25:
+                self.logger.warning("*** EAP 回复超时 *** -> EAP 未在 25 s 回复, 设备停止")
                 self.plc.execute_write(self.get_tag_name("equipment_stop"), TagTypeEnum.INT.value, 2)
+                break
         self.set_sv_value_with_name("track_in_reply_flag", False)
 
     # pylint: disable=W0237
@@ -449,7 +454,7 @@ class ZhongCheYiXing(Controller):  # pylint: disable=R0901
     def _on_s07f19(self, handler, packet):
         """Host查看设备的所有配方."""
         del handler
-        recipes = [recipe_id_name.split("_")[-1] for recipe_id_name in list(self.recipes.keys())]
+        recipes = [recipe_id_name.split("_", 1)[-1] for recipe_id_name in list(self.recipes.keys())]
         return self.stream_function(7, 20)(recipes)
 
     def _on_s10f03(self, handler, packet):
@@ -478,7 +483,7 @@ class ZhongCheYiXing(Controller):  # pylint: disable=R0901
             if recipe_id_name in plc_recipe_id_name:
                 recipe_id_name = plc_recipe_id_name
                 break
-        recipe_id, recipe_name = recipe_id_name.split("_")
+        recipe_id, recipe_name = recipe_id_name.split("_", 1)
         self.set_sv_value_with_name("pp_select_recipe_id", int(recipe_id))
         self.set_sv_value_with_name("pp_select_recipe_name", recipe_name)
         # noinspection PyBroadException
